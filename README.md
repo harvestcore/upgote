@@ -4,24 +4,26 @@
 
 ---
 
-## ¿Qué es?
+## What is it
 
-TBD
+This software aims to be a cloud based place in which you can define a schema, a source and a update interval, allowing the user to store, fetch and update all its precious data.
 
----
-
-## ¿Por qué?
-
-TBD
+More info TBD.
 
 ---
 
-## Herramientas y servicios
+## Why
 
-- TBD
+The main reason is that I wanted to learn Go and use queues and background processes.
 
 ---
 
-## Documentación:
+## Tools, services and others
+
+- Main programming language: [Go](https://golang.org/)
+
+---
+
+## Documentation
 
 - [Basic repo, git and GitHub configuration](doc/milestones/basic-git-github-config.md)
