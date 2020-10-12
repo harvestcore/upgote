@@ -24,4 +24,4 @@ TBD
 
 ## Documentación:
 
-- TBD
+- [Basic repo, git and GitHub configuration](doc/milestones/basic-git-github-config.md)
