@@ -15,3 +15,8 @@ git remote add upstream https://github.com/jj/CC-20-21
 This is the SSH key I have configured (quite a while ago) in my GitHub account.
 
 ![remotes](imgs/ssh.png)
+
+
+## GitHub 2FA
+
+![remotes](imgs/2fa.png)
