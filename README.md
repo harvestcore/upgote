@@ -21,6 +21,10 @@ The main reason is that I wanted to learn Go and use queues and background proce
 ## Tools, services and others
 
 - Main programming language: [Go](https://golang.org/)
+- REST-API framework: [Gorilla Mux](https://github.com/gorilla/mux)
+- DBMS: [MongoDB](https://www.mongodb.com/) with the [`mongo-driver`](https://godoc.org/go.mongodb.org/mongo-driver) for Go.
+- Logs: [`log` Go package](https://golang.org/pkg/log/)
+- Communication between processes: [`rpc` Go package](https://golang.org/pkg/net/rpc/)
 
 ---
 
