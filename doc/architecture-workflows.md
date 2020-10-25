@@ -10,7 +10,7 @@ The landing place for all user requests. It handles all those requests and commu
 
 Possible scenarios:
 
-- **User performs a request to HarvestCCode**: The API handles that request and issues an event to the Handler.
+- **User performs a request to HarvestCCode**: The API handles that request and issues an event to the Handler. Finally issues a log event.
 
 ## Handler
 
