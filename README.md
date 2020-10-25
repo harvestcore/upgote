@@ -8,7 +8,22 @@
 
 This software aims to be a cloud based place in which you can define a schema, a source and a update interval, allowing the user to store, fetch and update all its precious data.
 
-More info TBD.
+---
+
+## Architecture
+
+The architecture of HarvestCCode is an event based one. The diagram that defines that architecture is the following one:
+
+![architecture](doc/imgs/architecture.png)
+
+It has different parts that interact with each other via events. Those parts are:
+
+- **Core**: Main core of the software. It contains all the logic related to Updater creation and data storing.
+- **Handler**: It is the central part that handles all the events sent and received by the rest of the parts.
+- **Updater**: Background process that fetches the configured data and will send events as soon as it performs an update.
+- **API**: Landing place for all user requests. Handles all user requests to the system. The [framework](https://github.com/gorilla/mux) used is `Gorilla Mux`.
+- **DB**: It is the place where all the fetched data is stored. Since the data schema is unknown until it is defined by the user, the database management system is a non relational one ([MongoDB](https://www.mongodb.com/) to be precise). The driver used to connect to the Mongo server is `mongo-driver` ([this one](https://godoc.org/go.mongodb.org/mongo-driver)).
+- **Log**: Logs all operations performed across all the system. All these functionalities are handled using the `log` [Go package](https://golang.org/pkg/log/).
 
 ---
 
