@@ -48,6 +48,20 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 
 ---
 
+## Already existing Structs
+
+- Core:
+  - [core/core.go](src/core/core.go)
+
+- Handler
+  - [handler/event.go](src/handler/event.go)
+  - [handler/handler.go](src/handler/handler.go)
+
+- Updater
+  - [updater/updater.go](src/updater/updater.go)
+
+---
+
 ## Documentation
 
 - [Basic repo, git and GitHub configuration](doc/milestones/basic-git-github-config.md)
