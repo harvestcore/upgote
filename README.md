@@ -60,6 +60,9 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 - Updater
   - [updater/updater.go](src/updater/updater.go)
 
+- Log
+  - [log/log.go](src/log/log.go)
+
 ---
 
 ## Documentation

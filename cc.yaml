@@ -3,3 +3,4 @@ entidad:
   - src/handler/event.go
   - src/handler/handler.go
   - src/updater/updater.go
+  - src/log/log.go
