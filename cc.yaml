@@ -1,0 +1,5 @@
+entidad:
+  - src/core/core.go
+  - src/handler/event.go
+  - src/handler/handler.go
+  - src/updater/updater.go
