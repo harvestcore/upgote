@@ -17,9 +17,7 @@ After this brief introduction you can:
 
 ## Architecture
 
-The architecture of HarvestCCode is an event based one. The diagram that defines that architecture is the following one:
-
-![architecture](doc/imgs/architecture.png)
+The architecture of HarvestCCode is an event based one. The main reason for choosing this type of architecture is the nature of the tasks to be performed. A module of the software, called Updaters, will obtain data in the background from a specified source from time to time. Each time this action is completed, other processes, also asynchronous in turn, will be launched.
 
 It has different parts that interact with each other via events. Those parts are:
 
