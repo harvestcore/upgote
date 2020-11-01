@@ -1,7 +1,6 @@
 # Architecture workflows
 
-> This document defines all the workflows and scenarios between all the different parts of this software.
-
+> This document defines all the different modules, workflows and scenarios between all the parts of this software.
 > Please note that this is a living document and it will be updated along the development of HarvestCCode.
 
 ## API
