@@ -8,7 +8,10 @@
 
 This software aims to be a cloud based place in which you can define a schema, a source and a update interval, allowing the user to store, fetch and update all its precious data.
 
-You can learn more about the workflows and user journeys [here](doc/architecture-workflows.md).
+After this brief introduction you can:
+
+- Learn more about the event workflows and user journeys [here](doc/architecture-workflows.md).
+- Check the [project roadmap](doc/roadmap.md).
 
 ---
 
