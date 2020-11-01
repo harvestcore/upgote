@@ -27,6 +27,8 @@ It has different parts that interact with each other via events. Those parts are
 - **DB**: It is the place where all the fetched data is stored. Since the data schema is unknown until it is defined by the user, the database management system is a non relational one ([MongoDB](https://www.mongodb.com/) to be precise). The driver used to connect to the Mongo server is `mongo-driver` ([this one](https://godoc.org/go.mongodb.org/mongo-driver)).
 - **Log**: Logs all operations performed across all the system. All these functionalities are handled using the `log` [Go package](https://golang.org/pkg/log/).
 
+Since the operations to be performed are mostly asynchronous it does not make sense to use a non-event architecture. In addition, these tasks are programmed to run in the background, so there is no need to provide more than a confirmation that its request has been processed correctly or not.
+
 ---
 
 ## Why
