@@ -16,9 +16,7 @@ jobs:
         go-version: '1.15.4'
 
     - name: Install deps
-      working-directory: src
-      run: go get -d ./...
+      run: make install
 
     - name: Go linter
-      working-directory: src
-      run: go vet
+      run: make lint
