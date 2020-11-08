@@ -1,6 +1,11 @@
+lenguage: Go
+fichero_tareas: Makefile
 entidad:
   - src/core/core.go
   - src/handler/event.go
   - src/handler/handler.go
   - src/updater/updater.go
   - src/log/log.go
+test:
+  - src/updater/updater_test.go
+  - src/log/log_test.go
