@@ -1,4 +1,4 @@
-lenguage: Go
+lenguaje: Go
 fichero_tareas: Makefile
 entidad:
   - src/core/core.go
