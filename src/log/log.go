@@ -7,8 +7,26 @@ import (
 )
 
 type Log struct {
-	datetime time.Time
-	from     uuid.UUID
-	message  string
-	id       uuid.UUID
+	Datetime time.Time
+	From     uuid.UUID
+	To       uuid.UUID
+	Message  string
+	ID       uuid.UUID
+}
+
+// New Creates a new Log
+func New(from uuid.UUID, to uuid.UUID, message string) *Log {
+	var null uuid.UUID
+
+	if from == null || to == null {
+		return nil
+	}
+
+	return &Log{
+		Datetime: time.Now(),
+		From:     from,
+		To:       to,
+		Message:  message,
+		ID:       uuid.New(),
+	}
 }
