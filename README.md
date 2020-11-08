@@ -8,6 +8,8 @@
 
 This software aims to be a cloud based place in which you can define a schema, a source and a update interval, allowing the user to store, fetch and update all its precious data.
 
+Since the interaction with this software will be made via a REST-API, the **user** of this software must have the basic knowledge of this kind of architecture.
+
 After this brief introduction you can:
 
 - Learn more about the event workflows and user journeys [here](doc/architecture-workflows.md).
