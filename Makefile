@@ -1,8 +1,8 @@
 run:
-	go run src/main.go
+	cd src && go run main.go
 
 test:
-	go test ./tests...
+	cd src && go test ./...
 
 install:
 	cd src && go get ./...
