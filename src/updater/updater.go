@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/go-co-op/gocron"
@@ -12,14 +13,50 @@ import (
 )
 
 type Updater struct {
-	Schema      map[interface{}]interface{}
-	Interval    uint64
+	Schema      map[string]interface{}
+	Interval    int
 	Source      string
 	ID          uuid.UUID
 	Method      string
 	RequestBody map[string]interface{}
 	Timeout     int
 	Scheduler   *gocron.Scheduler
+}
+
+// New Creates a new Updater
+func New(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) *Updater {
+	if len(schema) == 0 {
+		return nil
+	}
+
+	var _interval int = 5
+	if interval > _interval {
+		_interval = interval
+	}
+
+	url, err := url.ParseRequestURI(source)
+	if err != nil {
+		return nil
+	}
+
+	if method != "GET" && method != "POST" {
+		return nil
+	}
+
+	var _timeout int = 15
+	if timeout > _timeout {
+		_timeout = timeout
+	}
+
+	return &Updater{
+		Schema:      schema,
+		Interval:    _interval,
+		Source:      url.String(),
+		ID:          uuid.New(),
+		Method:      method,
+		RequestBody: requestBody,
+		Timeout:     _timeout,
+	}
 }
 
 func (u *Updater) SendUpdate() {
@@ -91,7 +128,7 @@ func (u *Updater) Run() {
 	u.Scheduler = gocron.NewScheduler(time.UTC)
 	u.Scheduler.StartAsync()
 
-	u.Scheduler.Every(u.Interval).Seconds().Do(u.FetchData)
+	u.Scheduler.Every(uint64(u.Interval)).Seconds().Do(u.FetchData)
 }
 
 // Stop Clears all the background tasks
