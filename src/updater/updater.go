@@ -7,29 +7,31 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 )
 
 type Updater struct {
 	Schema      map[interface{}]interface{}
-	Interval    int
+	Interval    uint64
 	Source      string
 	ID          uuid.UUID
 	Method      string
 	RequestBody map[string]interface{}
 	Timeout     int
+	Scheduler   *gocron.Scheduler
 }
 
-func (u Updater) SendUpdate() {
+func (u *Updater) SendUpdate() {
 
 }
 
-func (u Updater) HandleEvent() {
+func (u *Updater) HandleEvent() {
 
 }
 
 // GetClient Returns the client configured with the timeout inverval
-func (u Updater) GetClient() (client *http.Client) {
+func (u *Updater) GetClient() (client *http.Client) {
 	timeout := time.Duration(u.Timeout) * time.Second
 
 	client = &http.Client{
@@ -40,7 +42,7 @@ func (u Updater) GetClient() (client *http.Client) {
 }
 
 // FetchData Fetches the data from the source
-func (u Updater) FetchData() map[string]interface{} {
+func (u *Updater) FetchData() map[string]interface{} {
 	var requestBody []byte
 	var requestBodyErr error
 	var body bytes.Buffer
@@ -84,6 +86,15 @@ func (u Updater) FetchData() map[string]interface{} {
 	return dat
 }
 
-func (u Updater) Run() {
+// Run Create the scheduler and start running the background taks
+func (u *Updater) Run() {
+	u.Scheduler = gocron.NewScheduler(time.UTC)
+	u.Scheduler.StartAsync()
 
+	u.Scheduler.Every(u.Interval).Seconds().Do(u.FetchData)
+}
+
+// Stop Clears all the background tasks
+func (u *Updater) Stop() {
+	u.Scheduler.Clear()
 }
