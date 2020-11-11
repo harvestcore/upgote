@@ -1,4 +1,4 @@
-# Test frame
+# Test framework
 
 The testing framework I'm using is the native one from Go, which makes use of the `go test` command along with the `testing` package from Go. The main reason for this is that no additional software or extra packages are needed so it is only a matter of writting the tests.
 
