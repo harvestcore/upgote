@@ -1,16 +1,22 @@
-all: install build
+all: install
 
 run:
-	cd src && go run main.go
+	go run src/main.go
 
 test:
-	cd src && go test ./...
+	go test ./src...
+
+deps:
+	go get ./src...
 
 install:
-	cd src && go get ./...
+	go install ./src...
 
 build:
-	cd src && go build
+	go build ./src...
 
 lint:
-	cd src && go vet
+	go vet ./src...
+
+clean:
+	go clean ./src...

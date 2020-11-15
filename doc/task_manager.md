@@ -17,28 +17,36 @@ Since `make` is more like a generic tool it can be also used for other tasks, no
 
 The `makefile` I've made is the following and can be found [here](../Makefile). It contains the four tasks that are needed for now:
 
-- `all`, installs all the dependencies and builds the software.
-- `run`, runs the software.
-- `test`, runs all the unit tests.
-- `install`, installs all the dependencies.
+- `all`, install all the dependencies and builds the software.
+- `run`, run the software.
+- `test`, run all the unit tests.
+- `deps`, add dependencies and install them.
+- `install`, compile and install dependencies.
 - `build`, builds the software, generating an executable file.
 - `lint`, runs the linter across all Go files.
+- `clean`, remove cache and object files.
 
 ```Makefile
-all: install build
+all: install
 
 run:
-    cd src && go run main.go
+    go run src/main.go
 
 test:
-    cd src && go test ./...
+    go test ./src...
+
+deps:
+    go get ./src...
 
 install:
-    cd src && go get ./...
+    go install ./src...
 
 build:
-    cd src && go build
+    go build ./src...
 
 lint:
-    cd src && go vet
+    go vet ./src...
+
+clean:
+    go clean ./src...
 ```

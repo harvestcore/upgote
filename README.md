@@ -55,14 +55,11 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 
 - Core:
   - [core/core.go](src/core/core.go)
-
 - Handler
   - [handler/event.go](src/handler/event.go)
   - [handler/handler.go](src/handler/handler.go)
-
 - Updater
   - [updater/updater.go](src/updater/updater.go)
-
 - Log
   - [log/log.go](src/log/log.go)
 
