@@ -22,8 +22,17 @@ Other issues I've also worked on:
 - [#45](https://github.com/harvestcore/HarvestCCode/issues/45)
 - [#46](https://github.com/harvestcore/HarvestCCode/issues/46)
 - [#47](https://github.com/harvestcore/HarvestCCode/issues/47)
+- [#55](https://github.com/harvestcore/HarvestCCode/issues/55)
+- [#56](https://github.com/harvestcore/HarvestCCode/issues/56)
+- [#57](https://github.com/harvestcore/HarvestCCode/issues/57)
+- [#58](https://github.com/harvestcore/HarvestCCode/issues/58)
+- [#59](https://github.com/harvestcore/HarvestCCode/issues/59)
+- [#60](https://github.com/harvestcore/HarvestCCode/issues/60)
+- [#61](https://github.com/harvestcore/HarvestCCode/issues/61)
 
 Test files created:
 
 - [log_test.go](../../src/log/log_test.go)
 - [updater_test.go](../../src/updater/updater_test.go)
+- [event_test.go](../../src/event/event_test.go)
+- [handler_test.go](../../src/handler/handler_test.go)
