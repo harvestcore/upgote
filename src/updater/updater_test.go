@@ -19,7 +19,7 @@ func TestUpdaterCreation(t *testing.T) {
 	var schema = make(map[string]interface{})
 	schema["cool"] = "test"
 
-	var u = updater.New(
+	var u = updater.NewUpdater(
 		schema,
 		10,
 		"https://google.es",
@@ -35,7 +35,7 @@ func TestUpdaterCreation(t *testing.T) {
 	assert.Equal(t, u.RequestBody, schema, "Mismatch requestBody")
 	assert.Equal(t, u.Timeout, 20, "Mismatch timeout")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		nilSchema,
 		10,
 		"https://google.es",
@@ -45,7 +45,7 @@ func TestUpdaterCreation(t *testing.T) {
 	)
 	assert.Nil(t, u, "Updater created without schema")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		schema,
 		nilInterval,
 		"https://google.es",
@@ -56,7 +56,7 @@ func TestUpdaterCreation(t *testing.T) {
 	assert.NotNil(t, u, "Updater not created without interval")
 	assert.Equal(t, u.Interval, 5, "Interval is not 5")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		schema,
 		10,
 		nilSource,
@@ -66,7 +66,7 @@ func TestUpdaterCreation(t *testing.T) {
 	)
 	assert.Nil(t, u, "Updater created without interval")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		schema,
 		10,
 		"https://google.es",
@@ -76,7 +76,7 @@ func TestUpdaterCreation(t *testing.T) {
 	)
 	assert.Nil(t, u, "Updater created without method")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		schema,
 		10,
 		"https://google.es",
@@ -86,7 +86,7 @@ func TestUpdaterCreation(t *testing.T) {
 	)
 	assert.NotNil(t, u, "Updater not created without requestBody")
 
-	u = updater.New(
+	u = updater.NewUpdater(
 		schema,
 		10,
 		"https://google.es",
