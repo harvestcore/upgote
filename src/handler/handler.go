@@ -24,15 +24,12 @@ func NewHandler(timeout int) *Handler {
 		return nil
 	}
 
-	h := Handler{
+	return &Handler{
 		Timeout:    timeout,
 		Lock:       false,
 		EventQueue: make([]event.Event, 0),
-		Scheduler:  nil,
+		Scheduler:  gocron.NewScheduler(time.UTC),
 	}
-
-	h.StartHandlingEvents()
-	return &h
 }
 
 // Run Run the handling if the lock is available and the queue has events to process
@@ -44,8 +41,6 @@ func (h *Handler) Run() {
 
 // StartHandlingEvents Start the process of handling events, aka run the scheduler
 func (h *Handler) StartHandlingEvents() {
-	h.Scheduler = gocron.NewScheduler(time.UTC)
-
 	h.Scheduler.StartAsync()
 	h.Scheduler.Every(uint64(h.Timeout / 2)).Seconds().Do(h.Run)
 }
