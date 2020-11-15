@@ -4,7 +4,7 @@ run:
 	go run src/main.go
 
 test:
-	go test ./src...
+	go test ./src... -v
 
 deps:
 	go get ./src...
