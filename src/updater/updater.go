@@ -23,8 +23,8 @@ type Updater struct {
 	Scheduler   *gocron.Scheduler
 }
 
-// New Creates a new Updater
-func New(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) *Updater {
+// NewUpdater Creates a new Updater
+func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) *Updater {
 	if len(schema) == 0 {
 		return nil
 	}
