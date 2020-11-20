@@ -18,9 +18,9 @@ CMD cp -R --symbolic-link /app/test/* /go/src/github.com/harvestcore/HarvestCCod
 
 ## Base image
 
-The base image selected is [`golang:1.15.5-alpine`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/alpine3.12/Dockerfile). It is a lightweigh image that already includes Golang v1.15.5 installed, without any extra unnecesary software. Since I'm only going to run some unit tests in the container I don't need an image that includes extra software, like [`golang:1.15.5-buster`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/buster/Dockerfile) (based on debian) or [`golang:1.15.5-windowsservercore-1809`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/windows/windowsservercore-1809/Dockerfile) (based on Windows).
+The base image selected is [`golang:1.15.5-alpine`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/alpine3.12/Dockerfile). It is a lightweigh image that already includes Golang v1.15.5 installed, without any extra unnecesary software. Since I'm only going to run some unit tests in the container I don't need an image that includes extra software, like [`golang:1.15.5-buster`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/buster/Dockerfile) (based on Debian) or [`golang:1.15.5-windowsservercore-1809`](https://github.com/docker-library/golang/blob/071e264f53e89ea75f1a38f6c1c33641685d8560/1.15/windows/windowsservercore-1809/Dockerfile) (based on Windows).
 
-On the other hand, having a base image with Golang already installed saves me some time.
+On the other hand, having a base image with Golang already installed saves me some time when building the image.
 
 ## Dockerfile explanation
 
@@ -42,7 +42,7 @@ WORKDIR /go/src/github.com/harvestcore/HarvestCCode
 ENV CGO_ENABLED 0
 ```
 
-Golang is able to run C code, and Golang by itself sometimes makes use of this ([`cgo` package](https://golang.org/cmd/cgo/)). Since I'm using an Alpine image which does not include the GCC compiler, it is possible to avoid this code execution by setting the environment variable `CGO_ENABLED` to `0`. By doing this I'm force a build using just Golang. This has no impact at all and allows me to save some bytes in the image size.
+Golang is able to run C code, and Golang by itself sometimes makes use of this ([`cgo` package](https://golang.org/cmd/cgo/)). Since I'm using an Alpine image which does not include the GCC compiler, it is possible to avoid this code execution by setting the environment variable `CGO_ENABLED` to `0`. By doing this I'm forcing a build using just Golang, not C code. This has no impact at all and allows me to save some bytes in the image size.
 
 ```Dockerfile
 RUN apk update --no-cache; apk add --no-cache make git
@@ -65,6 +65,6 @@ First of all I've created a new repository in DockerHub ([this one](https://hub.
   - Branch: `master`
   - Dockerfile location: `Dockerfile.tests`
   - Autobuild: enabled
-  - Build cache: enabled
+  - Build caching: enabled
 
 ![DockerHub Build Tests](imgs/dockerhub_build_tests.png)
