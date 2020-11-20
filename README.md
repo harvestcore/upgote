@@ -70,7 +70,10 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 - [Basic repo, git and GitHub configuration](doc/milestones/basic-git-github-config.md)
 - [Currently open and closed user stories](https://github.com/harvestcore/HarvestCCode/issues?q=is%3Aopen+is%3Aclosed+is%3Aissue+label%3Auser-stories+)
 
+## Other documentation
+
 - [Task manager](doc/task_manager.md)
 - [Assertion package](doc/assertion_library.md)
 - [Test framework](doc/test_framework.md)
 - [Progress on Milestone 2](doc/milestones/tests-hu.md)
+- [Dockerfile.tests, DockerHub and GH Registry](doc/dockerf.tests.md)
