@@ -3,11 +3,14 @@ all: install
 run:
 	go run src/main.go
 
-test:
+test: testdeps
 	go test ./src... -v
 
 deps:
 	go get ./src...
+
+testdeps:
+	go get -t ./src...
 
 install:
 	go install ./src...
