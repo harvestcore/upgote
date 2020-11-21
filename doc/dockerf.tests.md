@@ -68,3 +68,70 @@ First of all I've created a new repository in DockerHub ([this one](https://hub.
   - Build caching: enabled
 
 ![DockerHub Build Tests](imgs/dockerhub_build_tests.png)
+
+This configuration works alright, but it will rebuild the image every time I push something in this repo. This makes no sense at all, since this image is static and it will barely be updated. For this reason I've created a GH Action workflow, that builds and pushes the testing image only when the Dockerfile.tests file is updated.
+
+This is the [file](../Dockerfile.tests) content:
+
+```yml
+name: Publish testing Docker image
+
+on:
+  push:
+    paths:
+      - 'Dockerfile.tests'
+
+jobs:
+  push-to-registries:
+    name: Push to registries
+    runs-on: ubuntu-latest
+    env:
+      image-tag: harvestcore/harvestccode:latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: DockerHub - Login
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+
+    - name: DockerHub - Build and push image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./Dockerfile.tests
+        push: true
+        tags: ${{ env.image-tag }}
+
+    - name: GitHub Registry - Login
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GH_TOKEN }}
+
+    - name: GitHub Registry - Build and push image
+      run: docker build . -f Dockerfile.tests -t ghcr.io/${{ env.image-tag }} && docker push ghcr.io/${{ env.image-tag }}
+```
+
+> This workflow has been created following the guidances [here](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages) and [here](https://github.com/marketplace/actions/build-and-push-docker-images).
+
+Basically, what it does is login, build the image, and push it to both registries. By doing this it will be only published if the Dockerfile has changed. The build & push for DockerHub is using a custom action from the Docker team (which also requires the set up of the actions above that one, QEMU and Buildx). In the case of GitHub Registry, the build & push is made using simple docker commands, since the action used for DockerHub returned some errors when working with GHR.
+
+In order to be able to push images to both registries I created two access tokens.
+
+This one for GH Registry:
+
+![GHR token](./imgs/ghr-token.png)
+
+And this one for DockerHub:
+
+![DockerHub token](./imgs/dockerhub-token.png)
