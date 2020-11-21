@@ -6,6 +6,8 @@ The content of the testing Dockerfile is the following:
 
 ```Dockerfile
 FROM golang:1.15.5-alpine
+LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>"
+LABEL version="0.1"
 
 WORKDIR /go/src/github.com/harvestcore/HarvestCCode
 ENV CGO_ENABLED 0
@@ -24,13 +26,20 @@ On the other hand, having a base image with Golang already installed saves me so
 
 ## Dockerfile explanation
 
-> In this section I'll explain each line of the Dockerfile.
+> In this section I'll explain each line of the Dockerfile. I've followed the best practices that [Docker](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) recommends.
 
 ```Dockerfile
 FROM golang:1.15.5-alpine
 ```
 
 Base image, explained above.
+
+```Dockerfile
+LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>"
+LABEL version="0.1"
+```
+
+Some labels, including the maintainer (me) and the version of the Dockerfile (0.1).
 
 ```Dockerfile
 WORKDIR /go/src/github.com/harvestcore/HarvestCCode
@@ -56,7 +65,7 @@ CMD cp -R --symbolic-link /app/test/* /go/src/github.com/harvestcore/HarvestCCod
 
 This image will be tested using the command `docker run -t -v /some/path:/app/test nick-estudiante/nombre-del-repo` this means that a volume will be mounted in `/app/test` and all the project files will be there. The command `cp -R --symbolic-link /app/test/* /go/src/github.com/harvestcore/HarvestCCode` creates symbolic links recursively (from all the files and directories in `/app/test`) in the directory I've set as `WORKDIR`. The project files are not available in build time, so this command must be run in runtime. By creating symbolic links I can avoid copying the raw files into the desired directory. After that I just execute `make test`, which installs all the needed testing dependencies and runs the unit tests.
 
-## DockerHub
+## DockerHub & GitHub Registry
 
 First of all I've created a new repository in DockerHub ([this one](https://hub.docker.com/r/harvestcore/harvestccode)). After that I've configured the automated build as shown below:
 
