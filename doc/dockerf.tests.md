@@ -36,10 +36,10 @@ Base image, explained above.
 
 ```Dockerfile
 LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>"
-LABEL version="0.1"
+LABEL version="0.2"
 ```
 
-Some labels, including the maintainer (me) and the version of the Dockerfile (0.1).
+Some labels, including the maintainer (me) and the version of the Dockerfile (0.2).
 
 ```Dockerfile
 WORKDIR /go/src/github.com/harvestcore/HarvestCCode
