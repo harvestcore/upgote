@@ -1,11 +1,19 @@
 lenguaje: Go
 fichero_tareas: Makefile
 entidad:
+  - src/config/config_manager.go
   - src/core/core.go
-  - src/handler/event.go
+  - src/db/item.go
+  - src/db/mongo_engine.go
+  - src/db/responses.go
+  - src/event/event.go
   - src/handler/handler.go
   - src/updater/updater.go
   - src/log/log.go
+  - src/utils/eventtype.go
 test:
+  - src/config/config_manager_test.go
+  - src/event/event_test.go
+  - src/handler/handler_test.go
   - src/updater/updater_test.go
   - src/log/log_test.go
