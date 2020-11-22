@@ -144,3 +144,8 @@ This one for GH Registry:
 And this one for DockerHub:
 
 ![DockerHub token](./imgs/dockerhub-token.png)
+
+After the workflow is run, we can see the images uploaded to both registries:
+
+- [GitHub Container Registry](https://github.com/users/harvestcore/packages/container/package/harvestccode)
+- [DockerHub](https://hub.docker.com/r/harvestcore/harvestccode)
