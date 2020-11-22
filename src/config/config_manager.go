@@ -7,17 +7,19 @@ import (
 
 var lock = &sync.Mutex{}
 
-type ConfigManager struct {
+// Manager Encapsulated all the config variables needed
+type Manager struct {
 	MongoPort string
 	MongoHost string
 	MongoURI  string
 	Database  string
 }
 
-var engine *ConfigManager
+var manager *Manager
 
-func GetConfigManager() *ConfigManager {
-	if engine == nil {
+// GetManager Returns the Manager instance
+func GetManager() *Manager {
+	if manager == nil {
 		lock.Lock()
 		defer lock.Unlock()
 
@@ -41,7 +43,7 @@ func GetConfigManager() *ConfigManager {
 			mongoURI = "mongodb://" + host + ":" + port
 		}
 
-		engine = &ConfigManager{
+		manager = &Manager{
 			MongoPort: port,
 			MongoHost: host,
 			MongoURI:  mongoURI,
@@ -49,5 +51,5 @@ func GetConfigManager() *ConfigManager {
 		}
 	}
 
-	return engine
+	return manager
 }
