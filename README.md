@@ -77,3 +77,4 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 - [Test framework](doc/test_framework.md)
 - [Progress on Milestone 2](doc/milestones/tests-hu.md)
 - [Dockerfile, DockerHub and GH Registry](doc/dockerf.tests.md)
+- [Progress on Milestone 3](doc/milestones/m3.md)
