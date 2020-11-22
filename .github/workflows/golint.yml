@@ -1,6 +1,13 @@
 name: Go linter
 
-on: push
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'src/**'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   build:
