@@ -80,7 +80,7 @@ First of all I've created a new repository in DockerHub ([this one](https://hub.
 
 This configuration works alright, but it will rebuild the image every time I push something in this repo. This makes no sense at all, since this image is static and it will barely be updated. For this reason I've created a GH Action workflow, that builds and pushes the testing image only when the Dockerfile.tests file is updated.
 
-This is the [file](../Dockerfile.tests) content:
+This is the [file](../.github/workflows/publish-testing-image.yml) content:
 
 ```yml
 name: Publish testing Docker image
