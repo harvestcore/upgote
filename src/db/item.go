@@ -111,3 +111,8 @@ func (item *Item) Delete(criteria map[string]interface{}) *DeleteResponse {
 		Length: deleted,
 	}
 }
+
+// Drop Drops the current collection
+func (item *Item) Drop() {
+	item.Collection().Drop(Ctx())
+}
