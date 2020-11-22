@@ -1,6 +1,6 @@
-# Dockerfile.tests
+# Dockerfile
 
-> This document contains all the information related to the confection of the [`Dockerfile.tests`](../Dockerfile.tests) file used to create an image to run the unit tests of this project.
+> This document contains all the information related to the confection of the [`Dockerfile`](../Dockerfile) file used to create an image to run the unit tests of this project.
 
 The content of the testing Dockerfile is the following:
 
@@ -72,13 +72,13 @@ First of all I've created a new repository in DockerHub ([this one](https://hub.
 - I've linked my GitHub account with DockerHub.
 - I've set the build rules:
   - Branch: `master`
-  - Dockerfile location: `Dockerfile.tests`
+  - Dockerfile location: `Dockerfile`
   - Autobuild: enabled
   - Build caching: enabled
 
 ![DockerHub Build Tests](imgs/dockerhub_build_tests.png)
 
-This configuration works alright, but it will rebuild the image every time I push something in this repo. This makes no sense at all, since this image is static and it will barely be updated. For this reason I've created a GH Action workflow, that builds and pushes the testing image only when the Dockerfile.tests file is updated.
+This configuration works alright, but it will rebuild the image every time I push something in this repo. This makes no sense at all, since this image is static and it will barely be updated. For this reason I've created a GH Action workflow, that builds and pushes the testing image only when the Dockerfile is updated.
 
 This is the [file](../.github/workflows/publish-testing-image.yml) content:
 
@@ -88,7 +88,7 @@ name: Publish testing Docker image
 on:
   push:
     paths:
-      - 'Dockerfile.tests'
+      - 'Dockerfile'
 
 jobs:
   push-to-registries:
@@ -116,7 +116,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile.tests
+        file: ./Dockerfile
         push: true
         tags: ${{ env.image-tag }}
 
@@ -128,7 +128,7 @@ jobs:
         password: ${{ secrets.GH_TOKEN }}
 
     - name: GitHub Registry - Build and push image
-      run: docker build . -f Dockerfile.tests -t ghcr.io/${{ env.image-tag }} && docker push ghcr.io/${{ env.image-tag }}
+      run: docker build . -f Dockerfile -t ghcr.io/${{ env.image-tag }} && docker push ghcr.io/${{ env.image-tag }}
 ```
 
 > This workflow has been created following the guidances [here](https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages) and [here](https://github.com/marketplace/actions/build-and-push-docker-images).

@@ -76,4 +76,4 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 - [Assertion package](doc/assertion_library.md)
 - [Test framework](doc/test_framework.md)
 - [Progress on Milestone 2](doc/milestones/tests-hu.md)
-- [Dockerfile.tests, DockerHub and GH Registry](doc/dockerf.tests.md)
+- [Dockerfile, DockerHub and GH Registry](doc/dockerf.tests.md)

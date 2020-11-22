@@ -3,7 +3,7 @@ name: Publish testing Docker image
 on:
   push:
     paths:
-      - 'Dockerfile.tests'
+      - 'Dockerfile'
 
 jobs:
   push-to-registries:
@@ -31,7 +31,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile.tests
+        file: ./Dockerfile
         push: true
         tags: ${{ env.image-tag }}
 
@@ -43,4 +43,4 @@ jobs:
         password: ${{ secrets.GH_TOKEN }}
 
     - name: GitHub Registry - Build and push image
-      run: docker build . -f Dockerfile.tests -t ghcr.io/${{ env.image-tag }} && docker push ghcr.io/${{ env.image-tag }}
+      run: docker build . -f Dockerfile -t ghcr.io/${{ env.image-tag }} && docker push ghcr.io/${{ env.image-tag }}
