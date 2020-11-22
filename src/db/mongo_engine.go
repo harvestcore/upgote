@@ -16,6 +16,8 @@ var lock = &sync.Mutex{}
 type MongoEngine struct {
 	Client   *mongo.Client
 	Database string
+	cancel   context.CancelFunc
+	ctx      context.Context
 }
 
 var engine *MongoEngine
@@ -32,22 +34,31 @@ func GetEngine() *MongoEngine {
 
 		// Mongo client instantation
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
 		client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
-		defer func() {
-			if err = client.Disconnect(ctx); err != nil {
-				panic(err)
-			}
-		}()
 
-		engine = &MongoEngine{
-			Client:   client,
-			Database: database,
+		if err == nil {
+			engine = &MongoEngine{
+				Client:   client,
+				Database: database,
+				cancel:   cancel,
+				ctx:      ctx,
+			}
+		} else {
+			defer func() {
+				cancel()
+				client.Disconnect(ctx)
+			}()
 		}
 	}
 
 	return engine
+}
+
+// CloseConnection Closes the client connectino
+func CloseConnection() {
+	var engine = GetEngine()
+	engine.cancel()
+	engine.Client.Disconnect(engine.ctx)
 }
 
 // DB Returns the current active database
