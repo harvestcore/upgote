@@ -14,7 +14,7 @@ require (
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/stretchr/testify v1.6.1
-	go.mongodb.org/mongo-driver v1.4.3 // indirect
+	go.mongodb.org/mongo-driver v1.4.3
 	go.uber.org/zap v1.16.0 // indirect
 	google.golang.org/grpc v1.26.0 // indirect
 )

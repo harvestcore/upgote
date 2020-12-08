@@ -22,13 +22,14 @@ var lock = &sync.Mutex{}
 
 // Manager Encapsulated all the config variables needed
 type Manager struct {
-	MongoPort string
-	MongoHost string
-	MongoURI  string
-	Database  string
-	Context   context.Context
-	Client    *clientv3.Client
-	KV        clientv3.KV
+	MongoPort  string
+	MongoHost  string
+	MongoURI   string
+	Database   string
+	Context    context.Context
+	CancelFunc context.CancelFunc
+	Client     *clientv3.Client
+	KV         clientv3.KV
 }
 
 var manager *Manager
@@ -39,7 +40,7 @@ func GetManager() *Manager {
 		lock.Lock()
 		defer lock.Unlock()
 
-		context, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		client, _ := clientv3.New(clientv3.Config{
 			DialTimeout: 2 * time.Second,
 			Endpoints:   []string{"127.0.0.1:2379"},
@@ -66,17 +67,23 @@ func GetManager() *Manager {
 		}
 
 		manager = &Manager{
-			MongoPort: port,
-			MongoHost: host,
-			MongoURI:  mongoURI,
-			Database:  database,
-			Context:   context,
-			Client:    client,
-			KV:        clientv3.NewKV(client),
+			MongoPort:  port,
+			MongoHost:  host,
+			MongoURI:   mongoURI,
+			Database:   database,
+			Context:    context,
+			CancelFunc: cancel,
+			Client:     client,
+			KV:         clientv3.NewKV(client),
 		}
 	}
 
 	return manager
+}
+
+// Close Closes the etcd manager
+func (manager *Manager) Close() {
+	manager.CancelFunc()
 }
 
 // GetVariable Returns the requested variable.
