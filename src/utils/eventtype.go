@@ -3,9 +3,9 @@ package utils
 type EventType string
 
 const (
-	Store      = "store"
-	Fetch      = "fetch"
-	Update     = "update"
-	APIsend    = "APIsend"
-	APIreceive = "APIreceive"
+	Store      EventType = "store"
+	Fetch      EventType = "fetch"
+	Update     EventType = "update"
+	APIsend    EventType = "APIsend"
+	APIreceive EventType = "APIreceive"
 )
