@@ -12,24 +12,52 @@ import (
 type Variable string
 
 const (
+	// Variable names
 	HCC_MONGO_PORT     Variable = "HCC_MONGO_PORT"
 	HCC_MONGO_HOST     Variable = "HCC_MONGO_HOST"
 	HCC_MONGO_DATABASE Variable = "HCC_MONGO_DATABASE"
 	HCC_MONGO_URI      Variable = "HCC_MONGO_URI"
+	HCC_LOG_FILE       Variable = "HCC_LOG_FILE"
+	HCC_ETCD3_HOST     Variable = "HCC_ETCD3_HOST"
+
+	// Default variables
+	HCC_DEFAULT_MONGO_PORT     Variable = "27017"
+	HCC_DEFAULT_MONGO_HOST     Variable = "localhost"
+	HCC_DEFAULT_MONGO_DATABASE Variable = "harvestccode"
+	HCC_DEFAULT_MONGO_URI      Variable = "mongodb://localhost:27017"
+	HCC_DEFAULT_LOG_FILE       Variable = "/var/log/harvestccode/logfile"
+	HCC_DEFAULT_ETCD3_HOST     Variable = "127.0.0.1:2379"
 )
+
+// GetDefault Returns the default value of a variable
+func GetDefault(variable Variable) string {
+	switch variable {
+	case HCC_MONGO_PORT:
+		return string(HCC_DEFAULT_MONGO_PORT)
+	case HCC_MONGO_HOST:
+		return string(HCC_DEFAULT_MONGO_HOST)
+	case HCC_MONGO_DATABASE:
+		return string(HCC_DEFAULT_MONGO_DATABASE)
+	case HCC_MONGO_URI:
+		return string(HCC_DEFAULT_MONGO_URI)
+	case HCC_LOG_FILE:
+		return string(HCC_DEFAULT_LOG_FILE)
+	case HCC_ETCD3_HOST:
+		return string(HCC_DEFAULT_ETCD3_HOST)
+	}
+
+	return ""
+}
 
 var lock = &sync.Mutex{}
 
 // Manager Encapsulated all the config variables needed
 type Manager struct {
-	MongoPort  string
-	MongoHost  string
-	MongoURI   string
-	Database   string
-	Context    context.Context
-	CancelFunc context.CancelFunc
-	Client     *clientv3.Client
-	KV         clientv3.KV
+	VariablePool map[string]string
+	Context      context.Context
+	CancelFunc   context.CancelFunc
+	Client       *clientv3.Client
+	KV           clientv3.KV
 }
 
 var manager *Manager
@@ -40,41 +68,25 @@ func GetManager() *Manager {
 		lock.Lock()
 		defer lock.Unlock()
 
+		var etcd3Host = os.Getenv(string(HCC_MONGO_PORT))
+
+		if etcd3Host == "" {
+			// Default one
+			etcd3Host = string(HCC_DEFAULT_ETCD3_HOST)
+		}
+
 		context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		client, _ := clientv3.New(clientv3.Config{
 			DialTimeout: 2 * time.Second,
-			Endpoints:   []string{"127.0.0.1:2379"},
+			Endpoints:   []string{etcd3Host},
 		})
 
-		var port = os.Getenv("HCC_MONGO_PORT")
-		if port == "" {
-			port = "27017"
-		}
-
-		var host = os.Getenv("HCC_MONGO_HOST")
-		if host == "" {
-			host = "localhost"
-		}
-
-		var database = os.Getenv("HCC_MONGO_DATABASE")
-		if database == "" {
-			database = "harvestccode"
-		}
-
-		var mongoURI = os.Getenv("HCC_MONGO_URI")
-		if mongoURI == "" {
-			mongoURI = "mongodb://" + host + ":" + port
-		}
-
 		manager = &Manager{
-			MongoPort:  port,
-			MongoHost:  host,
-			MongoURI:   mongoURI,
-			Database:   database,
-			Context:    context,
-			CancelFunc: cancel,
-			Client:     client,
-			KV:         clientv3.NewKV(client),
+			VariablePool: make(map[string]string),
+			Context:      context,
+			CancelFunc:   cancel,
+			Client:       client,
+			KV:           clientv3.NewKV(client),
 		}
 	}
 
@@ -88,11 +100,27 @@ func (manager *Manager) Close() {
 
 // GetVariable Returns the requested variable.
 func (manager *Manager) GetVariable(variable Variable) string {
-	var _var string
-	data, _ := manager.KV.Get(manager.Context, string(variable))
-	for _, ev := range data.Kvs {
-		_var = string(ev.Value)
+	var output = manager.VariablePool[string(variable)]
+
+	if output == "" {
+		data, err := manager.KV.Get(manager.Context, string(variable))
+
+		if err == nil {
+			for _, ev := range data.Kvs {
+				output = string(ev.Value)
+			}
+		} else {
+			output = os.Getenv(string(variable))
+		}
+
+		if output == "" {
+			output = GetDefault(variable)
+		}
+
+		if output != "" {
+			manager.VariablePool[string(variable)] = string(variable)
+		}
 	}
 
-	return _var
+	return output
 }
