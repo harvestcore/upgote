@@ -54,7 +54,7 @@ func GetEngine() *MongoEngine {
 	return engine
 }
 
-// CloseConnection Closes the client connectino
+// CloseConnection Closes the client connection
 func CloseConnection() {
 	var engine = GetEngine()
 	engine.cancel()
