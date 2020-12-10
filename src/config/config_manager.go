@@ -51,7 +51,7 @@ func GetDefault(variable Variable) string {
 
 var lock = &sync.Mutex{}
 
-// Manager Encapsulated all the config variables needed
+// Manager Encapsulates all the config variables needed
 type Manager struct {
 	VariablePool map[string]string
 	Context      context.Context
