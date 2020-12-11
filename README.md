@@ -54,10 +54,12 @@ entidad:
 test:
   - src/config/config_manager_test.go
   - src/db/item_test.go
+  - src/db/mongo_engine_test.go
   - src/event/event_test.go
   - src/handler/handler_test.go
   - src/updater/updater_test.go
   - src/log/log_test.go
+
 ```
 
 ---
