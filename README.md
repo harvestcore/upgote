@@ -77,3 +77,4 @@ test:
 - [Progress on Milestone 2](doc/milestones/tests-hu.md)
 - [Dockerfile, DockerHub and GH Registry](doc/dockerf.tests.md)
 - [Progress on Milestone 3](doc/milestones/m3.md)
+- [Continuous integration](doc/ci.md)

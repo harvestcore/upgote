@@ -4,7 +4,7 @@ For this project I've used Travis CI and GitHub Actions. The different configura
 
 ## Travis CI
 
-To setup the CI in Travis the first step is to create an account in [travis-ci.com/](https://travis-ci.com/). I already have an account (linked with GitHub) so I ommited this step. After that, I've allowed Travis to access all the repositories in my GitHub account as show in the picture below:
+To setup the CI in Travis the first step is to create an account in [travis-ci.com](https://travis-ci.com/). I already have an account (linked with GitHub) so I ommited this step. After that, I've allowed Travis to access all the repositories in my GitHub account as show in the picture below:
 
 ![travis_gh](./imgs/travis_gh.png)
 
@@ -25,7 +25,7 @@ script:
 
 Its content is super simple. First of all I've set the language to test and the version to use, in this case `Golang v1.15`. Since the software makes use of a database connection to a `MongoDB` server, in order to run the unit tests related to that code I've set the `mongodb` service to be used in every build. Finally, I run the testing process by using the task manager.
 
-The latest Travis builds for HarvestCCode can be seen [here](https://travis-ci.com/github/harvestcore/HarvestCCode/builds) and the status badge can be seen in the [README](../../README.md) of this repo.
+The latest Travis builds for HarvestCCode can be seen [here](https://travis-ci.com/github/harvestcore/HarvestCCode/builds) and the status badge can be seen in the [README](../README.md) of this repo.
 
 ## GitHub Actions
 
@@ -77,7 +77,7 @@ jobs:
       run: make lint
 ```
 
-This pipeline is only run if its content changes or the source code of the software changes. First of all setups the Golang environment and then runs the linter using the [task manager](../../Makefile) (`make`).
+This pipeline is only run if its content changes or the source code of the software changes. First of all setups the Golang environment and then runs the linter using the [task manager](../Makefile) (`make`).
 
 ```yml
 lint: deps testdeps
@@ -143,6 +143,6 @@ test: testdeps
 
 This last pipeline builds and pushes a Docker image that can be used to run the unit tests.
 
-More info about it [here](../dockerf.tests.md).
+More info about it [here](dockerf.tests.md).
 
 This image could have been used in the Travis CI pipeline for example, but I have put that idea aside for a while since I found a bunch of problems/errors when trying to setup the MongoDB service and the connection with the Docker image. I'll try to get it working in the future, though.
