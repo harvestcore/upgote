@@ -4,9 +4,6 @@ import (
 	"context"
 	"os"
 	"sync"
-	"time"
-
-	"github.com/coreos/etcd/clientv3"
 )
 
 type Variable string
@@ -56,8 +53,6 @@ type Manager struct {
 	VariablePool map[string]string
 	Context      context.Context
 	CancelFunc   context.CancelFunc
-	Client       *clientv3.Client
-	KV           clientv3.KV
 }
 
 var manager *Manager
@@ -68,34 +63,12 @@ func GetManager() *Manager {
 		lock.Lock()
 		defer lock.Unlock()
 
-		var etcd3Host = os.Getenv(string(HCC_MONGO_PORT))
-
-		if etcd3Host == "" {
-			// Default one
-			etcd3Host = string(HCC_DEFAULT_ETCD3_HOST)
-		}
-
-		context, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		client, _ := clientv3.New(clientv3.Config{
-			DialTimeout: 2 * time.Second,
-			Endpoints:   []string{etcd3Host},
-		})
-
 		manager = &Manager{
 			VariablePool: make(map[string]string),
-			Context:      context,
-			CancelFunc:   cancel,
-			Client:       client,
-			KV:           clientv3.NewKV(client),
 		}
 	}
 
 	return manager
-}
-
-// Close Closes the etcd manager
-func (manager *Manager) Close() {
-	manager.CancelFunc()
 }
 
 // GetVariable Returns the requested variable.
@@ -103,15 +76,7 @@ func (manager *Manager) GetVariable(variable Variable) string {
 	var output = manager.VariablePool[string(variable)]
 
 	if output == "" {
-		data, err := manager.KV.Get(manager.Context, string(variable))
-
-		if err == nil {
-			for _, ev := range data.Kvs {
-				output = string(ev.Value)
-			}
-		} else {
-			output = os.Getenv(string(variable))
-		}
+		output = os.Getenv(string(variable))
 
 		if output == "" {
 			output = GetDefault(variable)
