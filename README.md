@@ -1,6 +1,6 @@
 # HarvestCCode
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![CI](https://github.com/harvestcore/HarvestCCode/workflows/Tests/badge.svg) ![Lint](https://github.com/harvestcore/HarvestCCode/workflows/Go%20linter/badge.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![CI](https://github.com/harvestcore/HarvestCCode/workflows/Tests/badge.svg) ![Lint](https://github.com/harvestcore/HarvestCCode/workflows/Go%20linter/badge.svg) [![Build Status](https://travis-ci.com/harvestcore/HarvestCCode.svg?branch=master)](https://travis-ci.com/harvestcore/HarvestCCode)
 
 ---
 
