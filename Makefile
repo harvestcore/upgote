@@ -18,7 +18,7 @@ install:
 build:
 	go build ./src...
 
-lint:
+lint: deps testdeps
 	go vet ./src...
 
 clean:

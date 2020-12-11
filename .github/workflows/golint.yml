@@ -29,8 +29,5 @@ jobs:
       with:
         go-version: '1.15.4'
 
-    - name: Install deps
-      run: make deps
-
     - name: Go linter
       run: make lint
