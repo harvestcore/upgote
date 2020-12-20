@@ -40,24 +40,25 @@ func (item *Item) Find(criteria map[string]interface{}) *FindResponse {
 func (item *Item) InsertOne(element map[string]interface{}) *InsertResponse {
 	res, err := item.Collection().InsertOne(Ctx(), element)
 	length := 0
-	status := false
 	items := make([]interface{}, 0)
 
 	if err == nil {
 		length = 1
-		status = true
+		items = append(items, res)
 	}
 
 	return &InsertResponse{
-		Status: status,
+		Status: err == nil,
 		Length: length,
-		Items:  append(items, res),
+		Items:  items,
 	}
 }
 
 // InsertMany Inserts multiple elements in the current collection
 func (item *Item) InsertMany(elements []map[string]interface{}) InsertResponse {
 	toInsert := make([]interface{}, 0)
+	lenght := 0
+	items := make([]interface{}, 0)
 
 	for _, element := range elements {
 		toInsert = append(toInsert, element)
@@ -65,10 +66,15 @@ func (item *Item) InsertMany(elements []map[string]interface{}) InsertResponse {
 
 	res, err := item.Collection().InsertMany(Ctx(), toInsert)
 
+	if err == nil {
+		lenght = len(res.InsertedIDs)
+		items = res.InsertedIDs
+	}
+
 	return InsertResponse{
 		Status: err == nil,
-		Length: len(res.InsertedIDs),
-		Items:  res.InsertedIDs,
+		Length: lenght,
+		Items:  items,
 	}
 }
 
@@ -80,16 +86,14 @@ func (item *Item) Update(criteria map[string]interface{}, updated map[string]int
 
 	res, err := item.Collection().UpdateOne(Ctx(), criteria, updateQuery)
 	var modified, matched = 0, 0
-	status := false
 
 	if err == nil {
-		status = true
 		modified = int(res.ModifiedCount)
 		matched = int(res.MatchedCount)
 	}
 
 	return &UpdateResponse{
-		Status:   status,
+		Status:   err == nil,
 		Matched:  matched,
 		Modified: modified,
 	}
