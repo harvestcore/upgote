@@ -10,8 +10,10 @@ import (
 	"github.com/harvestcore/HarvestCCode/src/db"
 )
 
+// Connotation The connotation of the log message
 type Connotation string
 
+// Connotation types
 const (
 	Info    Connotation = "INFO"
 	Warning Connotation = "WARNING"
@@ -108,7 +110,7 @@ func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) 
 	var logger = getLogger()
 	var _log = NewLog(connotation, from, to, message)
 
-	if _log != nil {
+	if logger != nil && _log != nil {
 		var _message = message + "__from__" + from.String() + "__to__" + to.String()
 
 		// Add log message to local text file
