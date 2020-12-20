@@ -10,13 +10,12 @@ import (
 )
 
 func TestLogCreation(t *testing.T) {
-	var niluuid uuid.UUID
 	var msg = "yeet"
 
 	var a = uuid.New()
 	var b = uuid.New()
 
-	var l = log.NewLog(log.Error, a, b, msg)
+	var l = log.NewLog(log.Error, msg, a, b)
 	assert.NotNil(t, l, "Log creation return nil with all parameters set")
 	assert.Equal(t, l.From, a, "Mismatch 'from' UUID")
 	assert.Equal(t, l.To, b, "Mismatch 'to' UUID")
@@ -24,12 +23,11 @@ func TestLogCreation(t *testing.T) {
 	assert.NotNil(t, l.ID, "Created log does not have ID")
 	assert.NotNil(t, l.Datetime, "Created log does not have Datetime")
 
-	l = log.NewLog(log.Error, niluuid, uuid.New(), msg)
-	assert.Nil(t, l, "Log creation did not return nil when 'from' is a null UUID")
-
-	l = log.NewLog(log.Error, uuid.New(), niluuid, msg)
-	assert.Nil(t, l, "Log creation did not return nil when 'to' is a null UUID")
-
-	l = log.NewLog(log.Error, niluuid, niluuid, msg)
-	assert.Nil(t, l, "Log creation did not return nil when both UUID are null")
+	l = log.NewLog(log.Error, msg, uuid.Nil, uuid.Nil)
+	assert.NotNil(t, l, "Log creation return nil with all parameters set")
+	assert.Equal(t, l.From, uuid.Nil, "Mismatch 'from' UUID")
+	assert.Equal(t, l.To, uuid.Nil, "Mismatch 'to' UUID")
+	assert.Equal(t, l.Message, msg, "Mismatch message")
+	assert.NotNil(t, l.ID, "Created log does not have ID")
+	assert.NotNil(t, l.Datetime, "Created log does not have Datetime")
 }

@@ -31,13 +31,7 @@ type Log struct {
 }
 
 // NewLog Creates a new Log
-func NewLog(connotation Connotation, from uuid.UUID, to uuid.UUID, message string) *Log {
-	var null uuid.UUID
-
-	if from == null || to == null {
-		return nil
-	}
-
+func NewLog(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) *Log {
 	return &Log{
 		Connotation: connotation,
 		Datetime:    time.Now(),
@@ -108,10 +102,17 @@ func (logger *Logger) Stop() {
 // Add Adds a new log message
 func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) {
 	var logger = getLogger()
-	var _log = NewLog(connotation, from, to, message)
+	var _log = NewLog(connotation, message, from, to)
 
 	if logger != nil && _log != nil {
-		var _message = message + "__from__" + from.String() + "__to__" + to.String()
+		var _message = message
+		if from != uuid.Nil {
+			_message += "__from__" + from.String()
+		}
+
+		if to != uuid.Nil {
+			_message += "__to__" + to.String()
+		}
 
 		// Add log message to local text file
 		switch connotation {
@@ -126,4 +127,9 @@ func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) 
 		// Add log message to database
 		logger.Item.InsertOne(_log.serialize())
 	}
+}
+
+// AddSimple Adds a new simple log message
+func AddSimple(connotation Connotation, message string) {
+	Add(connotation, message, uuid.Nil, uuid.Nil)
 }
