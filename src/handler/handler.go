@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-co-op/gocron"
 	"github.com/harvestcore/HarvestCCode/src/event"
+	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
@@ -24,6 +25,8 @@ func NewHandler(timeout int) *Handler {
 		return nil
 	}
 
+	log.AddSimple(log.Info, "Created handler.")
+
 	return &Handler{
 		Timeout:    timeout,
 		Lock:       false,
@@ -41,6 +44,8 @@ func (h *Handler) Run() {
 
 // StartHandlingEvents Start the process of handling events, aka run the scheduler
 func (h *Handler) StartHandlingEvents() {
+	log.AddSimple(log.Info, "Start handling events.")
+
 	h.Scheduler.StartAsync()
 	h.Scheduler.Every(uint64(h.Timeout / 2)).Seconds().Do(h.Run)
 }
@@ -48,6 +53,8 @@ func (h *Handler) StartHandlingEvents() {
 // StopHandlingEvents Stop the handling process
 func (h *Handler) StopHandlingEvents() {
 	if h.Scheduler != nil {
+		log.AddSimple(log.Info, "Stop handling events.")
+
 		h.Scheduler.Clear()
 	}
 }

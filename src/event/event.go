@@ -3,6 +3,7 @@ package event
 import (
 	"github.com/google/uuid"
 
+	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
@@ -24,12 +25,16 @@ func NewEvent(from uuid.UUID, to uuid.UUID, eventType utils.EventType, action st
 		return nil
 	}
 
+	var id = uuid.New()
+
 	if d == nil {
 		d = make(map[interface{}]interface{}, 0)
+
+		log.AddSimple(log.Warning, "Created event "+id.String()+" without data.")
 	}
 
 	return &Event{
-		ID:     uuid.New(),
+		ID:     id,
 		From:   from,
 		To:     to,
 		Type:   eventType,

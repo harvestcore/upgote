@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
+	"github.com/harvestcore/HarvestCCode/src/log"
 )
 
 type Updater struct {
@@ -26,6 +27,7 @@ type Updater struct {
 // NewUpdater Creates a new Updater
 func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) *Updater {
 	if len(schema) == 0 {
+		log.AddSimple(log.Error, "Updater schema is empty.")
 		return nil
 	}
 
@@ -36,10 +38,14 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 
 	url, err := url.ParseRequestURI(source)
 	if err != nil {
+		log.AddSimple(log.Error, "Updater URL is incorrect.")
+
 		return nil
 	}
 
 	if method != "GET" && method != "POST" {
+		log.AddSimple(log.Error, "Updater method is not GET or POST.")
+
 		return nil
 	}
 
@@ -112,12 +118,20 @@ func (u *Updater) FetchData() map[string]interface{} {
 					// Decode the body
 					unmarshalErr := json.Unmarshal(responseBody, &dat)
 
-					if unmarshalErr == nil {
-						return dat
+					if unmarshalErr != nil {
+						log.Add(log.Error, "Data parsing error. ["+u.Method+" "+u.Source+"]", u.ID, uuid.Nil)
 					}
+
+					return dat
 				}
+			} else {
+				log.Add(log.Error, "Request response error. ["+u.Method+" "+u.Source+"]", u.ID, uuid.Nil)
 			}
+		} else {
+			log.Add(log.Error, "Request creation error. ["+u.Method+" "+u.Source+"]", u.ID, uuid.Nil)
 		}
+	} else {
+		log.Add(log.Error, "Body parsing error. [POST "+u.Source+"]", u.ID, uuid.Nil)
 	}
 
 	return dat
@@ -125,6 +139,8 @@ func (u *Updater) FetchData() map[string]interface{} {
 
 // Run Create the scheduler and start running the background taks
 func (u *Updater) Run() {
+	log.Add(log.Info, "Running updater.", u.ID, uuid.Nil)
+
 	u.Scheduler = gocron.NewScheduler(time.UTC)
 	u.Scheduler.StartAsync()
 
