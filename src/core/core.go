@@ -67,6 +67,29 @@ func (c *Core) CreateUpdater(collection string, schema map[string]interface{}, i
 	return uuid.Nil
 }
 
+// StopUpdater Stops an existing updater and removes it.
+func (c *Core) StopUpdater(updater uuid.UUID) bool {
+	var u = c.Updaters[updater]
+
+	if u == nil {
+		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
+
+		return false
+	}
+
+	// Stop the fetching process
+	u.Reference.Stop()
+
+	// Set pointer to null. (GC will free this memory)
+	u.Reference = nil
+
+	// Remove entry in the map
+	delete(c.Updaters, updater)
+
+	log.AddSimple(log.Info, "Updater "+updater.String()+" removed.")
+	return true
+}
+
 func (c *Core) UpdateData() {
 
 }
