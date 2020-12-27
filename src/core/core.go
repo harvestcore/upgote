@@ -67,6 +67,22 @@ func (c *Core) CreateUpdater(collection string, schema map[string]interface{}, i
 	return uuid.Nil
 }
 
+// UpdateUpdater Updates an existing updater.
+func (c *Core) UpdateUpdater(updater uuid.UUID, data *updater.Updater) bool {
+	var u = c.Updaters[updater]
+
+	if u == nil {
+		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
+
+		return false
+	}
+
+	u.Reference.Update(data)
+
+	log.AddSimple(log.Info, "Updater "+updater.String()+" updated.")
+	return true
+}
+
 // StopUpdater Stops an existing updater and removes it.
 func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	var u = c.Updaters[updater]

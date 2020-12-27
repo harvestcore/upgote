@@ -84,6 +84,40 @@ func (u *Updater) GetClient() (client *http.Client) {
 	return
 }
 
+// Update Updates the current updater data
+func (u *Updater) Update(data *Updater) {
+	// Stop the fetching process
+	u.Stop()
+
+	// Check possible values
+	if &data.Interval != nil {
+		u.Interval = data.Interval
+	}
+
+	if data.Method != "" && (data.Method == "GET" || data.Method == "POST") {
+		u.Method = data.Method
+	}
+
+	if data.Source != "" {
+		u.Source = data.Source
+	}
+
+	if data.Schema != nil {
+		u.Schema = data.Schema
+	}
+
+	if data.RequestBody != nil {
+		u.RequestBody = data.RequestBody
+	}
+
+	if &data.Timeout != nil {
+		u.Timeout = data.Timeout
+	}
+
+	// Run the fetching process again
+	u.Run()
+}
+
 // FetchData Fetches the data from the source
 func (u *Updater) FetchData() map[string]interface{} {
 	var requestBody []byte
