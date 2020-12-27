@@ -1,13 +1,13 @@
 package core
 
 import (
-	"fmt"
 	"net"
 	"sync"
 
 	"github.com/cenkalti/rpc2"
 	"github.com/google/uuid"
 
+	"github.com/harvestcore/HarvestCCode/src/db"
 	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/updater"
@@ -15,8 +15,6 @@ import (
 )
 
 var lock = &sync.Mutex{}
-
-type Reply int
 
 // UpdaterMap Maps the updater reference with its collection
 type UpdaterMap struct {
@@ -62,8 +60,7 @@ func GetCore() *Core {
 		}
 
 		core = &Core{
-			ID:       id,
-			Updaters: make(map[uuid.UUID]*UpdaterMap, 0),
+			ID: id,
 
 			// RPC
 			client:     client,
@@ -103,21 +100,21 @@ func (c *Core) CreateUpdater(collection string, schema map[string]interface{}, i
 	return uuid.Nil
 }
 
-// UpdateUpdater Updates an existing updater.
-func (c *Core) UpdateUpdater(updater uuid.UUID, data *updater.Updater) bool {
-	var u = c.Updaters[updater]
+// // UpdateUpdater Updates an existing updater.
+// func (c *Core) UpdateUpdater(updater uuid.UUID, data *updater.Updater) bool {
+// 	var u = c.Updaters[updater]
 
-	if u == nil {
-		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
+// 	if u == nil {
+// 		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
 
-		return false
-	}
+// 		return false
+// 	}
 
-	u.Reference.Update(data)
+// 	u.Reference.Update(data)
 
-	log.AddSimple(log.Info, "Updater "+updater.String()+" updated.")
-	return true
-}
+// 	log.AddSimple(log.Info, "Updater "+updater.String()+" updated.")
+// 	return true
+// }
 
 // StopUpdater Stops an existing updater and removes it.
 func (c *Core) StopUpdater(updater uuid.UUID) bool {
@@ -142,12 +139,10 @@ func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	return true
 }
 
-func (c *Core) UpdateData() {
-
-}
-
-func (c *Core) StoreData() {
-
+// StoreData Stores the given data in the given collection
+func (c *Core) StoreData(from uuid.UUID, data map[string]interface{}) {
+	item := &db.Item{CollectionName: c.Updaters[from].Collection}
+	item.InsertOne(data)
 }
 
 func (c *Core) FetchData() {
@@ -160,7 +155,14 @@ func (c *Core) SendEvent() {
 
 func registerFunctions(client *rpc2.Client) {
 	client.Handle("HandleCoreEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
-		fmt.Print("RECEIVED CORE EVENT")
+		switch utils.EventType(e.Type) {
+		case utils.CreateUpdater:
+			// GetCore().CreateUpdater()
+		case utils.RemoveUpdater:
+			// GetCore().StopUpdater()
+		case utils.StoreData:
+			GetCore().StoreData(e.From, e.Data)
+		}
 		return nil
 	})
 }

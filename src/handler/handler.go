@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net"
 	"sync"
 	"time"
@@ -17,11 +16,6 @@ import (
 
 // API API type
 type API int
-
-type Component struct {
-	Client *rpc2.Client
-	ID     uuid.UUID
-}
 
 var lock = &sync.Mutex{}
 
@@ -111,20 +105,18 @@ func (h *Handler) HandleEvents() {
 		} else {
 			event := h.EventQueue[0]
 			h.EventQueue = h.EventQueue[1:]
-
+			var reply utils.Reply
 			evtType := utils.EventType(event.Type)
 
 			switch evtType {
-			case utils.Store:
-				fmt.Println("Store")
-			case utils.Fetch:
-				fmt.Println("Fetch")
-			case utils.Update:
-				fmt.Println("Update")
-			case utils.APIsend:
-				fmt.Println("APIsend")
-			case utils.APIreceive:
-				fmt.Println("APIreceive")
+			case utils.CreateUpdater:
+			case utils.RemoveUpdater:
+			case utils.StoreData:
+				h.coreClient.Call("HandleCoreEvent", event, &reply)
+			case utils.API:
+				h.apiClient.Call("HandleAPIEvent", event, &reply)
+			case utils.UpdateUpdater:
+				h.updaters[event.From].Call("HandleUpdaterEvent", event, &reply)
 			}
 		}
 	}
