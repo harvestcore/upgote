@@ -2,14 +2,26 @@ package handler
 
 import (
 	"fmt"
+	"net"
 	"sync"
 	"time"
 
+	"github.com/cenkalti/rpc2"
 	"github.com/go-co-op/gocron"
+	"github.com/google/uuid"
+
 	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
 )
+
+// API API type
+type API int
+
+type Component struct {
+	Client *rpc2.Client
+	ID     uuid.UUID
+}
 
 var lock = &sync.Mutex{}
 
@@ -19,6 +31,14 @@ type Handler struct {
 	Timeout    int
 	Scheduler  *gocron.Scheduler
 	Lock       bool
+
+	// RPC
+	server   *rpc2.Server
+	listener *net.Listener
+
+	updaters   map[uuid.UUID]*rpc2.Client
+	apiClient  *rpc2.Client
+	coreClient *rpc2.Client
 }
 
 var handler *Handler
@@ -29,13 +49,30 @@ func GetHandler() *Handler {
 		lock.Lock()
 		defer lock.Unlock()
 
-		log.AddSimple(log.Info, "Created handler.")
+		server := rpc2.NewServer()
+		registerFunctions(server)
+
+		listener, err := net.Listen("tcp", ":50125")
+
+		if err != nil {
+			log.AddSimple(log.Error, "Error listening on port 50125")
+		}
+
+		go server.Accept(listener)
+
 		handler = &Handler{
 			Timeout:    1,
 			Lock:       false,
 			EventQueue: make([]event.Event, 0),
 			Scheduler:  gocron.NewScheduler(time.UTC),
+
+			// RPC2
+			server:   server,
+			listener: &listener,
+			updaters: make(map[uuid.UUID]*rpc2.Client, 0),
 		}
+
+		log.AddSimple(log.Info, "Created handler.")
 	}
 
 	return handler
@@ -96,15 +133,49 @@ func (h *Handler) HandleEvents() {
 }
 
 // ClearEventQueue Clears all the queued events
-func (h *Handler) ClearEventQueue() {
+func (h *Handler) ClearEventQueue() error {
 	h.EventQueue = h.EventQueue[:0]
+
+	return nil
 }
 
-// QueueEvent Queues a new event
-func (h *Handler) QueueEvent(e event.Event) {
-	h.EventQueue = append(h.EventQueue, e)
-}
+// EVENTS
 
-func (h *Handler) SendEvent() {
+func registerFunctions(server *rpc2.Server) {
+	server.Handle("QueueEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
+		handler = GetHandler()
+		handler.EventQueue = append(handler.EventQueue, e)
 
+		return nil
+	})
+
+	server.Handle("RegisterComponent", func(client *rpc2.Client, args *utils.RegisterComponentArgs, reply *utils.Reply) error {
+		handler = GetHandler()
+
+		if args.ComponentType == "UPDATER" {
+			handler.updaters[args.ID] = client
+		} else if args.ComponentType == "CORE" {
+			handler.coreClient = client
+		} else if args.ComponentType == "API" {
+			handler.apiClient = client
+		}
+
+		log.AddSimple(log.Info, "Registered "+args.ComponentType+" component with ID "+args.ID.String())
+		return nil
+	})
+
+	server.Handle("UnregisterComponent", func(client *rpc2.Client, args *utils.RegisterComponentArgs, reply *utils.Reply) error {
+		handler = GetHandler()
+
+		if args.ComponentType == "UPDATER" {
+			delete(handler.updaters, args.ID)
+		} else if args.ComponentType == "CORE" {
+			handler.coreClient = nil
+		} else if args.ComponentType == "API" {
+			handler.apiClient = nil
+		}
+
+		log.AddSimple(log.Info, "Unregistered "+args.ComponentType+" component with ID "+args.ID.String())
+		return nil
+	})
 }
