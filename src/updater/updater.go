@@ -3,14 +3,19 @@ package updater
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/cenkalti/rpc2"
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
+	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
+	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
 type Updater struct {
@@ -22,6 +27,10 @@ type Updater struct {
 	RequestBody map[string]interface{}
 	Timeout     int
 	Scheduler   *gocron.Scheduler
+
+	// RPC
+	client     *rpc2.Client
+	connection *net.Conn
 }
 
 // NewUpdater Creates a new Updater
@@ -54,14 +63,36 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		_timeout = timeout
 	}
 
+	id := uuid.New()
+
+	connection, err := net.Dial("tcp", ":50125")
+
+	if err != nil {
+		log.AddSimple(log.Error, "Could not dial port 50125")
+	}
+
+	client := rpc2.NewClient(connection)
+	registerFunctions(client)
+	go client.Run()
+
+	var r utils.Reply
+	client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
+
+	if &r != nil {
+		log.AddSimple(log.Error, "Could not register Core component")
+	}
+
 	return &Updater{
 		Schema:      schema,
 		Interval:    _interval,
 		Source:      url.String(),
-		ID:          uuid.New(),
+		ID:          id,
 		Method:      method,
 		RequestBody: requestBody,
 		Timeout:     _timeout,
+
+		client:     client,
+		connection: &connection,
 	}
 }
 
@@ -184,4 +215,11 @@ func (u *Updater) Run() {
 // Stop Clears all the background tasks
 func (u *Updater) Stop() {
 	u.Scheduler.Clear()
+}
+
+func registerFunctions(client *rpc2.Client) {
+	client.Handle("HandleUpdaterEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
+		fmt.Print("RECEIVED Updater EVENT")
+		return nil
+	})
 }
