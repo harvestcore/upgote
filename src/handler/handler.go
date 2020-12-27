@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/go-co-op/gocron"
@@ -10,6 +11,9 @@ import (
 	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
+var lock = &sync.Mutex{}
+
+// Handler Event handler
 type Handler struct {
 	EventQueue []event.Event
 	Timeout    int
@@ -17,22 +21,24 @@ type Handler struct {
 	Lock       bool
 }
 
-// NewHandler Creates a new Handler
-func NewHandler(timeout int) *Handler {
-	var null int
+var handler *Handler
 
-	if timeout == null {
-		return nil
+// GetHandler Returns the only instance of the Handler
+func GetHandler() *Handler {
+	if handler == nil {
+		lock.Lock()
+		defer lock.Unlock()
+
+		log.AddSimple(log.Info, "Created handler.")
+		handler = &Handler{
+			Timeout:    1,
+			Lock:       false,
+			EventQueue: make([]event.Event, 0),
+			Scheduler:  gocron.NewScheduler(time.UTC),
+		}
 	}
 
-	log.AddSimple(log.Info, "Created handler.")
-
-	return &Handler{
-		Timeout:    timeout,
-		Lock:       false,
-		EventQueue: make([]event.Event, 0),
-		Scheduler:  gocron.NewScheduler(time.UTC),
-	}
+	return handler
 }
 
 // Run Run the handling if the lock is available and the queue has events to process
@@ -89,6 +95,12 @@ func (h *Handler) HandleEvents() {
 	h.Lock = false
 }
 
+// ClearEventQueue Clears all the queued events
+func (h *Handler) ClearEventQueue() {
+	h.EventQueue = h.EventQueue[:0]
+}
+
+// QueueEvent Queues a new event
 func (h *Handler) QueueEvent(e event.Event) {
 	h.EventQueue = append(h.EventQueue, e)
 }

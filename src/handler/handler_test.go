@@ -13,33 +13,18 @@ import (
 )
 
 func TestHandlerCreation(t *testing.T) {
-	var nullTimeout int
-	var timeout int = 1
-
-	var h = handler.NewHandler(
-		timeout,
-	)
+	var h = handler.GetHandler()
 
 	assert.NotNil(t, h, "Handler creation failed with all parameters set")
-	assert.Equal(t, h.Timeout, timeout, "Mismatch timeout")
+	assert.Equal(t, h.Timeout, 1, "Mismatch timeout")
 	assert.Equal(t, h.Lock, false, "Mismatch lock")
 	assert.NotNil(t, h.Scheduler, "Scheduler not created")
 	assert.NotNil(t, h.EventQueue, "Nil QueueEvent")
 	assert.Equal(t, len(h.EventQueue), 0, "QueueEvent is not empty")
-
-	h = handler.NewHandler(
-		nullTimeout,
-	)
-	assert.Nil(t, h, "Updater created without schema")
 }
 
 func TestHandlerSchedulerCreation(t *testing.T) {
-	var timeout int = 1
-
-	var h = handler.NewHandler(
-		timeout,
-	)
-
+	var h = handler.GetHandler()
 	assert.NotNil(t, h, "Handler creation failed with all parameters set")
 
 	h.StartHandlingEvents()
@@ -47,13 +32,8 @@ func TestHandlerSchedulerCreation(t *testing.T) {
 }
 
 func TestHandlerSchedulerEvents(t *testing.T) {
-	var timeout int = 1
-
-	var h = handler.NewHandler(
-		timeout,
-	)
-
-	assert.NotNil(t, h, "Handler creation failed with all parameters set")
+	var h = handler.GetHandler()
+	assert.NotNil(t, h, "Handler creation failed")
 
 	h.StartHandlingEvents()
 	assert.NotNil(t, h.Scheduler, "Nil Scheduler after StartHandlingEvents")
@@ -76,18 +56,15 @@ func TestHandlerSchedulerEvents(t *testing.T) {
 
 	h.QueueEvent(*e1)
 	h.QueueEvent(*e2)
-
 	assert.Equal(t, len(h.EventQueue), 2, "QueueEvent does not have 2 events")
+
+	h.ClearEventQueue()
+	assert.Equal(t, len(h.EventQueue), 0, "QueueEvent is not empty")
 }
 
 func TestHandlerSchedulerHandleEvents(t *testing.T) {
-	var timeout int = 1
-
-	var h = handler.NewHandler(
-		timeout,
-	)
-
-	assert.NotNil(t, h, "Handler creation failed with all parameters set")
+	var h = handler.GetHandler()
+	assert.NotNil(t, h, "Handler creation failed")
 
 	h.StartHandlingEvents()
 	assert.NotNil(t, h.Scheduler, "Nil Scheduler after StartHandlingEvents")
