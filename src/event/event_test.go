@@ -11,11 +11,11 @@ import (
 
 func TestEventCreation(t *testing.T) {
 	var niluuid uuid.UUID
-	var nildata map[interface{}]interface{}
+	var nildata map[string]interface{}
 
 	var from = uuid.New()
 	var to = uuid.New()
-	var data = make(map[interface{}]interface{}, 0)
+	var data = make(map[string]interface{}, 0)
 
 	var e = event.NewEvent(
 		from,

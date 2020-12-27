@@ -13,11 +13,11 @@ type Event struct {
 	To     uuid.UUID
 	Type   utils.EventType
 	Action string
-	Data   map[interface{}]interface{}
+	Data   map[string]interface{}
 }
 
 // NewEvent Creates a new event
-func NewEvent(from uuid.UUID, to uuid.UUID, eventType utils.EventType, action string, data map[interface{}]interface{}) *Event {
+func NewEvent(from uuid.UUID, to uuid.UUID, eventType utils.EventType, action string, data map[string]interface{}) *Event {
 	var null uuid.UUID
 	var d = data
 
@@ -28,7 +28,7 @@ func NewEvent(from uuid.UUID, to uuid.UUID, eventType utils.EventType, action st
 	var id = uuid.New()
 
 	if d == nil {
-		d = make(map[interface{}]interface{}, 0)
+		d = make(map[string]interface{}, 0)
 
 		log.AddSimple(log.Warning, "Created event "+id.String()+" without data.")
 	}

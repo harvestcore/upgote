@@ -63,7 +63,7 @@ func TestHandlerSchedulerEvents(t *testing.T) {
 		uuid.New(),
 		utils.Store,
 		"test",
-		make(map[interface{}]interface{}, 0),
+		make(map[string]interface{}, 0),
 	)
 
 	e2 := event.NewEvent(
@@ -71,7 +71,7 @@ func TestHandlerSchedulerEvents(t *testing.T) {
 		uuid.New(),
 		utils.Store,
 		"test",
-		make(map[interface{}]interface{}, 0),
+		make(map[string]interface{}, 0),
 	)
 
 	h.QueueEvent(*e1)
@@ -97,7 +97,7 @@ func TestHandlerSchedulerHandleEvents(t *testing.T) {
 		uuid.New(),
 		utils.Store,
 		"test",
-		make(map[interface{}]interface{}, 0),
+		make(map[string]interface{}, 0),
 	)
 
 	e2 := event.NewEvent(
@@ -105,7 +105,7 @@ func TestHandlerSchedulerHandleEvents(t *testing.T) {
 		uuid.New(),
 		utils.Store,
 		"test",
-		make(map[interface{}]interface{}, 0),
+		make(map[string]interface{}, 0),
 	)
 
 	h.QueueEvent(*e1)
