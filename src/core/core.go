@@ -1,15 +1,22 @@
 package core
 
 import (
+	"fmt"
+	"net"
 	"sync"
 
+	"github.com/cenkalti/rpc2"
 	"github.com/google/uuid"
 
+	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/updater"
+	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
 var lock = &sync.Mutex{}
+
+type Reply int
 
 // UpdaterMap Maps the updater reference with its collection
 type UpdaterMap struct {
@@ -19,7 +26,12 @@ type UpdaterMap struct {
 
 // Core Main core of the software
 type Core struct {
+	ID       uuid.UUID
 	Updaters map[uuid.UUID]*UpdaterMap
+
+	// RPC
+	client     *rpc2.Client
+	connection *net.Conn
 }
 
 var core *Core
@@ -30,8 +42,32 @@ func GetCore() *Core {
 		lock.Lock()
 		defer lock.Unlock()
 
+		id := uuid.New()
+
+		connection, err := net.Dial("tcp", ":50125")
+
+		if err != nil {
+			log.AddSimple(log.Error, "Could not dial port 50125")
+		}
+
+		client := rpc2.NewClient(connection)
+		registerFunctions(client)
+		go client.Run()
+
+		var r utils.Reply
+		client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
+
+		if &r != nil {
+			log.AddSimple(log.Error, "Could not register Core component")
+		}
+
 		core = &Core{
+			ID:       id,
 			Updaters: make(map[uuid.UUID]*UpdaterMap, 0),
+
+			// RPC
+			client:     client,
+			connection: &connection,
 		}
 	}
 
@@ -118,10 +154,13 @@ func (c *Core) FetchData() {
 
 }
 
-func (c *Core) HandleEvent() {
+func (c *Core) SendEvent() {
 
 }
 
-func (c *Core) SendEvent() {
-
+func registerFunctions(client *rpc2.Client) {
+	client.Handle("HandleCoreEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
+		fmt.Print("RECEIVED CORE EVENT")
+		return nil
+	})
 }
