@@ -139,15 +139,16 @@ func (h *Handler) HandleEvents() {
 }
 
 // ClearEventQueue Clears all the queued events
-func (h *Handler) ClearEventQueue() error {
+func (h *Handler) ClearEventQueue() {
 	h.EventQueue = h.EventQueue[:0]
-
-	return nil
 }
 
 // EVENTS
 
+// registerFunctions Register the functions that will be available for the other processes.
 func registerFunctions(server *rpc2.Server) {
+
+	// Add a new event to the events pool
 	server.Handle("QueueEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
 		handler = GetHandler()
 		handler.EventQueue = append(handler.EventQueue, e)
@@ -155,6 +156,8 @@ func registerFunctions(server *rpc2.Server) {
 		return nil
 	})
 
+	// Used to register all the components (or processes) that will be managed by this handler.
+	// There are only three types: Updater, Core and API
 	server.Handle("RegisterComponent", func(client *rpc2.Client, args *utils.RegisterComponentArgs, reply *utils.Reply) error {
 		handler = GetHandler()
 
@@ -170,6 +173,8 @@ func registerFunctions(server *rpc2.Server) {
 		return nil
 	})
 
+	// Used to unregister the components (or processes) that are managed by this handler.
+	// There are only three types: Updater, Core and API
 	server.Handle("UnregisterComponent", func(client *rpc2.Client, args *utils.RegisterComponentArgs, reply *utils.Reply) error {
 		handler = GetHandler()
 
