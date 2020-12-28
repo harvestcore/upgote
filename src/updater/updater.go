@@ -3,7 +3,6 @@ package updater
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -96,12 +95,10 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	}
 }
 
-func (u *Updater) SendUpdate() {
-
-}
-
-func (u *Updater) HandleEvent() {
-
+// SendUpdate Issues an event to update the data
+func (u *Updater) SendUpdate(data map[string]interface{}) {
+	var reply utils.Reply
+	u.client.Call("QueueEvent", event.NewEvent(u.ID, uuid.Nil, utils.StoreData, "", data), &reply)
 }
 
 // GetClient Returns the client configured with the timeout inverval
@@ -116,33 +113,34 @@ func (u *Updater) GetClient() (client *http.Client) {
 }
 
 // Update Updates the current updater data
-func (u *Updater) Update(data *Updater) {
+func (u *Updater) Update(data map[string]interface{}) {
 	// Stop the fetching process
 	u.Stop()
 
 	// Check possible values
-	if &data.Interval != nil {
-		u.Interval = data.Interval
+	if data["interval"] != nil {
+		u.Interval = data["interval"].(int)
 	}
 
-	if data.Method != "" && (data.Method == "GET" || data.Method == "POST") {
-		u.Method = data.Method
+	method := data["method"]
+	if method != "" && (method == "GET" || method == "POST") {
+		u.Method = method.(string)
 	}
 
-	if data.Source != "" {
-		u.Source = data.Source
+	if data["source"] != "" {
+		u.Source = data["source"].(string)
 	}
 
-	if data.Schema != nil {
-		u.Schema = data.Schema
+	if data["schema"] != nil {
+		u.Schema = data["schema"].(map[string]interface{})
 	}
 
-	if data.RequestBody != nil {
-		u.RequestBody = data.RequestBody
+	if data["requestBody"] != nil {
+		u.RequestBody = data["requestBody"].(map[string]interface{})
 	}
 
-	if &data.Timeout != nil {
-		u.Timeout = data.Timeout
+	if data["timeout"] != nil {
+		u.Timeout = data["timeout"].(int)
 	}
 
 	// Run the fetching process again
@@ -150,7 +148,7 @@ func (u *Updater) Update(data *Updater) {
 }
 
 // FetchData Fetches the data from the source
-func (u *Updater) FetchData() map[string]interface{} {
+func (u *Updater) FetchData() {
 	var requestBody []byte
 	var requestBodyErr error
 	var body bytes.Buffer
@@ -187,7 +185,7 @@ func (u *Updater) FetchData() map[string]interface{} {
 						log.Add(log.Error, "Data parsing error. ["+u.Method+" "+u.Source+"]", u.ID, uuid.Nil)
 					}
 
-					return dat
+					u.SendUpdate(dat)
 				}
 			} else {
 				log.Add(log.Error, "Request response error. ["+u.Method+" "+u.Source+"]", u.ID, uuid.Nil)
@@ -198,8 +196,6 @@ func (u *Updater) FetchData() map[string]interface{} {
 	} else {
 		log.Add(log.Error, "Body parsing error. [POST "+u.Source+"]", u.ID, uuid.Nil)
 	}
-
-	return dat
 }
 
 // Run Create the scheduler and start running the background taks
@@ -217,9 +213,15 @@ func (u *Updater) Stop() {
 	u.Scheduler.Clear()
 }
 
+// registerFunctions Register the functions that will be available for the other processes.
 func registerFunctions(client *rpc2.Client) {
-	client.Handle("HandleUpdaterEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
-		fmt.Print("RECEIVED Updater EVENT")
+	client.Handle("HandleUpdaterEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
+		if e.Type == utils.UpdateUpdater {
+			ref := e.Data["reference"].(*Updater)
+			if ref != nil {
+				ref.Update(e.Data["reference"].(map[string]interface{}))
+			}
+		}
 		return nil
 	})
 }

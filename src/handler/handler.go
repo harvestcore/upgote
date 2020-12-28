@@ -110,6 +110,7 @@ func (h *Handler) HandleEvents() {
 
 			switch evtType {
 			case utils.CreateUpdater:
+			case utils.UpdateUpdater:
 			case utils.RemoveUpdater:
 			case utils.StoreData:
 				if h.coreClient != nil {
@@ -123,7 +124,7 @@ func (h *Handler) HandleEvents() {
 				} else {
 					log.NewLog(log.Error, "API client does not exists.", event.From, event.To)
 				}
-			case utils.UpdateUpdater:
+			case utils.Updater:
 				updaterClient := h.updaters[event.From]
 				if updaterClient != nil {
 					updaterClient.Call("HandleUpdaterEvent", event, &reply)
@@ -149,9 +150,9 @@ func (h *Handler) ClearEventQueue() {
 func registerFunctions(server *rpc2.Server) {
 
 	// Add a new event to the events pool
-	server.Handle("QueueEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
+	server.Handle("QueueEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
 		handler = GetHandler()
-		handler.EventQueue = append(handler.EventQueue, e)
+		handler.EventQueue = append(handler.EventQueue, *e)
 
 		return nil
 	})

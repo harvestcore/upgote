@@ -100,22 +100,6 @@ func (c *Core) CreateUpdater(collection string, schema map[string]interface{}, i
 	return uuid.Nil
 }
 
-// // UpdateUpdater Updates an existing updater.
-// func (c *Core) UpdateUpdater(updater uuid.UUID, data *updater.Updater) bool {
-// 	var u = c.Updaters[updater]
-
-// 	if u == nil {
-// 		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
-
-// 		return false
-// 	}
-
-// 	u.Reference.Update(data)
-
-// 	log.AddSimple(log.Info, "Updater "+updater.String()+" updated.")
-// 	return true
-// }
-
 // StopUpdater Stops an existing updater and removes it.
 func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	var u = c.Updaters[updater]
@@ -154,10 +138,21 @@ func (c *Core) SendEvent() {
 }
 
 func registerFunctions(client *rpc2.Client) {
-	client.Handle("HandleCoreEvent", func(client *rpc2.Client, e event.Event, reply *utils.Reply) error {
+	client.Handle("HandleCoreEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
 		switch utils.EventType(e.Type) {
 		case utils.CreateUpdater:
 			// GetCore().CreateUpdater()
+		case utils.UpdateUpdater:
+			var reply utils.Reply
+			c := GetCore()
+
+			data := make(map[string]interface{})
+			data["data"] = e.Data
+			data["reference"] = c.Updaters[e.To].Reference
+			e.Data = data
+			e.Type = utils.Updater
+
+			c.client.Call("QueueEvent", e, &reply)
 		case utils.RemoveUpdater:
 			// GetCore().StopUpdater()
 		case utils.StoreData:

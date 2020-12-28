@@ -7,5 +7,6 @@ const (
 	RemoveUpdater EventType = "RemoveUpdater"
 	UpdateUpdater EventType = "UpdateUpdater"
 	StoreData     EventType = "StoreData"
+	Updater       EventType = "Updater"
 	API           EventType = "API"
 )
