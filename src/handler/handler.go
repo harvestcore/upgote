@@ -112,11 +112,25 @@ func (h *Handler) HandleEvents() {
 			case utils.CreateUpdater:
 			case utils.RemoveUpdater:
 			case utils.StoreData:
-				h.coreClient.Call("HandleCoreEvent", event, &reply)
+				if h.coreClient != nil {
+					h.coreClient.Call("HandleCoreEvent", event, &reply)
+				} else {
+					log.NewLog(log.Error, "Core client does not exists.", event.From, event.To)
+				}
 			case utils.API:
-				h.apiClient.Call("HandleAPIEvent", event, &reply)
+				if h.coreClient != nil {
+					h.apiClient.Call("HandleAPIEvent", event, &reply)
+				} else {
+					log.NewLog(log.Error, "API client does not exists.", event.From, event.To)
+				}
 			case utils.UpdateUpdater:
-				h.updaters[event.From].Call("HandleUpdaterEvent", event, &reply)
+				updaterClient := h.updaters[event.From]
+				if updaterClient != nil {
+					updaterClient.Call("HandleUpdaterEvent", event, &reply)
+				} else {
+					log.NewLog(log.Error, "Updater client does not exists.", event.From, event.To)
+				}
+
 			}
 		}
 	}
