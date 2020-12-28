@@ -20,7 +20,7 @@ func TestEventCreation(t *testing.T) {
 	var e = event.NewEvent(
 		from,
 		to,
-		utils.Store,
+		utils.StoreData,
 		"action",
 		data,
 	)
@@ -29,7 +29,7 @@ func TestEventCreation(t *testing.T) {
 	assert.NotNil(t, e.ID, "ID is nil")
 	assert.Equal(t, e.From, from, "Mismatch 'from' UUID")
 	assert.Equal(t, e.To, to, "Mismatch 'to' UUID")
-	assert.Equal(t, e.Type, utils.EventType("store"), "Mismatch event type")
+	assert.Equal(t, e.Type, utils.EventType("StoreData"), "Mismatch event type")
 	assert.Equal(t, e.Action, "action", "Mismatch action")
 	assert.NotNil(t, e.Data, "Data map is nil")
 	assert.Equal(t, len(e.Data), 0, "Data map length is not 0")
@@ -37,7 +37,7 @@ func TestEventCreation(t *testing.T) {
 	e = event.NewEvent(
 		niluuid,
 		to,
-		utils.Store,
+		utils.StoreData,
 		"action",
 		data,
 	)
@@ -47,7 +47,7 @@ func TestEventCreation(t *testing.T) {
 	e = event.NewEvent(
 		from,
 		niluuid,
-		utils.Store,
+		utils.StoreData,
 		"action",
 		data,
 	)
@@ -57,7 +57,7 @@ func TestEventCreation(t *testing.T) {
 	e = event.NewEvent(
 		from,
 		to,
-		utils.Store,
+		utils.StoreData,
 		"action",
 		nildata,
 	)

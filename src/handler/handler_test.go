@@ -41,7 +41,7 @@ func TestHandlerSchedulerEvents(t *testing.T) {
 	e1 := event.NewEvent(
 		uuid.New(),
 		uuid.New(),
-		utils.Store,
+		utils.StoreData,
 		"test",
 		make(map[string]interface{}, 0),
 	)
@@ -49,13 +49,14 @@ func TestHandlerSchedulerEvents(t *testing.T) {
 	e2 := event.NewEvent(
 		uuid.New(),
 		uuid.New(),
-		utils.Store,
+		utils.StoreData,
 		"test",
 		make(map[string]interface{}, 0),
 	)
 
-	h.QueueEvent(*e1)
-	h.QueueEvent(*e2)
+	h.EventQueue = append(h.EventQueue, *e1)
+	h.EventQueue = append(h.EventQueue, *e2)
+
 	assert.Equal(t, len(h.EventQueue), 2, "QueueEvent does not have 2 events")
 
 	h.ClearEventQueue()
@@ -72,7 +73,7 @@ func TestHandlerSchedulerHandleEvents(t *testing.T) {
 	e1 := event.NewEvent(
 		uuid.New(),
 		uuid.New(),
-		utils.Store,
+		utils.StoreData,
 		"test",
 		make(map[string]interface{}, 0),
 	)
@@ -80,13 +81,13 @@ func TestHandlerSchedulerHandleEvents(t *testing.T) {
 	e2 := event.NewEvent(
 		uuid.New(),
 		uuid.New(),
-		utils.Store,
+		utils.StoreData,
 		"test",
 		make(map[string]interface{}, 0),
 	)
 
-	h.QueueEvent(*e1)
-	h.QueueEvent(*e2)
+	h.EventQueue = append(h.EventQueue, *e1)
+	h.EventQueue = append(h.EventQueue, *e2)
 	assert.Equal(t, len(h.EventQueue), 2, "QueueEvent does not have 2 events")
 
 	h.StartHandlingEvents()
