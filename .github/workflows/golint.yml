@@ -12,6 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ['1.14', '1.15', '1.15.4', '1.15.6']
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
@@ -24,10 +27,10 @@ jobs:
       with:
         path: ${{ env.GOPATH }}/src/github.com/${{ github.repository }}
 
-    - name: Setup Go v1.15.4
+    - name: Setup Go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.15.4'
+        go-version: ${{ matrix.go }}
 
     - name: Go linter
       run: make lint
