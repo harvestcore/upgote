@@ -72,22 +72,29 @@ func GetCore() *Core {
 }
 
 // CreateUpdater Creates a new updater and stores a pointer to it.
-func (c *Core) CreateUpdater(collection string, schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) uuid.UUID {
+func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 	for _, value := range c.Updaters {
-		if value.Collection == collection {
+		if value.Collection == data["collection"].(string) {
 			log.AddSimple(log.Error, "Database already in use.")
 			log.AddSimple(log.Error, "Updater not created.")
 			return uuid.Nil
 		}
 	}
 
-	var updater = updater.NewUpdater(schema, interval, source, method, requestBody, timeout)
+	var updater = updater.NewUpdater(
+		data["schema"].(map[string]interface{}),
+		data["interval"].(int),
+		data["source"].(string),
+		data["method"].(string),
+		data["requestBody"].(map[string]interface{}),
+		data["interval"].(int),
+	)
 
 	if updater != nil {
 		log.AddSimple(log.Info, "Updater created with ID "+updater.ID.String())
 		c.Updaters[updater.ID] = &UpdaterMap{
 			Reference:  updater,
-			Collection: collection,
+			Collection: data["collection"].(string),
 		}
 
 		// Start fetching data
@@ -129,19 +136,11 @@ func (c *Core) StoreData(from uuid.UUID, data map[string]interface{}) {
 	item.InsertOne(data)
 }
 
-func (c *Core) FetchData() {
-
-}
-
-func (c *Core) SendEvent() {
-
-}
-
 func registerFunctions(client *rpc2.Client) {
 	client.Handle("HandleCoreEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
 		switch utils.EventType(e.Type) {
 		case utils.CreateUpdater:
-			// GetCore().CreateUpdater()
+			GetCore().CreateUpdater(e.Data)
 		case utils.UpdateUpdater:
 			var reply utils.Reply
 			c := GetCore()
@@ -154,10 +153,11 @@ func registerFunctions(client *rpc2.Client) {
 
 			c.client.Call("QueueEvent", e, &reply)
 		case utils.RemoveUpdater:
-			// GetCore().StopUpdater()
+			GetCore().StopUpdater(e.Data["updater"].(uuid.UUID))
 		case utils.StoreData:
 			GetCore().StoreData(e.From, e.Data)
 		}
+
 		return nil
 	})
 }
