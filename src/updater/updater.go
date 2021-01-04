@@ -12,6 +12,8 @@ import (
 	"github.com/cenkalti/rpc2"
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
+
+	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
@@ -64,10 +66,11 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 
 	id := uuid.New()
 
-	connection, err := net.Dial("tcp", ":50125")
+	port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
+	connection, err := net.Dial("tcp", ":"+port)
 
 	if err != nil {
-		log.AddSimple(log.Error, "Could not dial port 50125")
+		log.AddSimple(log.Error, "Could not dial port "+port)
 	}
 
 	client := rpc2.NewClient(connection)

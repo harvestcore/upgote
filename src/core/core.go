@@ -7,6 +7,7 @@ import (
 	"github.com/cenkalti/rpc2"
 	"github.com/google/uuid"
 
+	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/db"
 	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
@@ -42,10 +43,11 @@ func GetCore() *Core {
 
 		id := uuid.New()
 
-		connection, err := net.Dial("tcp", ":50125")
+		port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
+		connection, err := net.Dial("tcp", ":"+port)
 
 		if err != nil {
-			log.AddSimple(log.Error, "Could not dial port 50125")
+			log.AddSimple(log.Error, "Could not dial port "+port)
 		}
 
 		client := rpc2.NewClient(connection)

@@ -9,6 +9,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 
+	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/event"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
@@ -46,10 +47,11 @@ func GetHandler() *Handler {
 		server := rpc2.NewServer()
 		registerFunctions(server)
 
-		listener, err := net.Listen("tcp", ":50125")
+		port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
+		listener, err := net.Listen("tcp", ":"+port)
 
 		if err != nil {
-			log.AddSimple(log.Error, "Error listening on port 50125")
+			log.AddSimple(log.Error, "Error listening on port "+port)
 		}
 
 		go server.Accept(listener)

@@ -16,6 +16,7 @@ const (
 	HCC_MONGO_URI      Variable = "HCC_MONGO_URI"
 	HCC_LOG_FILE       Variable = "HCC_LOG_FILE"
 	HCC_ETCD3_HOST     Variable = "HCC_ETCD3_HOST"
+	HCC_RPC_PORT       Variable = "HCC_RPC_PORT"
 
 	// Default variables
 	HCC_DEFAULT_MONGO_PORT     Variable = "27017"
@@ -24,6 +25,7 @@ const (
 	HCC_DEFAULT_MONGO_URI      Variable = "mongodb://localhost:27017"
 	HCC_DEFAULT_LOG_FILE       Variable = "/var/log/harvestccode/logfile"
 	HCC_DEFAULT_ETCD3_HOST     Variable = "127.0.0.1:2379"
+	HCC_DEFAULT_RPC_PORT       Variable = "50125"
 )
 
 // GetDefault Returns the default value of a variable
@@ -41,6 +43,8 @@ func GetDefault(variable Variable) string {
 		return string(HCC_DEFAULT_LOG_FILE)
 	case HCC_ETCD3_HOST:
 		return string(HCC_DEFAULT_ETCD3_HOST)
+	case HCC_RPC_PORT:
+		return string(HCC_DEFAULT_RPC_PORT)
 	}
 
 	return ""
