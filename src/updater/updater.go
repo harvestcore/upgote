@@ -15,6 +15,7 @@ import (
 
 	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/event"
+	"github.com/harvestcore/HarvestCCode/src/handler"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/utils"
 )
@@ -65,23 +66,30 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	}
 
 	id := uuid.New()
+	var client *rpc2.Client
+
+	// Wake up handler
+	handler.GetHandler()
 
 	port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
 	connection, err := net.Dial("tcp", ":"+port)
 
 	if err != nil {
 		log.AddSimple(log.Error, "Could not dial port "+port)
-	}
+	} else {
+		client := rpc2.NewClient(connection)
+		registerFunctions(client)
 
-	client := rpc2.NewClient(connection)
-	registerFunctions(client)
-	go client.Run()
+		var r utils.Reply
+		if client != nil {
+			client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
+		}
 
-	var r utils.Reply
-	client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
+		if client == nil || &r != nil {
+			log.AddSimple(log.Error, "Could not register Core component")
+		}
 
-	if &r != nil {
-		log.AddSimple(log.Error, "Could not register Core component")
+		go client.Run()
 	}
 
 	return &Updater{

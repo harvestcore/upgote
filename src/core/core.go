@@ -10,6 +10,7 @@ import (
 	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/db"
 	"github.com/harvestcore/HarvestCCode/src/event"
+	"github.com/harvestcore/HarvestCCode/src/handler"
 	"github.com/harvestcore/HarvestCCode/src/log"
 	"github.com/harvestcore/HarvestCCode/src/updater"
 	"github.com/harvestcore/HarvestCCode/src/utils"
@@ -42,23 +43,27 @@ func GetCore() *Core {
 		defer lock.Unlock()
 
 		id := uuid.New()
+		var client *rpc2.Client
+
+		// Wake up handler
+		handler.GetHandler()
 
 		port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
 		connection, err := net.Dial("tcp", ":"+port)
 
 		if err != nil {
 			log.AddSimple(log.Error, "Could not dial port "+port)
-		}
+		} else {
+			client := rpc2.NewClient(connection)
+			registerFunctions(client)
+			go client.Run()
 
-		client := rpc2.NewClient(connection)
-		registerFunctions(client)
-		go client.Run()
+			var r utils.Reply
+			client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
 
-		var r utils.Reply
-		client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
-
-		if &r != nil {
-			log.AddSimple(log.Error, "Could not register Core component")
+			if &r != nil {
+				log.AddSimple(log.Error, "Could not register Core component")
+			}
 		}
 
 		core = &Core{
