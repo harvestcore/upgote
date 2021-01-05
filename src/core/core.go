@@ -67,7 +67,8 @@ func GetCore() *Core {
 		}
 
 		core = &Core{
-			ID: id,
+			ID:       id,
+			Updaters: make(map[uuid.UUID]*UpdaterMap),
 
 			// RPC
 			client:     client,
@@ -94,7 +95,7 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 		data["source"].(string),
 		data["method"].(string),
 		data["requestBody"].(map[string]interface{}),
-		data["interval"].(int),
+		data["timeout"].(int),
 	)
 
 	if updater != nil {
