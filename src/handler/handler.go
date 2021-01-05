@@ -52,9 +52,9 @@ func GetHandler() *Handler {
 
 		if err != nil {
 			log.AddSimple(log.Error, "Error listening on port "+port)
+		} else {
+			go server.Accept(listener)
 		}
-
-		go server.Accept(listener)
 
 		handler = &Handler{
 			Timeout:    1,
