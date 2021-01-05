@@ -97,3 +97,30 @@ func TestUpdaterCreation(t *testing.T) {
 	assert.NotNil(t, u, "Updater not created without timeout")
 	assert.Equal(t, u.Timeout, 15, "Timeout is not 15")
 }
+
+func TestUpdaterUpdate(t *testing.T) {
+	var schema = make(map[string]interface{})
+	schema["cool"] = "test"
+
+	var u = updater.NewUpdater(
+		schema,
+		10,
+		"https://google.es",
+		"GET",
+		schema,
+		20,
+	)
+
+	schema["cool"] = "test2"
+	schema["test2"] = "cool"
+
+	var data = make(map[string]interface{})
+	data["schema"] = schema
+	data["interval"] = 60
+	data["source"] = "https://google.com"
+	data["method"] = "POST"
+	data["requestBody"] = make(map[string]interface{})
+	data["timeout"] = 30
+
+	u.Update(data)
+}

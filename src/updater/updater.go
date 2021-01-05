@@ -221,7 +221,9 @@ func (u *Updater) Run() {
 
 // Stop Clears all the background tasks
 func (u *Updater) Stop() {
-	u.Scheduler.Clear()
+	if u.Scheduler != nil {
+		u.Scheduler.Clear()
+	}
 }
 
 // registerFunctions Register the functions that will be available for the other processes.
