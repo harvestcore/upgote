@@ -42,4 +42,4 @@ jobs:
 
     - name: Show log
       if: ${{ always() }}
-      run: cat ./harvestccode.log
+      run: cat ~/harvestccode.log

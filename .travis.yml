@@ -13,4 +13,4 @@ script:
   - make test
 
 after_failure:
-  - cat harvestccode.log
+  - cat ~/harvestccode.log
