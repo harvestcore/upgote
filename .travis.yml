@@ -11,3 +11,6 @@ services:
 
 script:
   - make test
+
+after_failure:
+  - cat /var/log/harvestccode/logfile

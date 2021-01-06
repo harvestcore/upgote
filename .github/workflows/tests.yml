@@ -39,3 +39,6 @@ jobs:
 
     - name: Run tests
       run: make test
+
+    - name: Show log
+      run: cat /var/log/harvestccode/logfile
