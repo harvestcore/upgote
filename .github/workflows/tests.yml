@@ -41,4 +41,5 @@ jobs:
       run: make test
 
     - name: Show log
+      if: ${{ always() }}
       run: cat /var/log/harvestccode/logfile
