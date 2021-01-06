@@ -104,7 +104,6 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		if client == nil || &r != nil {
 			log.AddSimple(log.Error, "Could not register Updater component")
 		}
-
 	}
 
 	return updater
