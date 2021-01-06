@@ -4,7 +4,7 @@ run:
 	go run src/main.go
 
 test: testdeps
-	go test ./src... -v -count=1
+	go test ./src... -v -count=1 -timeout 30s
 
 deps:
 	go get ./src...
