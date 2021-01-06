@@ -105,9 +105,6 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 			Collection: data["collection"].(string),
 		}
 
-		// Start fetching data
-		updater.Run()
-
 		return updater.ID
 	}
 

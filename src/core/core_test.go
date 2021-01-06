@@ -9,7 +9,6 @@ import (
 )
 
 func TestCoreCreation(t *testing.T) {
-
 	var c = core.GetCore()
 
 	assert.NotNil(t, c, "Core creation failed")

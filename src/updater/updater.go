@@ -66,7 +66,7 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	}
 
 	id := uuid.New()
-	var client *rpc2.Client
+	var updater *Updater
 
 	// Wake up handler
 	handler.GetHandler()
@@ -78,7 +78,23 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		log.AddSimple(log.Error, "Could not dial port "+port)
 	} else {
 		client := rpc2.NewClient(connection)
-		registerFunctions(client)
+
+		updater = &Updater{
+			Schema:      schema,
+			Interval:    _interval,
+			Source:      url.String(),
+			ID:          id,
+			Method:      method,
+			RequestBody: requestBody,
+			Timeout:     _timeout,
+
+			client:     client,
+			connection: &connection,
+		}
+
+		updater.registerFunctions(client)
+
+		go client.Run()
 
 		var r utils.Reply
 		if client != nil {
@@ -86,24 +102,12 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		}
 
 		if client == nil || &r != nil {
-			log.AddSimple(log.Error, "Could not register Core component")
+			log.AddSimple(log.Error, "Could not register Updater component")
 		}
 
-		go client.Run()
 	}
 
-	return &Updater{
-		Schema:      schema,
-		Interval:    _interval,
-		Source:      url.String(),
-		ID:          id,
-		Method:      method,
-		RequestBody: requestBody,
-		Timeout:     _timeout,
-
-		client:     client,
-		connection: &connection,
-	}
+	return updater
 }
 
 // SendUpdate Issues an event to update the data
@@ -211,7 +215,7 @@ func (u *Updater) FetchData() {
 
 // Run Create the scheduler and start running the background taks
 func (u *Updater) Run() {
-	log.Add(log.Info, "Running updater.", u.ID, uuid.Nil)
+	log.Add(log.Info, "Running updater ", u.ID, uuid.Nil)
 
 	u.Scheduler = gocron.NewScheduler(time.UTC)
 	u.Scheduler.StartAsync()
@@ -227,14 +231,18 @@ func (u *Updater) Stop() {
 }
 
 // registerFunctions Register the functions that will be available for the other processes.
-func registerFunctions(client *rpc2.Client) {
+func (u *Updater) registerFunctions(client *rpc2.Client) {
 	client.Handle("HandleUpdaterEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
-		if e.Type == utils.UpdateUpdater {
-			ref := e.Data["reference"].(*Updater)
-			if ref != nil {
-				ref.Update(e.Data["reference"].(map[string]interface{}))
+		if e.To == u.ID {
+			if e.Type == utils.UpdateUpdater {
+				u.Update(e.Data["data"].(map[string]interface{}))
+			}
+
+			if e.Type == utils.StartUpdater {
+				u.Run()
 			}
 		}
+
 		return nil
 	})
 }
