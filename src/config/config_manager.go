@@ -87,7 +87,7 @@ func (manager *Manager) GetVariable(variable Variable) string {
 		}
 
 		if output != "" {
-			manager.VariablePool[string(variable)] = string(variable)
+			manager.VariablePool[string(variable)] = string(output)
 		}
 	}
 
