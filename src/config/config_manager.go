@@ -23,7 +23,7 @@ const (
 	HCC_DEFAULT_MONGO_HOST     Variable = "localhost"
 	HCC_DEFAULT_MONGO_DATABASE Variable = "harvestccode"
 	HCC_DEFAULT_MONGO_URI      Variable = "mongodb://localhost:27017"
-	HCC_DEFAULT_LOG_FILE       Variable = "/var/log/harvestccode/logfile"
+	HCC_DEFAULT_LOG_FILE       Variable = "./harvestccode.log"
 	HCC_DEFAULT_ETCD3_HOST     Variable = "127.0.0.1:2379"
 	HCC_DEFAULT_RPC_PORT       Variable = "50125"
 )

@@ -9,12 +9,8 @@ go:
 services:
   - mongodb
 
-before_script:
-  - sudo mkdir /var/log/harvestccode && sudo touch /var/log/harvestccode/logifile
-  - sudo chown travis /var/log/harvestccode/logifile
-
 script:
   - make test
 
 after_failure:
-  - cat /var/log/harvestccode/logfile
+  - cat harvestccode.log
