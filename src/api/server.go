@@ -47,7 +47,10 @@ func GetServer() *Server {
 // Start Starts listening and serving requests
 func (s *Server) Start() {
 	log.AddSimple(log.Info, "HTTP Server started, running on address "+s.server.Addr)
-	s.server.ListenAndServe()
+
+	if err := s.server.ListenAndServe(); err != nil {
+		log.AddSimple(log.Error, "Error running API server listening on port "+s.server.Addr)
+	}
 }
 
 // registerHandlers Registers all the router handlers
