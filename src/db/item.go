@@ -29,6 +29,10 @@ func (item *Item) Find(criteria map[string]interface{}) *FindResponse {
 		err = cursor.All(Ctx(), &results)
 	}
 
+	if results == nil {
+		results = make([]map[string]interface{}, 0)
+	}
+
 	return &FindResponse{
 		Status: err == nil,
 		Length: len(results),
