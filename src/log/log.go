@@ -68,8 +68,8 @@ var (
 	errorLogger   *log.Logger
 )
 
-// getLogger Returns the Logger instance
-func getLogger() *Logger {
+// GetLogger Returns the Logger instance
+func GetLogger() *Logger {
 	if logger == nil {
 		logFilePath := config.GetManager().GetVariable(config.HCC_LOG_FILE)
 		file, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
@@ -101,7 +101,7 @@ func (logger *Logger) Stop() {
 
 // Add Adds a new log message
 func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) {
-	var logger = getLogger()
+	var logger = GetLogger()
 	var _log = NewLog(connotation, message, from, to)
 
 	if logger != nil && _log != nil {

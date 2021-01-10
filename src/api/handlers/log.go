@@ -1,0 +1,45 @@
+package api
+
+import (
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/harvestcore/HarvestCCode/src/config"
+	"github.com/harvestcore/HarvestCCode/src/log"
+)
+
+// Log Log endpoint.
+func Log(router *mux.Router) {
+	router.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
+		logFilePath := config.GetManager().GetVariable(config.HCC_LOG_FILE)
+		file, _ := ioutil.ReadFile(logFilePath)
+
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write(file)
+	}).Methods("GET")
+
+	router.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
+		type Request struct {
+			Quantity int `json:"quantity"`
+		}
+
+		var request Request
+		var payload []byte
+
+		json.NewDecoder(r.Body).Decode(&request)
+
+		response := log.GetLogger().Item.Find(make(map[string]interface{}))
+
+		if request.Quantity != 0 {
+			response.Items = response.Items[response.Length-request.Quantity:]
+			response.Length = request.Quantity
+		}
+
+		payload, _ = json.Marshal(response)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(payload)
+	}).Methods("POST")
+}
