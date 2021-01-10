@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	handlers "github.com/harvestcore/HarvestCCode/src/api/handlers"
 	"github.com/harvestcore/HarvestCCode/src/config"
 	"github.com/harvestcore/HarvestCCode/src/log"
 )
@@ -53,7 +54,8 @@ func (s *Server) Start() {
 	}
 }
 
-// registerHandlers Registers all the router handlers
+// registerHandlers Registers all the server handlers
 func registerHandlers(router *mux.Router) {
-
+	handlers.Healthcheck(router)
+	handlers.Status(router)
 }
