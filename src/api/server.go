@@ -60,4 +60,5 @@ func registerHandlers(router *mux.Router) {
 	handlers.Status(router)
 	handlers.Log(router)
 	handlers.Data(router)
+	handlers.Updater(router)
 }

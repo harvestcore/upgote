@@ -21,14 +21,14 @@ import (
 )
 
 type Updater struct {
-	Schema      map[string]interface{}
-	Interval    int
-	Source      string
-	ID          uuid.UUID
-	Method      string
-	RequestBody map[string]interface{}
-	Timeout     int
-	Scheduler   *gocron.Scheduler
+	Schema      map[string]interface{} `json:"schema"`
+	Interval    int                    `json:"interval"`
+	Source      string                 `json:"source"`
+	ID          uuid.UUID              `json:"id"`
+	Method      string                 `json:"method"`
+	RequestBody map[string]interface{} `json:"requestBody"`
+	Timeout     int                    `json:"timeout"`
+	scheduler   *gocron.Scheduler
 
 	// RPC
 	client     *rpc2.Client
@@ -216,16 +216,16 @@ func (u *Updater) FetchData() {
 func (u *Updater) Run() {
 	log.Add(log.Info, "Running updater ", u.ID, uuid.Nil)
 
-	u.Scheduler = gocron.NewScheduler(time.UTC)
-	u.Scheduler.StartAsync()
+	u.scheduler = gocron.NewScheduler(time.UTC)
+	u.scheduler.StartAsync()
 
-	u.Scheduler.Every(uint64(u.Interval)).Seconds().Do(u.FetchData)
+	u.scheduler.Every(uint64(u.Interval)).Seconds().Do(u.FetchData)
 }
 
 // Stop Clears all the background tasks
 func (u *Updater) Stop() {
-	if u.Scheduler != nil {
-		u.Scheduler.Clear()
+	if u.scheduler != nil {
+		u.scheduler.Clear()
 	}
 }
 

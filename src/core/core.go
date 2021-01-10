@@ -112,6 +112,17 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 	return uuid.Nil
 }
 
+// UpdateUpdater Updates an updater.
+func (c *Core) UpdateUpdater(to uuid.UUID, data map[string]interface{}) {
+	var reply utils.Reply
+	d := make(map[string]interface{})
+	d["data"] = data
+	d["reference"] = c.Updaters[to].Reference
+
+	e := event.NewEvent(uuid.Nil, to, utils.UpdateUpdater, "", d)
+	c.client.Call("QueueEvent", e, &reply)
+}
+
 // StopUpdater Stops an existing updater and removes it.
 func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	var u = c.Updaters[updater]
@@ -147,16 +158,7 @@ func registerFunctions(client *rpc2.Client) {
 		case utils.CreateUpdater:
 			GetCore().CreateUpdater(e.Data)
 		case utils.UpdateUpdater:
-			var reply utils.Reply
-			c := GetCore()
-
-			data := make(map[string]interface{})
-			data["data"] = e.Data
-			data["reference"] = c.Updaters[e.To].Reference
-			e.Data = data
-			e.Type = utils.Updater
-
-			c.client.Call("QueueEvent", e, &reply)
+			GetCore().UpdateUpdater(e.To, e.Data)
 		case utils.RemoveUpdater:
 			GetCore().StopUpdater(e.Data["updater"].(uuid.UUID))
 		case utils.StoreData:
