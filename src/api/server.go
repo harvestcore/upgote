@@ -34,6 +34,7 @@ func GetServer() *Server {
 				Handler: router,
 				Addr:    ":" + config.GetManager().GetVariable(config.HCC_HTTP_SERVER_PORT),
 
+				// Read and write timeouts to avoid the server hang
 				ReadTimeout:  10 * time.Second,
 				WriteTimeout: 10 * time.Second,
 			},
@@ -45,8 +46,7 @@ func GetServer() *Server {
 
 // Start Starts listening and serving requests
 func (s *Server) Start() {
-	port := config.GetManager().GetVariable(config.HCC_HTTP_SERVER_PORT)
-	log.AddSimple(log.Info, "HTTP Server started, running on port "+port)
+	log.AddSimple(log.Info, "HTTP Server started, running on address "+s.server.Addr)
 	s.server.ListenAndServe()
 }
 
