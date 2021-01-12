@@ -32,12 +32,23 @@ func Log(router *mux.Router) {
 
 		response := log.GetLogger().Item.Find(make(map[string]interface{}))
 
-		if len(response.Items) > 0 && request.Quantity != 0 && request.Quantity <= response.Length {
-			response.Items = response.Items[response.Length-request.Quantity:]
-			response.Length = request.Quantity
-		}
-
 		payload, _ = json.Marshal(response)
+
+		if request.Quantity != 0 {
+			if request.Quantity > 0 && request.Quantity <= response.Length {
+				response.Items = response.Items[response.Length-request.Quantity:]
+				response.Length = request.Quantity
+
+				payload, _ = json.Marshal(response)
+			} else {
+				payload, _ = json.Marshal(map[string]interface{}{
+					"status":  false,
+					"message": "Wrong quantity value.",
+				})
+
+				w.WriteHeader(http.StatusUnprocessableEntity)
+			}
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)

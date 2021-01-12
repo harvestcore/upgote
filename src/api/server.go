@@ -15,7 +15,7 @@ var lock = &sync.Mutex{}
 
 // Server HTTP server of the software
 type Server struct {
-	server *http.Server
+	Server *http.Server
 }
 
 var server *Server
@@ -31,7 +31,7 @@ func GetServer() *Server {
 		registerHandlers(router)
 
 		server = &Server{
-			server: &http.Server{
+			Server: &http.Server{
 				Handler: router,
 				Addr:    ":" + config.GetManager().GetVariable(config.HCC_HTTP_SERVER_PORT),
 
@@ -47,10 +47,10 @@ func GetServer() *Server {
 
 // Start Starts listening and serving requests
 func (s *Server) Start() {
-	log.AddSimple(log.Info, "HTTP Server started, running on address "+s.server.Addr)
+	log.AddSimple(log.Info, "HTTP Server started, running on address "+s.Server.Addr)
 
-	if err := s.server.ListenAndServe(); err != nil {
-		log.AddSimple(log.Error, "Error running API server listening on port "+s.server.Addr)
+	if err := s.Server.ListenAndServe(); err != nil {
+		log.AddSimple(log.Error, "Error running API server listening on port "+s.Server.Addr)
 	}
 }
 
