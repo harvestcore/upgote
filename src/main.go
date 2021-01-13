@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"github.com/harvestcore/HarvestCCode/src/api"
+	"github.com/harvestcore/HarvestCCode/src/log"
 )
 
 func main() {
-	fmt.Println("HarvestCCode running")
+	log.AddSimple(log.Info, "### HarvestCCode running ###")
+
+	api := api.GetServer()
+	api.Start()
 }
