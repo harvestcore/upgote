@@ -120,7 +120,10 @@ func (c *Core) UpdateUpdater(to uuid.UUID, data map[string]interface{}) {
 	d["reference"] = c.Updaters[to].Reference
 
 	e := event.NewEvent(uuid.Nil, to, utils.UpdateUpdater, "", d)
-	c.client.Call("QueueEvent", e, &reply)
+
+	if c.client != nil {
+		c.client.Call("QueueEvent", e, &reply)
+	}
 }
 
 // StopUpdater Stops an existing updater and removes it.

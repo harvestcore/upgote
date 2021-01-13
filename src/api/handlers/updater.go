@@ -2,13 +2,24 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/harvestcore/HarvestCCode/src/core"
-	"github.com/harvestcore/HarvestCCode/src/updater"
 )
+
+type customRequest struct {
+	Schema      map[string]interface{} `json:"schema"`
+	Interval    int                    `json:"interval"`
+	Source      string                 `json:"source"`
+	ID          uuid.UUID              `json:"id"`
+	Method      string                 `json:"method"`
+	RequestBody map[string]interface{} `json:"requestBody"`
+	Timeout     int                    `json:"timeout"`
+	Collection  string                 `json:"database"`
+}
 
 // Updater Updater endpoints.
 func Updater(router *mux.Router) {
@@ -34,32 +45,42 @@ func Updater(router *mux.Router) {
 	}).Methods("GET")
 
 	router.HandleFunc("/updater", func(w http.ResponseWriter, r *http.Request) {
-		var request updater.Updater
+		var request customRequest
 		var payload []byte
 
 		json.NewDecoder(r.Body).Decode(&request)
 
-		// TODO ADD MORE CHECKS
-		if request.Source != "" {
+		if checkUpdaterParams(request) {
 			c := core.GetCore()
-			c.CreateUpdater(map[string]interface{}{
+			updaterID := c.CreateUpdater(map[string]interface{}{
 				"schema":      request.Schema,
 				"interval":    request.Interval,
 				"source":      request.Source,
 				"method":      request.Method,
 				"requestBody": request.RequestBody,
 				"timeout":     request.Timeout,
+				"collection":  request.Collection,
 			})
 
-			payload, _ = json.Marshal(map[string]interface{}{
-				"status":  true,
-				"message": "Updater created.",
-			})
+			if updaterID != uuid.Nil {
+				payload, _ = json.Marshal(map[string]interface{}{
+					"status":  true,
+					"message": "Updater created.",
+					"id":      updaterID.String(),
+				})
+			} else {
+				payload, _ = json.Marshal(map[string]interface{}{
+					"status":  false,
+					"message": "Error creating updater. Wrong parameters",
+				})
+				w.WriteHeader(http.StatusUnprocessableEntity)
+			}
 		} else {
 			payload, _ = json.Marshal(map[string]interface{}{
 				"status":  false,
-				"message": "Missing updater ID.",
+				"message": "Wrong parameters",
 			})
+			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -67,12 +88,14 @@ func Updater(router *mux.Router) {
 	}).Methods("POST")
 
 	router.HandleFunc("/updater", func(w http.ResponseWriter, r *http.Request) {
-		var request updater.Updater
+		var request customRequest
 		var payload []byte
 
 		json.NewDecoder(r.Body).Decode(&request)
 
-		if request.ID != uuid.Nil {
+		fmt.Println(request)
+
+		if request.ID != uuid.Nil || checkUpdaterParams(request) {
 			c := core.GetCore()
 			c.UpdateUpdater(request.ID, map[string]interface{}{
 				"schema":      request.Schema,
@@ -116,15 +139,26 @@ func Updater(router *mux.Router) {
 			id, err := uuid.Parse(request.ID)
 			if err != nil {
 				payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Invalid ID."})
+				w.WriteHeader(http.StatusUnprocessableEntity)
 			} else {
 				c.StopUpdater(id)
 				payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Updater removed."})
+				w.WriteHeader(http.StatusNoContent)
 			}
 		} else {
 			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing updater ID or removal not forced."})
+			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)
 	}).Methods("DELETE")
+}
+
+func checkUpdaterParams(updater customRequest) bool {
+	if len(updater.Schema) == 0 || updater.Collection == "" || updater.Schema == nil || updater.Interval <= 0 || updater.Source == "" || updater.Method == "" || updater.Timeout <= 0 {
+		return false
+	}
+
+	return true
 }
