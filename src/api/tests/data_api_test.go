@@ -36,8 +36,8 @@ func TestPostDataWithDatabaseNoQuantity(t *testing.T) {
 	json.Unmarshal(res.Body.Bytes(), &data)
 
 	assert.True(t, data["status"].(bool), "POST /data status is not true")
-	assert.Positive(t, data["length"], "POST /data length is not valid")
-	assert.Positive(t, len(data["items"].([]interface{})), "POST /data items are not valid")
+	assert.GreaterOrEqual(t, data["length"], 0.0, "POST /data length is not valid")
+	assert.GreaterOrEqual(t, len(data["items"].([]interface{})), 0, "POST /data items are not valid")
 }
 
 func TestPostDataWithWrongDatabaseNoQuantity(t *testing.T) {
@@ -56,7 +56,10 @@ func TestPostDataWithWrongDatabaseNoQuantity(t *testing.T) {
 }
 
 func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
-	req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "log", "quantity": 1}`)))
+	item := &db.Item{CollectionName: "TestPostDataWithDatabaseAndQuantity"}
+	item.InsertOne(map[string]interface{}{"test": 1})
+
+	req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "TestPostDataWithDatabaseAndQuantity", "quantity": 1}`)))
 	res := api.ExecuteTestingRequest(req)
 
 	assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
@@ -68,6 +71,8 @@ func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
 	assert.True(t, data["status"].(bool), "POST /data status is not true")
 	assert.Equal(t, data["length"], 1.0, "POST /data length is not valid")
 	assert.Equal(t, len(data["items"].([]interface{})), 1, "POST /data items are not valid")
+
+	item.Drop()
 }
 
 func TestPostDataWithDatabaseAndWrongQuantity(t *testing.T) {
@@ -85,9 +90,6 @@ func TestPostDataWithDatabaseAndWrongQuantity(t *testing.T) {
 }
 
 func TestDeleteDataWithNoDatabase(t *testing.T) {
-	// item := &db.Item{CollectionName: "__delete"}
-	// item.InsertOne(map[string]interface{}{"test": 1})
-
 	req, _ := http.NewRequest("DELETE", "/data", bytes.NewBuffer([]byte(`{}`)))
 	res := api.ExecuteTestingRequest(req)
 
