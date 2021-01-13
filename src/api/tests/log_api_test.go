@@ -32,7 +32,6 @@ func TestPostLogFileNoQuantity(t *testing.T) {
 	assert.True(t, data["status"].(bool), "POST /log status is not true")
 	assert.Positive(t, data["length"], "POST /log length is not valid")
 	assert.Positive(t, len(data["items"].([]interface{})), "POST /log items are not valid")
-
 }
 
 func TestPostLogFileWithQuantity(t *testing.T) {

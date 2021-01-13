@@ -92,6 +92,8 @@ func Updater(router *mux.Router) {
 				"status":  false,
 				"message": "Missing updater ID.",
 			})
+
+			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

@@ -24,15 +24,21 @@ func Data(router *mux.Router) {
 		if request.Database != "" {
 			item := &db.Item{CollectionName: request.Database}
 			response := item.Find(make(map[string]interface{}))
-
-			if len(response.Items) > 0 && request.Quantity != 0 && request.Quantity <= response.Length {
-				response.Items = response.Items[response.Length-request.Quantity:]
-				response.Length = request.Quantity
-			}
-
 			payload, _ = json.Marshal(response)
+
+			if request.Quantity != 0 {
+				if len(response.Items) > 0 && request.Quantity > 0 && request.Quantity <= response.Length {
+					response.Items = response.Items[response.Length-request.Quantity:]
+					response.Length = request.Quantity
+					payload, _ = json.Marshal(response)
+				} else {
+					payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database."})
+					w.WriteHeader(http.StatusUnprocessableEntity)
+				}
+			}
 		} else {
 			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database."})
+			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -56,9 +62,11 @@ func Data(router *mux.Router) {
 			payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Database removed."})
 		} else {
 			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database or removal not forced."})
+			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNoContent)
 		w.Write(payload)
 	}).Methods("DELETE")
 }
