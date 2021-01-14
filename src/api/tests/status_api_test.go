@@ -8,9 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	api "github.com/harvestcore/HarvestCCode/src/api/tests"
+	"github.com/harvestcore/HarvestCCode/src/log"
 )
 
 func TestGetHeartcheck(t *testing.T) {
+	log.AddSimple(log.Info, "@TEST # Running TestGetHeartcheck")
 	req, _ := http.NewRequest("GET", "/healthcheck", nil)
 	res := api.ExecuteTestingRequest(req)
 
@@ -21,9 +23,11 @@ func TestGetHeartcheck(t *testing.T) {
 	json.Unmarshal(res.Body.Bytes(), &data)
 
 	assert.True(t, data["status"].(bool), "GET /healthcheck status is not true")
+	log.AddSimple(log.Info, "@TEST-END # Running TestGetHeartcheck")
 }
 
 func TestGetStatus(t *testing.T) {
+	log.AddSimple(log.Info, "@TEST # Running TestGetStatus")
 	req, _ := http.NewRequest("GET", "/status", nil)
 	res := api.ExecuteTestingRequest(req)
 
@@ -36,4 +40,5 @@ func TestGetStatus(t *testing.T) {
 	assert.True(t, data["status"].(bool), "GET /status status is not true")
 	assert.GreaterOrEqual(t, data["updaters"].(float64), 0.0, "GET /status wrong updaters")
 	assert.GreaterOrEqual(t, data["events"].(float64), 0.0, "GET /status wrong events")
+	log.AddSimple(log.Info, "@TEST-END # Running TestGetStatus")
 }
