@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -92,8 +91,6 @@ func Updater(router *mux.Router) {
 		var payload []byte
 
 		json.NewDecoder(r.Body).Decode(&request)
-
-		fmt.Println(request)
 
 		if request.ID != uuid.Nil || checkUpdaterParams(request) {
 			c := core.GetCore()

@@ -30,8 +30,8 @@ func TestPostLogFileNoQuantity(t *testing.T) {
 	json.Unmarshal(res.Body.Bytes(), &data)
 
 	assert.True(t, data["status"].(bool), "POST /log status is not true")
-	assert.Positive(t, data["length"], "POST /log length is not valid")
-	assert.Positive(t, len(data["items"].([]interface{})), "POST /log items are not valid")
+	assert.GreaterOrEqual(t, data["length"], 0.0, "POST /log length is not valid")
+	assert.GreaterOrEqual(t, len(data["items"].([]interface{})), 0, "POST /log items are not valid")
 }
 
 func TestPostLogFileWithQuantity(t *testing.T) {
