@@ -101,3 +101,23 @@ func TestPutUpdateUpdater(t *testing.T) {
 	assert.True(t, data["status"].(bool), "PUT /updater status is not true")
 	log.AddSimple(log.Info, "@TEST-END # Running TestPutUpdateUpdater")
 }
+
+func TestPostStartUpdater(t *testing.T) {
+	log.AddSimple(log.Info, "@TEST # Running TestPostStartUpdater")
+	req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+	res := api.ExecuteTestingRequest(req)
+
+	var data map[string]interface{}
+	json.Unmarshal(res.Body.Bytes(), &data)
+
+	req, _ = http.NewRequest("POST", "/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+	res = api.ExecuteTestingRequest(req)
+
+	assert.Equal(t, res.Code, http.StatusOK, "POST /updater/start status code is not 200")
+	assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "PUT /updater Content type is not \"application/json\"")
+
+	json.Unmarshal(res.Body.Bytes(), &data)
+
+	assert.True(t, data["status"].(bool), "POST /updater/start status is not true")
+	log.AddSimple(log.Info, "@TEST-END # Running TestPostStartUpdater")
+}

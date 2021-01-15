@@ -150,10 +150,64 @@ func Updater(router *mux.Router) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)
 	}).Methods("DELETE")
+
+	router.HandleFunc("/updater/start", func(w http.ResponseWriter, r *http.Request) {
+		type Request struct {
+			ID string `json:"id"`
+		}
+
+		var payload []byte
+		var request Request
+
+		json.NewDecoder(r.Body).Decode(&request)
+
+		if request.ID != "" {
+			parsedID, _ := uuid.Parse(request.ID)
+
+			if parsedID != uuid.Nil {
+				c := core.GetCore()
+				status := c.StartUpdater(parsedID)
+
+				if status {
+					payload, _ = json.Marshal(map[string]interface{}{
+						"status":  true,
+						"message": "Updater started successfully.",
+					})
+				} else {
+					payload, _ = json.Marshal(map[string]interface{}{
+						"status":  false,
+						"message": "The updater does not exist.",
+					})
+					w.WriteHeader(http.StatusUnprocessableEntity)
+				}
+			} else {
+				payload, _ = json.Marshal(map[string]interface{}{
+					"status":  false,
+					"message": "Wrong ID.",
+				})
+				w.WriteHeader(http.StatusUnprocessableEntity)
+			}
+		} else {
+			payload, _ = json.Marshal(map[string]interface{}{
+				"status":  false,
+				"message": "Missing ID.",
+			})
+			w.WriteHeader(http.StatusUnprocessableEntity)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(payload)
+	}).Methods("POST")
 }
 
 func checkUpdaterParams(updater customRequest) bool {
-	if len(updater.Schema) == 0 || updater.Collection == "" || updater.Schema == nil || updater.Interval <= 0 || updater.Source == "" || updater.Method == "" || updater.Timeout <= 0 {
+	if len(updater.Schema) == 0 ||
+		updater.Collection == "" ||
+		updater.Schema == nil ||
+		updater.Interval <= 0 ||
+		updater.Source == "" ||
+		updater.Method == "" ||
+		updater.Timeout <= 0 {
 		return false
 	}
 

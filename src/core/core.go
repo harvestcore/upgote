@@ -86,6 +86,23 @@ func (c *Core) UpdateUpdater(updater uuid.UUID, data map[string]interface{}) {
 	}
 }
 
+// StartUpdater Starts an existing updater.
+func (c *Core) StartUpdater(updater uuid.UUID) bool {
+	var u = c.Updaters[updater]
+
+	if u == nil {
+		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
+
+		return false
+	}
+
+	// Stop the fetching process
+	u.Reference.Run()
+
+	log.AddSimple(log.Info, "Updater "+updater.String()+" started.")
+	return true
+}
+
 // StopUpdater Stops an existing updater and removes it.
 func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	var u = c.Updaters[updater]
