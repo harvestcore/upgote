@@ -26,6 +26,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		schema,
 		20,
+		"myDatabase",
 	)
 	assert.NotNil(t, u, "Updater creation failed with all parameters set")
 	assert.Equal(t, u.Schema, schema, "Mismatch schema")
@@ -34,6 +35,7 @@ func TestUpdaterCreation(t *testing.T) {
 	assert.Equal(t, u.Method, "GET", "Mismatch method")
 	assert.Equal(t, u.RequestBody, schema, "Mismatch requestBody")
 	assert.Equal(t, u.Timeout, 20, "Mismatch timeout")
+	assert.Equal(t, u.Collection, "myDatabase", "Mismatch collection")
 
 	u = updater.NewUpdater(
 		nilSchema,
@@ -42,6 +44,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		schema,
 		20,
+		"myDatabase",
 	)
 	assert.Nil(t, u, "Updater created without schema")
 
@@ -52,6 +55,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		schema,
 		20,
+		"myDatabase",
 	)
 	assert.NotNil(t, u, "Updater not created without interval")
 	assert.Equal(t, u.Interval, 5, "Interval is not 5")
@@ -63,6 +67,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		schema,
 		20,
+		"myDatabase",
 	)
 	assert.Nil(t, u, "Updater created without interval")
 
@@ -73,6 +78,7 @@ func TestUpdaterCreation(t *testing.T) {
 		nilMethod,
 		schema,
 		20,
+		"myDatabase",
 	)
 	assert.Nil(t, u, "Updater created without method")
 
@@ -83,6 +89,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		nilRequestBody,
 		20,
+		"myDatabase",
 	)
 	assert.NotNil(t, u, "Updater not created without requestBody")
 
@@ -93,6 +100,7 @@ func TestUpdaterCreation(t *testing.T) {
 		"GET",
 		schema,
 		nilTimeout,
+		"myDatabase",
 	)
 	assert.NotNil(t, u, "Updater not created without timeout")
 	assert.Equal(t, u.Timeout, 15, "Timeout is not 15")
@@ -109,6 +117,7 @@ func TestUpdaterUpdate(t *testing.T) {
 		"GET",
 		schema,
 		20,
+		"myDatabase",
 	)
 
 	schema["cool"] = "test2"
