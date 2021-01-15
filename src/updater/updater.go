@@ -13,6 +13,7 @@ import (
 
 	"github.com/harvestcore/HarvestCCode/src/db"
 	"github.com/harvestcore/HarvestCCode/src/log"
+	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
 type Updater struct {
@@ -84,7 +85,10 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 // SendUpdate Issues an event to update the data
 func (u *Updater) SendUpdate(data map[string]interface{}) {
 	item := &db.Item{CollectionName: u.Collection}
-	item.InsertOne(data)
+
+	matchedData := utils.MatchStructureWithSchema(data, u.Schema)
+
+	item.InsertOne(matchedData)
 }
 
 // GetClient Returns the client configured with the timeout inverval
