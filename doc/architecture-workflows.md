@@ -17,8 +17,9 @@ Main core of the software. It contains all the logic related to Updater creation
 
 Possible scenarios:
 
-- **The core receives create Updater event**: The core checks the data from the event and creates a background process that will handle that data update.
-- **The core receives data storing event**: The core checks the data from the event and stores the data.
+- **The core creates a new updater**.
+- **The core updates an existing updater**.
+- **The core removes an existing updater**.
 
 ## Updater
 
@@ -27,7 +28,7 @@ Background process that fetches the configured data.
 Possible scenarios:
 
 - **The Core creates an Updater**: The background process starts.
-- **The Updater time interval is met**: It fetches the data and then stores it.
+- **The Updater time interval is met**: The system fetches the data and then stores it.
 
 ## Log
 
@@ -35,4 +36,4 @@ Logs all operations performed across all the system.
 
 Possible scenarios:
 
-- **The Log receives an event**: It logs all the related information.
+- **The system logs an event**: The system logs all the related information.

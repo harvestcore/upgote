@@ -12,7 +12,7 @@ Since the interaction with this software will be made via a REST-API, the **user
 
 After this brief introduction you can:
 
-- Learn more about the event workflows and user journeys [here](doc/architecture-workflows.md).
+- Learn more about the workflows and user journeys [here](doc/architecture-workflows.md).
 - Check the [project roadmap](doc/roadmap.md).
 - Check its [architecture](doc/architecture.md)
 
@@ -45,15 +45,12 @@ entidad:
   - src/db/item.go
   - src/db/mongo_engine.go
   - src/db/responses.go
-  - src/event/event.go
   - src/updater/updater.go
   - src/log/log.go
-  - src/utils/eventtype.go
 test:
   - src/config/config_manager_test.go
   - src/db/item_test.go
   - src/db/mongo_engine_test.go
-  - src/event/event_test.go
   - src/updater/updater_test.go
   - src/log/log_test.go
 

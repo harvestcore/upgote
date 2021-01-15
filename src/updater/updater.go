@@ -82,7 +82,7 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	return updater
 }
 
-// SendUpdate Issues an event to update the data
+// SendUpdate Stores the fetched data
 func (u *Updater) SendUpdate(data map[string]interface{}) {
 	item := &db.Item{CollectionName: u.Collection}
 
