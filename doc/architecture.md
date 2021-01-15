@@ -5,7 +5,6 @@ The architecture of HarvestCCode is an event based one. The main reason for choo
 It has different parts that interact with each other via events. Those parts are:
 
 - **Core**: Main core of the software. It contains all the logic related to Updater creation and data storing.
-- **Handler**: It is the central part that handles all the events sent and received by the rest of the parts.
 - **Updater**: Background process that fetches the configured data and will send events as soon as it performs an update.
 - **API**: Landing place for all user requests. Handles all user requests to the system. The [framework](https://github.com/gorilla/mux) used is `Gorilla Mux`.
 - **DB**: It is the place where all the fetched data is stored. Since the data schema is unknown until it is defined by the user, the database management system is a non relational one ([MongoDB](https://www.mongodb.com/) to be precise). The driver used to connect to the Mongo server is `mongo-driver` ([this one](https://godoc.org/go.mongodb.org/mongo-driver)).

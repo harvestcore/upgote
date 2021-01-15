@@ -5,20 +5,11 @@
 
 ## API
 
-The landing place for all user requests. It handles all those requests and communicates with the Handler by sending events with all the necessary information.
+The landing place for all user requests. It communicates with the core to handles all those requests and communicates with the core.
 
 Possible scenarios:
 
-- **User performs a request to HarvestCCode**: The API handles that request and issues an event to the Handler. Finally issues a log event.
-
-## Handler
-
-Central part that handles all the events (and only events) sent and received by the rest of the parts. It contains different queues, one for each type of event.
-
-Possible scenarios:
-
-- **The handler receives an API event**: The handler forwards the event to the core. Issues back an event to the Updater if needed. Finally issues a log event.
-- **The handler receives a Updater event**: The handler forwards the event to the core. Issues back an event to the Updater if needed. Finally issues a log event.
+- **User performs a request to HarvestCCode**: The API handles that request.
 
 ## Core
 
@@ -26,8 +17,8 @@ Main core of the software. It contains all the logic related to Updater creation
 
 Possible scenarios:
 
-- **The core receives create Updater event**: The core checks the data from the event and creates a background process that will handle that data update. Finally issues a log event.
-- **The core receives data storing event**: The core checks the data from the event and stores the data. Finally issues a log event.
+- **The core receives create Updater event**: The core checks the data from the event and creates a background process that will handle that data update.
+- **The core receives data storing event**: The core checks the data from the event and stores the data.
 
 ## Updater
 
@@ -36,7 +27,7 @@ Background process that fetches the configured data.
 Possible scenarios:
 
 - **The Core creates an Updater**: The background process starts.
-- **The Updater time interval is met**: It fetches the data. Finally issues an event to the Handler.
+- **The Updater time interval is met**: It fetches the data and then stores it.
 
 ## Log
 

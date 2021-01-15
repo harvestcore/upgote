@@ -23,7 +23,7 @@ This first phase aims to create the Updater, which is the part that fetches the 
 - [Milestone: Updater](https://github.com/harvestcore/HarvestCCode/milestone/7)
   - [HU - Fetch data from time to time](https://github.com/harvestcore/HarvestCCode/issues/15)
 
-### Phase #2
+### Phase #2 [Deprecated]
 
 In this phase the Core of the software will be created, along with the Handler, which will handle all the events between the different parts of the software.
 
