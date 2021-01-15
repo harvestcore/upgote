@@ -7,7 +7,6 @@ entidad:
   - src/db/mongo_engine.go
   - src/db/responses.go
   - src/event/event.go
-  - src/handler/handler.go
   - src/updater/updater.go
   - src/log/log.go
   - src/utils/eventtype.go
@@ -16,6 +15,5 @@ test:
   - src/db/item_test.go
   - src/db/mongo_engine_test.go
   - src/event/event_test.go
-  - src/handler/handler_test.go
   - src/updater/updater_test.go
   - src/log/log_test.go

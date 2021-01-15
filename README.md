@@ -30,7 +30,6 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 - REST-API framework: [Gorilla Mux](https://github.com/gorilla/mux)
 - DBMS: [MongoDB](https://www.mongodb.com/) with the [`mongo-driver`](https://godoc.org/go.mongodb.org/mongo-driver) for Go.
 - Logs: [`log` Go package](https://golang.org/pkg/log/)
-- Communication between processes: [`rpc2` Go package](https://github.com/cenkalti/rpc2)
 - Assertions: [`testify/assert` package](https://godoc.org/github.com/stretchr/testify/assert)
 
 ---
@@ -47,7 +46,6 @@ entidad:
   - src/db/mongo_engine.go
   - src/db/responses.go
   - src/event/event.go
-  - src/handler/handler.go
   - src/updater/updater.go
   - src/log/log.go
   - src/utils/eventtype.go
@@ -56,7 +54,6 @@ test:
   - src/db/item_test.go
   - src/db/mongo_engine_test.go
   - src/event/event_test.go
-  - src/handler/handler_test.go
   - src/updater/updater_test.go
   - src/log/log_test.go
 

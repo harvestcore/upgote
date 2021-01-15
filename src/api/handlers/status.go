@@ -6,14 +6,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/harvestcore/HarvestCCode/src/core"
-	"github.com/harvestcore/HarvestCCode/src/handler"
 )
 
 // Healthcheck Healthcheck endpoint.
 func Healthcheck(router *mux.Router) {
 	router.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		data := make(map[string]interface{})
-		data["status"] = core.GetCore() != nil && handler.GetHandler() != nil
+		data["status"] = core.GetCore() != nil
 		payload, _ := json.Marshal(data)
 
 		w.Header().Set("Content-Type", "application/json")
@@ -27,14 +26,12 @@ func Status(router *mux.Router) {
 		data := make(map[string]interface{})
 
 		c := core.GetCore()
-		h := handler.GetHandler()
 
-		if c == nil || h == nil {
+		if c == nil {
 			data["status"] = false
 		} else {
 			data["status"] = true
 			data["updaters"] = len(c.Updaters)
-			data["events"] = len(h.EventQueue)
 		}
 
 		payload, _ := json.Marshal(data)
