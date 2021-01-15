@@ -29,9 +29,9 @@ type Updater struct {
 }
 
 // NewUpdater Creates a new Updater
-func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int) *Updater {
-	if len(schema) == 0 {
-		log.AddSimple(log.Error, "Updater schema is empty.")
+func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int, collection string) *Updater {
+	if schema == nil {
+		log.AddSimple(log.Error, "Updater schema is not valid.")
 		return nil
 	}
 
@@ -53,6 +53,12 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		return nil
 	}
 
+	if collection == "" {
+		log.AddSimple(log.Error, "Updater collection is empty")
+
+		return nil
+	}
+
 	var _timeout int = 15
 	if timeout > _timeout {
 		_timeout = timeout
@@ -69,6 +75,7 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 		Method:      method,
 		RequestBody: requestBody,
 		Timeout:     _timeout,
+		Collection:  collection,
 	}
 
 	return updater

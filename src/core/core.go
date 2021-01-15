@@ -59,6 +59,7 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 		data["method"].(string),
 		data["requestBody"].(map[string]interface{}),
 		data["timeout"].(int),
+		data["collection"].(string),
 	)
 
 	if updater != nil {
