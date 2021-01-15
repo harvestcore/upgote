@@ -39,6 +39,5 @@ func TestGetStatus(t *testing.T) {
 
 	assert.True(t, data["status"].(bool), "GET /status status is not true")
 	assert.GreaterOrEqual(t, data["updaters"].(float64), 0.0, "GET /status wrong updaters")
-	assert.GreaterOrEqual(t, data["events"].(float64), 0.0, "GET /status wrong events")
 	log.AddSimple(log.Info, "@TEST-END # Running TestGetStatus")
 }

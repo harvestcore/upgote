@@ -4,20 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"net/url"
 	"time"
 
-	"github.com/cenkalti/rpc2"
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 
-	"github.com/harvestcore/HarvestCCode/src/config"
-	"github.com/harvestcore/HarvestCCode/src/event"
-	"github.com/harvestcore/HarvestCCode/src/handler"
+	"github.com/harvestcore/HarvestCCode/src/db"
 	"github.com/harvestcore/HarvestCCode/src/log"
-	"github.com/harvestcore/HarvestCCode/src/utils"
 )
 
 type Updater struct {
@@ -28,11 +23,9 @@ type Updater struct {
 	Method      string                 `json:"method"`
 	RequestBody map[string]interface{} `json:"requestBody"`
 	Timeout     int                    `json:"timeout"`
-	scheduler   *gocron.Scheduler
+	Collection  string                 `json:"collection"`
 
-	// RPC
-	client     *rpc2.Client
-	connection *net.Conn
+	scheduler *gocron.Scheduler
 }
 
 // NewUpdater Creates a new Updater
@@ -68,42 +61,14 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	id := uuid.New()
 	var updater *Updater
 
-	// Wake up handler
-	handler.GetHandler()
-
-	port := config.GetManager().GetVariable(config.HCC_RPC_PORT)
-	connection, err := net.Dial("tcp", ":"+port)
-
-	if err != nil {
-		log.AddSimple(log.Error, "Could not dial port "+port)
-	} else {
-		client := rpc2.NewClient(connection)
-
-		updater = &Updater{
-			Schema:      schema,
-			Interval:    _interval,
-			Source:      url.String(),
-			ID:          id,
-			Method:      method,
-			RequestBody: requestBody,
-			Timeout:     _timeout,
-
-			client:     client,
-			connection: &connection,
-		}
-
-		updater.registerFunctions(client)
-
-		go client.Run()
-
-		var r utils.Reply
-		if client != nil {
-			client.Call("RegisterComponent", utils.RegisterComponentArgs{ComponentType: "CORE", ID: id}, &r)
-		}
-
-		if client == nil || &r != nil {
-			log.AddSimple(log.Error, "Could not register Updater component")
-		}
+	updater = &Updater{
+		Schema:      schema,
+		Interval:    _interval,
+		Source:      url.String(),
+		ID:          id,
+		Method:      method,
+		RequestBody: requestBody,
+		Timeout:     _timeout,
 	}
 
 	return updater
@@ -111,12 +76,12 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 
 // SendUpdate Issues an event to update the data
 func (u *Updater) SendUpdate(data map[string]interface{}) {
-	var reply utils.Reply
-	u.client.Call("QueueEvent", event.NewEvent(u.ID, uuid.Nil, utils.StoreData, "", data), &reply)
+	item := &db.Item{CollectionName: u.Collection}
+	item.InsertOne(data)
 }
 
 // GetClient Returns the client configured with the timeout inverval
-func (u *Updater) GetClient() (client *http.Client) {
+func (u *Updater) getClient() (client *http.Client) {
 	timeout := time.Duration(u.Timeout) * time.Second
 
 	client = &http.Client{
@@ -181,7 +146,7 @@ func (u *Updater) FetchData() {
 		if requestErr == nil {
 			// Set header content type and perform the request
 			request.Header.Set("Content-type", "application/json")
-			response, responseErr := u.GetClient().Do(request)
+			response, responseErr := u.getClient().Do(request)
 
 			if responseErr == nil {
 				// Defer the close of the body. It will be closed as soon as
@@ -227,21 +192,4 @@ func (u *Updater) Stop() {
 	if u.scheduler != nil {
 		u.scheduler.Clear()
 	}
-}
-
-// registerFunctions Register the functions that will be available for the other processes.
-func (u *Updater) registerFunctions(client *rpc2.Client) {
-	client.Handle("HandleUpdaterEvent", func(client *rpc2.Client, e *event.Event, reply *utils.Reply) error {
-		if e.To == u.ID {
-			if e.Type == utils.UpdateUpdater {
-				u.Update(e.Data["data"].(map[string]interface{}))
-			}
-
-			if e.Type == utils.StartUpdater {
-				u.Run()
-			}
-		}
-
-		return nil
-	})
 }
