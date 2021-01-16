@@ -1,6 +1,12 @@
 lenguaje: Go
 fichero_tareas: Makefile
+make: make
 entidad:
+  - src/api/handlers/data.go
+  - src/api/handlers/log.go
+  - src/api/handlers/status.go
+  - src/api/handlers/updater.go
+  - src/api/server.go
   - src/config/config_manager.go
   - src/core/core.go
   - src/db/item.go
@@ -9,6 +15,11 @@ entidad:
   - src/updater/updater.go
   - src/log/log.go
 test:
+  - src/api/tests/data_api_test.go
+  - src/api/tests/log_api_test.go
+  - src/api/tests/status_api_test.go
+  - src/api/tests/updater_api_test.go
+  - src/api/server_test.go
   - src/config/config_manager_test.go
   - src/db/item_test.go
   - src/db/mongo_engine_test.go
