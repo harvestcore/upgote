@@ -34,27 +34,20 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 
 ---
 
-## Project structure
+## Installing HarvestCCode
 
-```yml
-lenguaje: Go
-fichero_tareas: Makefile
-entidad:
-  - src/config/config_manager.go
-  - src/core/core.go
-  - src/db/item.go
-  - src/db/mongo_engine.go
-  - src/db/responses.go
-  - src/updater/updater.go
-  - src/log/log.go
-test:
-  - src/config/config_manager_test.go
-  - src/db/item_test.go
-  - src/db/mongo_engine_test.go
-  - src/updater/updater_test.go
-  - src/log/log_test.go
+This software can be installed and executed in multiple ways:
 
-```
+- By downloading this repository and running:
+  - For local testing:
+    - `make deps && make run`
+  - For local production:
+    - `make build && make start`
+- Using the available Docker image:
+  - Building it using the `Dockerfile.hcc` file.
+  - Pulling it either from [DockerHub](https://hub.docker.com/repository/docker/harvestcore/harvestccode-backend) or [GHR](https://github.com/users/harvestcore/packages/container/package/harvestccode-backend).
+  - Using the `docker-compose.yml` file available:
+    - `docker-compose build && docker-compose up`
 
 ---
 
