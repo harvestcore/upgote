@@ -139,7 +139,7 @@ func Updater(router *mux.Router) {
 				payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Invalid ID."})
 				w.WriteHeader(http.StatusUnprocessableEntity)
 			} else {
-				c.StopUpdater(id)
+				c.RemoveUpdater(id)
 				payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Updater removed."})
 				w.WriteHeader(http.StatusNoContent)
 			}
@@ -173,6 +173,54 @@ func Updater(router *mux.Router) {
 					payload, _ = json.Marshal(map[string]interface{}{
 						"status":  true,
 						"message": "Updater started successfully.",
+					})
+				} else {
+					payload, _ = json.Marshal(map[string]interface{}{
+						"status":  false,
+						"message": "The updater does not exist.",
+					})
+					w.WriteHeader(http.StatusUnprocessableEntity)
+				}
+			} else {
+				payload, _ = json.Marshal(map[string]interface{}{
+					"status":  false,
+					"message": "Wrong ID.",
+				})
+				w.WriteHeader(http.StatusUnprocessableEntity)
+			}
+		} else {
+			payload, _ = json.Marshal(map[string]interface{}{
+				"status":  false,
+				"message": "Missing ID.",
+			})
+			w.WriteHeader(http.StatusUnprocessableEntity)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(payload)
+	}).Methods("POST")
+
+	router.HandleFunc("/updater/stop", func(w http.ResponseWriter, r *http.Request) {
+		type Request struct {
+			ID string `json:"id"`
+		}
+
+		var payload []byte
+		var request Request
+
+		json.NewDecoder(r.Body).Decode(&request)
+
+		if request.ID != "" {
+			parsedID, _ := uuid.Parse(request.ID)
+
+			if parsedID != uuid.Nil {
+				c := core.GetCore()
+				status := c.StopUpdater(parsedID)
+
+				if status {
+					payload, _ = json.Marshal(map[string]interface{}{
+						"status":  true,
+						"message": "Updater stopped successfully.",
 					})
 				} else {
 					payload, _ = json.Marshal(map[string]interface{}{

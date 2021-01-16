@@ -103,8 +103,8 @@ func (c *Core) StartUpdater(updater uuid.UUID) bool {
 	return true
 }
 
-// StopUpdater Stops an existing updater and removes it.
-func (c *Core) StopUpdater(updater uuid.UUID) bool {
+// RemoveUpdater Removes an existing updater.
+func (c *Core) RemoveUpdater(updater uuid.UUID) bool {
 	var u = c.Updaters[updater]
 
 	if u == nil {
@@ -123,5 +123,22 @@ func (c *Core) StopUpdater(updater uuid.UUID) bool {
 	delete(c.Updaters, updater)
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" removed.")
+	return true
+}
+
+// StopUpdater Stops an existing updater.
+func (c *Core) StopUpdater(updater uuid.UUID) bool {
+	var u = c.Updaters[updater]
+
+	if u == nil {
+		log.AddSimple(log.Error, "Updater "+updater.String()+" does not exist.")
+
+		return false
+	}
+
+	// Stop the fetching process
+	u.Reference.Stop()
+
+	log.AddSimple(log.Info, "Updater "+updater.String()+" stopped.")
 	return true
 }
