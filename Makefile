@@ -1,4 +1,4 @@
-all: install
+all: install build
 
 run:
 	go run src/main.go
@@ -15,8 +15,11 @@ testdeps:
 install:
 	go install ./src...
 
-build:
-	go build ./src...
+build: deps
+	go build -o harvestccode ./src/main.go
+
+start:
+	./harvestccode
 
 lint: deps testdeps
 	go vet ./src...

@@ -1,0 +1,26 @@
+FROM golang:1.15.5-alpine as build
+LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>" version="0.1"
+
+WORKDIR /go/src/github.com/harvestcore/HarvestCCode
+ENV CGO_ENABLED 0
+
+COPY ./src ./src
+COPY LICENSE .
+COPY Makefile .
+
+RUN apk update --no-cache; apk add --no-cache make git; make build
+
+
+FROM golang:1.15.5-alpine
+
+COPY --from=build /go/src/github.com/harvestcore/HarvestCCode/harvestccode .
+COPY --from=build /go/src/github.com/harvestcore/HarvestCCode/LICENSE .
+COPY --from=build /go/src/github.com/harvestcore/HarvestCCode/Makefile .
+
+EXPOSE 8080
+
+RUN apk update --no-cache; apk add --no-cache make
+
+CMD make start
+
+HEALTHCHECK CMD curl --fail http://localhost:8080/healthcheck || exit 1
