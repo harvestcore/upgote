@@ -101,6 +101,7 @@ func Updater(router *mux.Router) {
 				"method":      request.Method,
 				"requestBody": request.RequestBody,
 				"timeout":     request.Timeout,
+				"collection":  request.Collection,
 			})
 
 			payload, _ = json.Marshal(map[string]interface{}{
