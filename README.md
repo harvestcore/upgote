@@ -36,6 +36,8 @@ The main reason is that I wanted to learn Go, use queues, background processes a
 
 ## Installing HarvestCCode
 
+> Before installing and running HarvestCCode please take a look at the [environment variables](doc/envvars.md) needed.
+
 This software can be installed and executed in multiple ways:
 
 - By downloading this repository and running:
