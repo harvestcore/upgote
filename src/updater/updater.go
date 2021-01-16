@@ -132,9 +132,6 @@ func (u *Updater) Update(data map[string]interface{}) {
 	if data["timeout"] != nil {
 		u.Timeout = data["timeout"].(int)
 	}
-
-	// Run the fetching process again
-	u.Run()
 }
 
 // FetchData Fetches the data from the source
