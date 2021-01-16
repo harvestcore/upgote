@@ -58,5 +58,30 @@ func TestCoreStopUpdater(t *testing.T) {
 	assert.Equal(t, len(c.Updaters), 1, "There is more than one updater created")
 
 	c.StopUpdater(updater)
-	assert.Equal(t, len(c.Updaters), 0, "Updater not removed")
+	assert.Equal(t, len(c.Updaters), 1, "Updater not stopped")
+
+	c.RemoveUpdater(updater)
+}
+
+func TestCoreRemoveUpdater(t *testing.T) {
+	var schema = make(map[string]interface{})
+	schema["cool"] = "test"
+
+	var data = make(map[string]interface{})
+	data["collection"] = "yikes123"
+	data["schema"] = schema
+	data["interval"] = 10
+	data["source"] = "https://google.es"
+	data["method"] = "GET"
+	data["requestBody"] = make(map[string]interface{})
+	data["timeout"] = 20
+
+	var c = core.GetCore()
+
+	var updater = c.CreateUpdater(data)
+	assert.NotEqual(t, updater, uuid.Nil, "Updater creation via Core failed")
+	assert.Equal(t, len(c.Updaters), 1, "There is more than one updater created")
+
+	c.RemoveUpdater(updater)
+	assert.Equal(t, len(c.Updaters), 0, "Updater not stopped")
 }
