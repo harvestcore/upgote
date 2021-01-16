@@ -1,5 +1,5 @@
 FROM golang:1.15.5-alpine as build
-LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>" version="0.1"
+LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>" version="0.2"
 
 WORKDIR /go/src/github.com/harvestcore/HarvestCCode
 ENV CGO_ENABLED 0
