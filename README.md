@@ -69,3 +69,5 @@ This software can be installed and executed in multiple ways:
 - [Progress on Milestone 3](doc/milestones/m3.md)
 - [Continuous integration](doc/ci.md)
 - [Progress on Milestone 4](doc/milestones/m4.md)
+- [Microservices](doc/microservices.md)
+- [Progress on Milestone 5](doc/milestones/m5.md)
