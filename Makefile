@@ -1,4 +1,4 @@
-all: install build
+all: build start
 
 run:
 	go run src/main.go
