@@ -57,6 +57,7 @@ This software can be installed and executed in multiple ways:
 
 - [Basic repo, git and GitHub configuration](doc/milestones/basic-git-github-config.md)
 - [Currently open and closed user stories](https://github.com/harvestcore/HarvestCCode/issues?q=is%3Aopen+is%3Aclosed+is%3Aissue+label%3Auser-stories+)
+- [API Endpoints](doc/endpoints/endpoints.md)
 
 ## Other documentation
 

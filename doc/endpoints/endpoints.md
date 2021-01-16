@@ -6,9 +6,9 @@
 
 ## [Data](data.md)
 
-## [Updaters](updaters.md)
+## [Updaters](updater.md)
 
-### Key
+### Legend
 
 #### I/O
 
