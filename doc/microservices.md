@@ -37,6 +37,12 @@ The [API Server](../src/api/handlers/server.go) encapsulates the HTTP Server and
 
 Each one of the handlers and also the server has its own `*_test.go` file with its corresponding unit tests.
 
+- [log_api_test.go](../src/api/tests/log_api_test.go)
+- [data_api_test.go](../src/api/tests/data_api_test.go)
+- [status_api_test.go](../src/api/tests/status_api_test.go)
+- [updater_api_test.go](../src/api/tests/updater_api_test.go)
+- [server_test.go](../src/api/server_test.go)
+
 ## User stories <-> Endpoints
 
 Log endpoints:
