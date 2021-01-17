@@ -1,7 +1,7 @@
 all: build start
 
 run:
-	go run main.go
+	go run ./main.go
 
 test: testdeps
 	go test ./... -v -count=1 -timeout 30s
@@ -16,7 +16,7 @@ install:
 	go install ./...
 
 build: deps
-	go build -o harvestccode .//main.go
+	go build -o harvestccode ./main.go
 
 start:
 	./harvestccode
