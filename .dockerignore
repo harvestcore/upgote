@@ -1,0 +1,7 @@
+.github/*
+doc/*
+.travis.yml
+cc.yaml
+docker-compose.yml
+Dockerfile*
+*.md
