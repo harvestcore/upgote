@@ -1,4 +1,4 @@
-all: build start
+all: buildapp start
 
 run:
 	go run ./main.go
@@ -15,7 +15,10 @@ testdeps:
 install:
 	go install ./...
 
-build: deps
+build:
+	echo "Building app..."
+
+buildapp: deps
 	go build -o harvestccode ./main.go
 
 start:

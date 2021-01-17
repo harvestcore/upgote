@@ -8,7 +8,7 @@ COPY ./src ./src
 COPY LICENSE .
 COPY Makefile .
 
-RUN apk update --no-cache; apk add --no-cache make git; make build
+RUN apk update --no-cache; apk add --no-cache make git; make buildapp
 
 
 FROM alpine:3.7
