@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/harvestcore/HarvestCCode/src/api"
-	"github.com/harvestcore/HarvestCCode/src/log"
+	"github.com/harvestcore/HarvestCCode/api"
+	"github.com/harvestcore/HarvestCCode/log"
 )
 
 func main() {

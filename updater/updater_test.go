@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/harvestcore/HarvestCCode/src/updater"
-	"github.com/harvestcore/HarvestCCode/src/utils"
+	"github.com/harvestcore/HarvestCCode/updater"
+	"github.com/harvestcore/HarvestCCode/utils"
 )
 
 func TestUpdaterCreation(t *testing.T) {

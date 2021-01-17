@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/src/config"
-	"github.com/harvestcore/HarvestCCode/src/log"
+	"github.com/harvestcore/HarvestCCode/config"
+	"github.com/harvestcore/HarvestCCode/log"
 )
 
 // Log Log endpoint.

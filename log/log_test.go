@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/harvestcore/HarvestCCode/src/log"
+	"github.com/harvestcore/HarvestCCode/log"
 )
 
 func TestLogCreation(t *testing.T) {

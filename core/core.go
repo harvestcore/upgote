@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/harvestcore/HarvestCCode/src/log"
-	"github.com/harvestcore/HarvestCCode/src/updater"
+	"github.com/harvestcore/HarvestCCode/log"
+	"github.com/harvestcore/HarvestCCode/updater"
 )
 
 var lock = &sync.Mutex{}

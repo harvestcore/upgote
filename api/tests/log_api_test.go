@@ -8,9 +8,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	api "github.com/harvestcore/HarvestCCode/src/api/tests"
-	"github.com/harvestcore/HarvestCCode/src/log"
-	"github.com/harvestcore/HarvestCCode/src/utils"
+	api "github.com/harvestcore/HarvestCCode/api/tests"
+	"github.com/harvestcore/HarvestCCode/log"
+	"github.com/harvestcore/HarvestCCode/utils"
 )
 
 func TestGetLogFile(t *testing.T) {

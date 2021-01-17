@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/harvestcore/HarvestCCode/src/config"
-	"github.com/harvestcore/HarvestCCode/src/db"
+	"github.com/harvestcore/HarvestCCode/config"
+	"github.com/harvestcore/HarvestCCode/db"
 )
 
 // Connotation The connotation of the log message

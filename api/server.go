@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	handlers "github.com/harvestcore/HarvestCCode/src/api/handlers"
-	"github.com/harvestcore/HarvestCCode/src/config"
-	"github.com/harvestcore/HarvestCCode/src/log"
+	handlers "github.com/harvestcore/HarvestCCode/api/handlers"
+	"github.com/harvestcore/HarvestCCode/config"
+	"github.com/harvestcore/HarvestCCode/log"
 )
 
 var lock = &sync.Mutex{}

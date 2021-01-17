@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/src/core"
+	"github.com/harvestcore/HarvestCCode/core"
 )
 
 type customRequest struct {

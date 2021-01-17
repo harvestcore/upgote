@@ -1,4 +1,4 @@
-module github.com/harvestcore/HarvestCCode/src
+module github.com/harvestcore/HarvestCCode
 
 go 1.15
 

@@ -1,28 +1,28 @@
 all: build start
 
 run:
-	go run src/main.go
+	go run main.go
 
 test: testdeps
-	go test ./src... -v -count=1 -timeout 30s
+	go test ./... -v -count=1 -timeout 30s
 
 deps:
-	go get ./src...
+	go get ./...
 
 testdeps:
-	go get -t ./src...
+	go get -t ./...
 
 install:
-	go install ./src...
+	go install ./...
 
 build: deps
-	go build -o harvestccode ./src/main.go
+	go build -o harvestccode .//main.go
 
 start:
 	./harvestccode
 
 lint: deps testdeps
-	go vet ./src...
+	go vet ./...
 
 clean:
-	go clean ./src...
+	go clean ./...

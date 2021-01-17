@@ -1,10 +1,15 @@
-FROM golang:1.15.5-alpine
+FROM golang:alpine
 LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>" version="0.3"
 
-WORKDIR /go/src/github.com/harvestcore/HarvestCCode
+WORKDIR /app/test
 ENV CGO_ENABLED 0
+
+RUN adduser -D hcc && addgroup -S hcc hcc
 
 RUN apk update --no-cache; apk add --no-cache make git
 
-CMD cp -R --symbolic-link /app/test/* /go/src/github.com/harvestcore/HarvestCCode; \
-    make test
+ENV GOPATH=/home/hcc/go
+
+USER hcc
+
+CMD make test

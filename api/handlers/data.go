@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/src/db"
+	"github.com/harvestcore/HarvestCCode/db"
 )
 
 // Data Data endpoints.
