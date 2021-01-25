@@ -37,23 +37,27 @@ The [API Server](../src/api/handlers/server.go) encapsulates the HTTP Server and
 
 Each one of the handlers and also the server has its own `*_test.go` file with its corresponding unit tests.
 
-- [log_api_test.go](../src/api/tests/log_api_test.go)
-- [data_api_test.go](../src/api/tests/data_api_test.go)
-- [status_api_test.go](../src/api/tests/status_api_test.go)
-- [updater_api_test.go](../src/api/tests/updater_api_test.go)
-- [server_test.go](../src/api/server_test.go)
+- [log_api_test.go](../api/tests/log_api_test.go)
+- [data_api_test.go](../api/tests/data_api_test.go)
+- [status_api_test.go](../api/tests/status_api_test.go)
+- [updater_api_test.go](../api/tests/updater_api_test.go)
+- [server_test.go](../api/server_test.go)
 
 ## User stories <-> Endpoints
 
 Log endpoints:
+
 - [HU#14 - Logs](https://github.com/harvestcore/HarvestCCode/issues/14)
 - [HU#18 - Logs download](https://github.com/harvestcore/HarvestCCode/issues/18)
 
 Data endpoints:
+
 - [HU#13 - Fetch data from the system](https://github.com/harvestcore/HarvestCCode/issues/13)
 
 Updater endpoints:
+
 - [HU#12 - Manage Updaters](https://github.com/harvestcore/HarvestCCode/issues/12)
 
 Status endpoints:
+
 - These endpoints were added as a way to check the status of the software in any given time. They're used in the [Dockerfile.hcc](../Dockerfile.hcc) and [docker-compose.yml](../docker-compose.yml) files.
