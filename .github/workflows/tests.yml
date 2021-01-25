@@ -4,7 +4,13 @@ on:
   push:
     paths:
       - '.github/**'
-      - 'src/**'
+      - 'api/**'
+      - 'config/**'
+      - 'core/**'
+      - 'db/**'
+      - 'log/**'
+      - 'updater/**'
+      - 'utils/**'
   pull_request:
     branches:
       - master
