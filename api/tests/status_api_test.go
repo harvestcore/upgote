@@ -8,13 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	api "github.com/harvestcore/HarvestCCode/api/tests"
-	"github.com/harvestcore/HarvestCCode/log"
 	"github.com/harvestcore/HarvestCCode/utils"
 )
 
 func TestGetHealthcheck(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestGetHealthcheck")
 		req, _ := http.NewRequest("GET", "/api/healthcheck", nil)
 		res := api.ExecuteTestingRequest(req)
 
@@ -25,13 +23,11 @@ func TestGetHealthcheck(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "GET /healthcheck status is not true")
-		log.AddSimple(log.Info, "@TEST-END # Running TestGetHealthcheck")
 	}
 }
 
 func TestGetStatus(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestGetStatus")
 		req, _ := http.NewRequest("GET", "/api/status", nil)
 		res := api.ExecuteTestingRequest(req)
 
@@ -43,6 +39,5 @@ func TestGetStatus(t *testing.T) {
 
 		assert.True(t, data["status"].(bool), "GET /status status is not true")
 		assert.GreaterOrEqual(t, data["updaters"].(float64), 0.0, "GET /status wrong updaters")
-		log.AddSimple(log.Info, "@TEST-END # Running TestGetStatus")
 	}
 }

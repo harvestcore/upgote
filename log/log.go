@@ -2,6 +2,7 @@ package log
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -132,4 +133,10 @@ func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) 
 // AddSimple Adds a new simple log message
 func AddSimple(connotation Connotation, message string) {
 	Add(connotation, message, uuid.Nil, uuid.Nil)
+}
+
+// AddRequest Adds a new simple log message
+func AddRequest(r *http.Request) {
+	msg := r.Method + " " + r.RequestURI + " from " + r.RemoteAddr
+	Add(Info, msg, uuid.Nil, uuid.Nil)
 }

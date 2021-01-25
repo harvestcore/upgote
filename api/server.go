@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	handlers "github.com/harvestcore/HarvestCCode/api/handlers"
+	middlewares "github.com/harvestcore/HarvestCCode/api/middlewares"
 	"github.com/harvestcore/HarvestCCode/config"
 	"github.com/harvestcore/HarvestCCode/log"
 )
@@ -29,6 +30,7 @@ func GetServer() *Server {
 		router := mux.NewRouter().PathPrefix("/api").Subrouter()
 
 		registerHandlers(router)
+		registerMiddlewares(router)
 
 		server = &Server{
 			Server: &http.Server{
@@ -61,4 +63,9 @@ func registerHandlers(router *mux.Router) {
 	handlers.Log(router)
 	handlers.Data(router)
 	handlers.Updater(router)
+}
+
+// registerMiddlewares Registers all the server middlewares
+func registerMiddlewares(router *mux.Router) {
+	router.Use(middlewares.LoggingMiddleware)
 }

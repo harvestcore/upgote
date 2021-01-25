@@ -9,13 +9,11 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	api "github.com/harvestcore/HarvestCCode/api/tests"
-	"github.com/harvestcore/HarvestCCode/log"
 	"github.com/harvestcore/HarvestCCode/utils"
 )
 
 func TestGetUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestGetUpdater")
 		req, _ := http.NewRequest("GET", "/api/updater", nil)
 		res := api.ExecuteTestingRequest(req)
 
@@ -28,13 +26,11 @@ func TestGetUpdater(t *testing.T) {
 		assert.True(t, data["status"].(bool), "GET /updater status is not true")
 		assert.GreaterOrEqual(t, len(data["items"].([]interface{})), 0, "GET /updater items are invalid")
 		assert.GreaterOrEqual(t, data["length"], 0.0, "GET /updater length is invalid")
-		log.AddSimple(log.Info, "@TEST-END # Running TestGetUpdater")
 	}
 }
 
 func TestPostCreateUpdaterWrongParams(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestPostCreateUpdaterWrongParams")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"interval": -4, "method": "DELETE"}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -45,13 +41,11 @@ func TestPostCreateUpdaterWrongParams(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "POST /updater status is not false")
-		log.AddSimple(log.Info, "@TEST-END # Running TestPostCreateUpdaterWrongParams")
 	}
 }
 
 func TestDeleteUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestDeleteUpdater")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingDELETE", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -67,13 +61,11 @@ func TestDeleteUpdater(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "DELETE /updater status is not true")
-		log.AddSimple(log.Info, "@TEST-END # Running TestDeleteUpdater")
 	}
 }
 
 func TestPostCreateUpdaterParams(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestPostCreateUpdaterParams")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -87,13 +79,11 @@ func TestPostCreateUpdaterParams(t *testing.T) {
 
 		req, _ = http.NewRequest("DELETE", "/api/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
-		log.AddSimple(log.Info, "@TEST-END # Running TestPostCreateUpdaterParams")
 	}
 }
 
 func TestPutUpdateUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestPutUpdateUpdater")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPUT", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -109,13 +99,11 @@ func TestPutUpdateUpdater(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "PUT /updater status is not true")
-		log.AddSimple(log.Info, "@TEST-END # Running TestPutUpdateUpdater")
 	}
 }
 
 func TestPostStartUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestPostStartUpdater")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -131,13 +119,11 @@ func TestPostStartUpdater(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /updater/action start action status is not true")
-		log.AddSimple(log.Info, "@TEST-END # Running TestPostStartUpdater")
 	}
 }
 
 func TestPostStopUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		log.AddSimple(log.Info, "@TEST # Running TestPostStopUpdater")
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOSTstop", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
@@ -156,6 +142,5 @@ func TestPostStopUpdater(t *testing.T) {
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /updater/action stop status is not true")
-		log.AddSimple(log.Info, "@TEST-END # Running TestPostStopUpdater")
 	}
 }
