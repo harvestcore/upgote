@@ -25,6 +25,12 @@ Response:
 | length     | int | Quantity of items returned. |
 | items     | list[[Updater](#Updater)] | Items. |
 
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+
 ## POST /updater
 
 Creates a new updater.
@@ -38,6 +44,13 @@ Response:
 | status     | bool | Wether the operation was successful or not. |
 | id     | string/uuid | ID of the created updater. |
 
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+| 422  | Some required fields are incorrect. |
+
 ## PUT /updater
 
 Updates an existant updater.
@@ -49,6 +62,13 @@ Response:
 | Parameter   | Type   | Description |
 | --------- | ------------------------- | ----------- |
 | status     | bool | Wether the operation was successful or not. |
+
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+| 422  | Some required fields are incorrect. |
 
 ## DELETE /data
 
@@ -67,7 +87,14 @@ Response:
 | --------- | ------------------------- | ----------- |
 | status     | bool | Wether the operation was successful or not. |
 
-## POST /updater/start
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 204  | The request was successful. |
+| 422  | Some required fields are incorrect. |
+
+## POST /updater/action
 
 Stars an existant updater.
 
@@ -76,6 +103,7 @@ Payload (JSON):
 | Parameter   | Type | Optional  | Description       |
 | --------- | ---- | :----------------: | --------------- |
 | id  | string/uuid |        :x:         | Updater to be started. |
+| action  | string |        :x:         | Action to be performed. |
 
 Response:
 
@@ -83,18 +111,9 @@ Response:
 | --------- | ------------------------- | ----------- |
 | status     | bool | Wether the operation was successful or not. |
 
-## POST /updater/stop
+Response codes:
 
-Stops an existant updater.
-
-Payload (JSON):
-
-| Parameter   | Type | Optional  | Description       |
-| --------- | ---- | :----------------: | --------------- |
-| id  | string/uuid |        :x:         | Updater to be stopped. |
-
-Response:
-
-| Parameter   | Type   | Description |
-| --------- | ------------------------- | ----------- |
-| status     | bool | Wether the operation was successful or not. |
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+| 422  | Some required fields are incorrect. |

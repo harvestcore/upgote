@@ -17,6 +17,13 @@ Response:
 | length     | int | Quantity of items returned. |
 | items     | list[Item] | Items. |
 
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+| 422  | Some required fields are incorrect. |
+
 ## DELETE /data
 
 Removes the given database.
@@ -27,3 +34,10 @@ Payload (JSON):
 | --------- | ---- | :----------------: | ------------------------------------------ |
 | database  | int |        :x:         | Database to be removed. |
 | force  | bool |        :x:         | Force the database removal. |
+
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 204  | The request was successful. |
+| 422  | Some required fields are incorrect. |

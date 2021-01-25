@@ -11,6 +11,12 @@
 | id         | string | O | Log message ID. |
 | message   | string | O | Log message. |
 
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+
 ## GET /log
 
 Returns the logfile in plain text.
@@ -34,3 +40,10 @@ Response:
 | status     | bool | Wether the operation was successful or not. |
 | length     | int | Quantity of log messages returned. |
 | items     | list[[Log](#Log)] | Log messages. |
+
+Response codes:
+
+| Code | Scenario   |
+| ---- | -------- |
+| 200  | The request was successful. |
+| 422  | Some required fields are incorrect. |
