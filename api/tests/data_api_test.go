@@ -17,7 +17,7 @@ import (
 func TestPostDataNoArgs(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostDataNoArgs")
-		req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{}`)))
+		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /data (no args) status code is not 422")
@@ -34,7 +34,7 @@ func TestPostDataNoArgs(t *testing.T) {
 func TestPostDataWithDatabaseNoQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostDataWithDatabaseNoQuantity")
-		req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "log"}`)))
+		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{"database": "log"}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
@@ -53,7 +53,7 @@ func TestPostDataWithDatabaseNoQuantity(t *testing.T) {
 func TestPostDataWithWrongDatabaseNoQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostDataWithWrongDatabaseNoQuantity")
-		req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "__test__"}`)))
+		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{"database": "__test__"}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
@@ -75,7 +75,7 @@ func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
 		item := &db.Item{CollectionName: "TestPostDataWithDatabaseAndQuantity"}
 		item.InsertOne(map[string]interface{}{"test": 1})
 
-		req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "TestPostDataWithDatabaseAndQuantity", "quantity": 1}`)))
+		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{"database": "TestPostDataWithDatabaseAndQuantity", "quantity": 1}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
@@ -96,7 +96,7 @@ func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
 func TestPostDataWithDatabaseAndWrongQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostDataWithDatabaseAndWrongQuantity")
-		req, _ := http.NewRequest("POST", "/data", bytes.NewBuffer([]byte(`{"database": "log", "quantity": -1}`)))
+		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{"database": "log", "quantity": -1}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /data status code is not 422")
@@ -114,7 +114,7 @@ func TestPostDataWithDatabaseAndWrongQuantity(t *testing.T) {
 func TestDeleteDataWithNoDatabase(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestDeleteDataWithNoDatabase")
-		req, _ := http.NewRequest("DELETE", "/data", bytes.NewBuffer([]byte(`{}`)))
+		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "DELETE /data status code is not 422")
@@ -132,7 +132,7 @@ func TestDeleteDataWithNoDatabase(t *testing.T) {
 func TestDeleteDataWithWrongDatabaseAndNoForce(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestDeleteDataWithWrongDatabaseAndNoForce")
-		req, _ := http.NewRequest("DELETE", "/data", bytes.NewBuffer([]byte(`{"database": "yikes"}`)))
+		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "yikes"}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "DELETE /data status code is not 422")
@@ -150,7 +150,7 @@ func TestDeleteDataWithWrongDatabaseAndNoForce(t *testing.T) {
 func TestDeleteDataWithWrongDatabaseAndForce(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestDeleteDataWithWrongDatabaseAndForce")
-		req, _ := http.NewRequest("DELETE", "/data", bytes.NewBuffer([]byte(`{"database": "yikes", "force": true}`)))
+		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "yikes", "force": true}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /data status code is not 204")
@@ -171,7 +171,7 @@ func TestDeleteDataWithExistingDatabaseAndForce(t *testing.T) {
 		item := &db.Item{CollectionName: "__delete"}
 		item.InsertOne(map[string]interface{}{"test": 1})
 
-		req, _ := http.NewRequest("DELETE", "/data", bytes.NewBuffer([]byte(`{"database": "__delete", "force": true}`)))
+		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "__delete", "force": true}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /data status code is not 204")

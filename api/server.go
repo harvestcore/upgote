@@ -26,7 +26,7 @@ func GetServer() *Server {
 		lock.Lock()
 		defer lock.Unlock()
 
-		router := mux.NewRouter()
+		router := mux.NewRouter().PathPrefix("/api").Subrouter()
 
 		registerHandlers(router)
 

@@ -15,7 +15,7 @@ import (
 func TestGetHealthcheck(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestGetHealthcheck")
-		req, _ := http.NewRequest("GET", "/healthcheck", nil)
+		req, _ := http.NewRequest("GET", "/api/healthcheck", nil)
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /healthcheck status code is not 200")
@@ -32,7 +32,7 @@ func TestGetHealthcheck(t *testing.T) {
 func TestGetStatus(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestGetStatus")
-		req, _ := http.NewRequest("GET", "/status", nil)
+		req, _ := http.NewRequest("GET", "/api/status", nil)
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /status code is not 200")

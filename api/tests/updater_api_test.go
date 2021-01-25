@@ -16,7 +16,7 @@ import (
 func TestGetUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestGetUpdater")
-		req, _ := http.NewRequest("GET", "/updater", nil)
+		req, _ := http.NewRequest("GET", "/api/updater", nil)
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /updater status code is not 200")
@@ -35,7 +35,7 @@ func TestGetUpdater(t *testing.T) {
 func TestPostCreateUpdaterWrongParams(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostCreateUpdaterWrongParams")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"interval": -4, "method": "DELETE"}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"interval": -4, "method": "DELETE"}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /updater status code is not 422")
@@ -52,13 +52,13 @@ func TestPostCreateUpdaterWrongParams(t *testing.T) {
 func TestDeleteUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestDeleteUpdater")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingDELETE", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingDELETE", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("DELETE", "/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("DELETE", "/api/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /updater status code is not 204")
@@ -74,7 +74,7 @@ func TestDeleteUpdater(t *testing.T) {
 func TestPostCreateUpdaterParams(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostCreateUpdaterParams")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /updater status code is not 200")
@@ -85,7 +85,7 @@ func TestPostCreateUpdaterParams(t *testing.T) {
 
 		assert.True(t, data["status"].(bool), "POST /updater status is not true")
 
-		req, _ = http.NewRequest("DELETE", "/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("DELETE", "/api/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 		log.AddSimple(log.Info, "@TEST-END # Running TestPostCreateUpdaterParams")
 	}
@@ -94,13 +94,13 @@ func TestPostCreateUpdaterParams(t *testing.T) {
 func TestPutUpdateUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPutUpdateUpdater")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingPUT", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPUT", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("PUT", "/updater", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ = http.NewRequest("PUT", "/api/updater", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res = api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "PUT /updater status code is not 200")
@@ -116,13 +116,13 @@ func TestPutUpdateUpdater(t *testing.T) {
 func TestPostStartUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostStartUpdater")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("POST", "/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/start status code is not 200")
@@ -138,16 +138,16 @@ func TestPostStartUpdater(t *testing.T) {
 func TestPostStopUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostStopUpdater")
-		req, _ := http.NewRequest("POST", "/updater", bytes.NewBuffer([]byte(`{"database": "testingPOSTstop", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
+		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOSTstop", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("POST", "/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 
-		req, _ = http.NewRequest("POST", "/updater/stop", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/stop", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/start status code is not 200")

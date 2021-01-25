@@ -21,4 +21,4 @@ RUN apk update --no-cache; apk add --no-cache make
 
 CMD make start
 
-HEALTHCHECK CMD curl --fail http://localhost:8080/healthcheck || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:8080/api/healthcheck || exit 1

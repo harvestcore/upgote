@@ -16,7 +16,7 @@ import (
 func TestGetLogFile(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestGetLogFile")
-		req, _ := http.NewRequest("GET", "/log", nil)
+		req, _ := http.NewRequest("GET", "/api/log", nil)
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /log status code is not 200")
@@ -28,7 +28,7 @@ func TestGetLogFile(t *testing.T) {
 func TestPostLogFileNoQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostLogFileNoQuantity")
-		req, _ := http.NewRequest("POST", "/log", bytes.NewBuffer([]byte(`{}`)))
+		req, _ := http.NewRequest("POST", "/api/log", bytes.NewBuffer([]byte(`{}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /log status code is not 200. Without quantity")
@@ -47,7 +47,7 @@ func TestPostLogFileNoQuantity(t *testing.T) {
 func TestPostLogFileWithQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostLogFileWithQuantity")
-		req, _ := http.NewRequest("POST", "/log", bytes.NewBuffer([]byte(`{"quantity": 1}`)))
+		req, _ := http.NewRequest("POST", "/api/log", bytes.NewBuffer([]byte(`{"quantity": 1}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /log status code is not 200. With quantity")
@@ -65,7 +65,7 @@ func TestPostLogFileWithQuantity(t *testing.T) {
 func TestPostLogFileNegativeQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		log.AddSimple(log.Info, "@TEST # Running TestPostLogFileNegativeQuantity")
-		req, _ := http.NewRequest("POST", "/log", bytes.NewBuffer([]byte(`{"quantity": -1}`)))
+		req, _ := http.NewRequest("POST", "/api/log", bytes.NewBuffer([]byte(`{"quantity": -1}`)))
 		res := api.ExecuteTestingRequest(req)
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "GET /log status code is not 422. With negative quantity")
