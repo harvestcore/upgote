@@ -122,15 +122,15 @@ func TestPostStartUpdater(t *testing.T) {
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("POST", "/api/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/action", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "action": "start"}`)))
 		res = api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/start status code is not 200")
+		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/action start status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "PUT /updater Content type is not \"application/json\"")
 
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		assert.True(t, data["status"].(bool), "POST /updater/start status is not true")
+		assert.True(t, data["status"].(bool), "POST /updater/action start action status is not true")
 		log.AddSimple(log.Info, "@TEST-END # Running TestPostStartUpdater")
 	}
 }
@@ -144,18 +144,18 @@ func TestPostStopUpdater(t *testing.T) {
 		var data map[string]interface{}
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		req, _ = http.NewRequest("POST", "/api/updater/start", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/action", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "action": "start"}`)))
 		res = api.ExecuteTestingRequest(req)
 
-		req, _ = http.NewRequest("POST", "/api/updater/stop", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`"}`)))
+		req, _ = http.NewRequest("POST", "/api/updater/action", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "action": "stop"}`)))
 		res = api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/start status code is not 200")
+		assert.Equal(t, res.Code, http.StatusOK, "POST /updater/action start status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "PUT /updater Content type is not \"application/json\"")
 
 		json.Unmarshal(res.Body.Bytes(), &data)
 
-		assert.True(t, data["status"].(bool), "POST /updater/start status is not true")
+		assert.True(t, data["status"].(bool), "POST /updater/action stop status is not true")
 		log.AddSimple(log.Info, "@TEST-END # Running TestPostStopUpdater")
 	}
 }
