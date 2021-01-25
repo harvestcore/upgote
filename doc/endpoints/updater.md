@@ -48,7 +48,7 @@ Response codes:
 
 | Code | Scenario   |
 | ---- | -------- |
-| 200  | The request was successful. |
+| 201  | The request was successful. |
 | 422  | Some required fields are incorrect. |
 
 ## PUT /updater
@@ -91,7 +91,7 @@ Response codes:
 
 | Code | Scenario   |
 | ---- | -------- |
-| 204  | The request was successful. |
+| 200  | The request was successful. |
 | 422  | Some required fields are incorrect. |
 
 ## POST /updater/action

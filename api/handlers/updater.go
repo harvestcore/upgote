@@ -82,6 +82,7 @@ func Updater(router *mux.Router) {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
+		w.WriteHeader(http.StatusCreated)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(payload)
 	}).Methods("POST")
@@ -141,7 +142,6 @@ func Updater(router *mux.Router) {
 			} else {
 				c.RemoveUpdater(id)
 				payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Updater removed."})
-				w.WriteHeader(http.StatusNoContent)
 			}
 		} else {
 			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing updater ID or removal not forced."})

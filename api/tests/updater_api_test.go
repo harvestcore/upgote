@@ -61,7 +61,7 @@ func TestDeleteUpdater(t *testing.T) {
 		req, _ = http.NewRequest("DELETE", "/api/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
 		res = api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /updater status code is not 204")
+		assert.Equal(t, res.Code, http.StatusOK, "DELETE /updater status code is not 204")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /updater Content type is not \"application/json\"")
 
 		json.Unmarshal(res.Body.Bytes(), &data)
@@ -77,7 +77,7 @@ func TestPostCreateUpdaterParams(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusOK, "POST /updater status code is not 200")
+		assert.Equal(t, res.Code, http.StatusCreated, "POST /updater status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /updater Content type is not \"application/json\"")
 
 		var data map[string]interface{}

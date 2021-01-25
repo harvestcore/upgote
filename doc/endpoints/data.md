@@ -39,5 +39,5 @@ Response codes:
 
 | Code | Scenario   |
 | ---- | -------- |
-| 204  | The request was successful. |
+| 200  | The request was successful. |
 | 422  | Some required fields are incorrect. |

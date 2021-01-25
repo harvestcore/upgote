@@ -66,7 +66,6 @@ func Data(router *mux.Router) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNoContent)
 		w.Write(payload)
 	}).Methods("DELETE")
 }

@@ -153,7 +153,7 @@ func TestDeleteDataWithWrongDatabaseAndForce(t *testing.T) {
 		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "yikes", "force": true}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /data status code is not 204")
+		assert.Equal(t, res.Code, http.StatusOK, "DELETE /data status code is not 204")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
 		var data map[string]interface{}
@@ -174,7 +174,7 @@ func TestDeleteDataWithExistingDatabaseAndForce(t *testing.T) {
 		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "__delete", "force": true}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		assert.Equal(t, res.Code, http.StatusNoContent, "DELETE /data status code is not 204")
+		assert.Equal(t, res.Code, http.StatusOK, "DELETE /data status code is not 204")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
 		var data map[string]interface{}
