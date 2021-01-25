@@ -109,7 +109,9 @@ func GetManager() *Manager {
 
 // Close Closes the etcd manager.
 func (manager *Manager) Close() {
-	manager.CancelFunc()
+	if manager.CancelFunc != nil {
+		manager.CancelFunc()
+	}
 }
 
 // GetFromRemote Gets the variable from ETCD3 server.
