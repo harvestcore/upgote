@@ -6,3 +6,4 @@ HarvestCCode needs some environment variables to work. So, in order to get Harve
 - `HCC_MONGO_DATABASE` Name of the database to be used. Defaults to `harvestccode`.
 - `HCC_LOG_FILE` Path where the log file will be created. Defaults to `~/harvestccode.log`.
 - `HCC_HTTP_SERVER_PORT` HarvestCCode API server port. Defaults to `8080`.
+- `HCC_ETCD3_HOST` Etcd3 server host + port. Defaults to `127.0.0.1:2379`.
