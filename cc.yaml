@@ -6,6 +6,8 @@ entidad:
   - api/handlers/log.go
   - api/handlers/status.go
   - api/handlers/updater.go
+  - api/middlewares/logging.go
+  - api/tests/utils.go
   - api/server.go
   - config/config_manager.go
   - core/core.go
@@ -13,7 +15,9 @@ entidad:
   - db/mongo_engine.go
   - db/responses.go
   - updater/updater.go
+  - utils/utils.go
   - log/log.go
+  - main.go
 test:
   - api/tests/data_api_test.go
   - api/tests/log_api_test.go
