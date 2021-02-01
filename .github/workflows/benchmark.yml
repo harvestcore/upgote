@@ -1,7 +1,26 @@
-k6_load_test:
-  name: k6 Load Test
-  runs-on: ubuntu-latest
-  steps:
+name: Tests
+
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'api/**'
+      - 'config/**'
+      - 'core/**'
+      - 'db/**'
+      - 'log/**'
+      - 'updater/**'
+      - 'utils/**'
+      - 'k6/**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
     - name: Checkout
       uses: actions/checkout@v2
 
