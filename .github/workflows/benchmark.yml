@@ -1,0 +1,58 @@
+name: DockerCompose Benchmark
+
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'api/**'
+      - 'config/**'
+      - 'core/**'
+      - 'db/**'
+      - 'log/**'
+      - 'updater/**'
+      - 'utils/**'
+      - 'k6_benchmark/**'
+      - 'locust_benchmark/**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run compose
+      run: docker-compose up -d --build
+
+    - name: Add host
+      run: sudo echo "127.0.0.1 localhost" | sudo tee -a /etc/hosts
+
+    - name: Dumb check
+      run: curl -k https://127.0.0.1/api/healthcheck
+
+    - name: Install K6
+      run: curl https://github.com/loadimpact/k6/releases/download/v0.30.0/k6-v0.30.0-linux64.tar.gz -L | tar xvz --strip-components 1
+
+    - name: K6 regular endpoints
+      run: ./k6 run k6_benchmark/benchmark.js --insecure-skip-tls-verify
+
+    - name: K6 log endpoints
+      run: ./k6 run k6_benchmark/benchmark_log.js --insecure-skip-tls-verify
+
+    - name: Setup Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install Locust
+      run: pip3 install locust
+
+    - name: Locust regular endpoints
+      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
+
+    - name: Locust log endpoints
+      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
