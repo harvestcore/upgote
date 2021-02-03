@@ -25,7 +25,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run compose
-      uses: docker-compose up -d --build
+      run: docker-compose up -d --build
 
     - name: K6 regular endpoints
       uses: k6io/action@v0.1
