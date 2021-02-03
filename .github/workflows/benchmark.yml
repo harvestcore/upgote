@@ -42,6 +42,11 @@ jobs:
     - name: K6 log endpoints
       run: ./k6 run k6_benchmark/benchmark_log.js --insecure-skip-tls-verify
 
+    - name: Setup Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
     - name: Install Locust
       run: pip3 install locust
 
