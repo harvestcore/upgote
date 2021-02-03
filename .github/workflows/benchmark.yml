@@ -1,0 +1,40 @@
+name: DockerCompose Benchmark
+
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'api/**'
+      - 'config/**'
+      - 'core/**'
+      - 'db/**'
+      - 'log/**'
+      - 'updater/**'
+      - 'utils/**'
+      - 'k6/**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run compose
+      uses: docker-compose up -d --build
+
+    - name: K6 regular endpoints
+      uses: k6io/action@v0.1
+      with:
+        filename: k6/benchmark.js
+        flags: --insecure-skip-tls-verify
+
+    - name: K6 log endpoints
+      uses: k6io/action@v0.1
+      with:
+        filename: k6/benchmark_log.js
+        flags: --insecure-skip-tls-verify
