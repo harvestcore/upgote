@@ -37,7 +37,16 @@ jobs:
       run: curl https://github.com/loadimpact/k6/releases/download/v0.30.0/k6-v0.30.0-linux64.tar.gz -L | tar xvz --strip-components 1
 
     - name: K6 regular endpoints
-      run: ./k6 run k6benchmark/benchmark.js --insecure-skip-tls-verify
+      run: ./k6 run k6_benchmark/benchmark.js --insecure-skip-tls-verify
 
     - name: K6 log endpoints
-      run: ./k6 run k6benchmark/benchmark_log.js --insecure-skip-tls-verify
+      run: ./k6 run k6_benchmark/benchmark_log.js --insecure-skip-tls-verify
+
+    - name: Install Locust
+      run: pip3 install locust
+
+    - name: Locust regular endpoints
+      run: locust --headless locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost
+
+    - name: Locust log endpoints
+      run: locust --headless locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost

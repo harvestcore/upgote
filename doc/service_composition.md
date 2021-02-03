@@ -186,4 +186,15 @@ networks:
 
 ## R4
 
+There are two scenarios when it comes to testing the service composition:
+
+- Create my own tests, something like a script in some language.
+- Use a framework or tool that (probably) can measure better the performance and also will also keep in mind all the metrics.
+
+In this case I've followed the second route. After a quick search in Google I found that there are quite a lot of tools that can do this task:
+
+- [Gatling](https://gatling.io/): This one is really interesting since it has a lot of features, but it is more focused on internal performance of the code. It has capabilities to test endpoints, but not as deep as other alternatives in this list. Its sytax is also a bit complex compared to others and it is only available for Java.
+- [Locust](https://locust.io/): Designed to test web applications. The best 
+- K6
+
 ## R5
