@@ -1,6 +1,8 @@
 # HarvestCCode
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![CI](https://github.com/harvestcore/HarvestCCode/workflows/Tests/badge.svg) ![Lint](https://github.com/harvestcore/HarvestCCode/workflows/Go%20linter/badge.svg) [![Build Status](https://travis-ci.com/harvestcore/HarvestCCode.svg?branch=master)](https://travis-ci.com/harvestcore/HarvestCCode)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) ![CI](https://github.com/harvestcore/HarvestCCode/workflows/Tests/badge.svg) ![Lint](https://github.com/harvestcore/HarvestCCode/workflows/Go%20linter/badge.svg) [![Build Status](https://travis-ci.com/harvestcore/HarvestCCode.svg?branch=master)](https://travis-ci.com/harvestcore/HarvestCCode) ![DockerCompose Benchmark](https://github.com/harvestcore/HarvestCCode/workflows/DockerCompose%20Benchmark/badge.svg?branch=master)
+
+Azure Deploy: [harvestccode.azurewebsites.net](https://harvestccode.azurewebsites.net/)
 
 ---
 
@@ -71,3 +73,4 @@ This software can be installed and executed in multiple ways:
 - [Progress on Milestone 4](doc/milestones/m4.md)
 - [Microservices (R1 to R5)](doc/microservices.md)
 - [Progress on Milestone 5](doc/milestones/m5.md)
+- [Service composition (R1 to R5)](doc/service_composition.md)

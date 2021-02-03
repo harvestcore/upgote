@@ -1,6 +1,7 @@
 lenguaje: Go
 fichero_tareas: Makefile
 make: make
+test-docker-compose: .github/workflows/benchmark.yml
 entidad:
   - api/handlers/data.go
   - api/handlers/log.go
