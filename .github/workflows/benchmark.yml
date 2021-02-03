@@ -27,6 +27,9 @@ jobs:
     - name: Run compose
       run: docker-compose up -d --build
 
+    - name: Dumb check
+      run: curl https://localhost/api/healthcheck
+
     - name: K6 regular endpoints
       uses: k6io/action@v0.1
       with:
