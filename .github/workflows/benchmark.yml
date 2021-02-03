@@ -11,7 +11,8 @@ on:
       - 'log/**'
       - 'updater/**'
       - 'utils/**'
-      - 'k6/**'
+      - 'k6_benchmark/**'
+      - 'locust_benchmark/**'
   pull_request:
     branches:
       - master

@@ -194,7 +194,151 @@ There are two scenarios when it comes to testing the service composition:
 In this case I've followed the second route. After a quick search in Google I found that there are quite a lot of tools that can do this task:
 
 - [Gatling](https://gatling.io/): This one is really interesting since it has a lot of features, but it is more focused on internal performance of the code. It has capabilities to test endpoints, but not as deep as other alternatives in this list. Its sytax is also a bit complex compared to others and it is only available for Java.
-- [Locust](https://locust.io/): Designed to test web applications. The best 
-- K6
+- [Locust](https://locust.io/): Designed to test web applications. One of the best features of this one is that the configuration files are Python files. Apart from testing endpoints it also has HTML parsing capabilities, something that won't be used in this case but something that could be really useful. The metrics it returns are the response time percentiles, requests per second and an error report among others. I've created two `locustfile` files that can be found [here](../locust_benchmark/benchmark.py) and [here](../locust_benchmark/benchmark_log.py).
+- [K6](https://k6.io/): This one is even more simple to configure than the previous one. Its configuration files are plain JavaScript and it returns way more metrics than Locust. For this reason I've also created two benchmarks that can be found [here](../k6_benchmark/benchmark_log.js) and [here](../k6_benchmark/benchmark_log.js).
+
+### Benchmarks
+
+There are 4 benchmarks in total, 2 created for Locust and 2 for K6, but its structure is the same. The options used for all of them are:
+
+- Duration: 1 minute
+- Users: 150
+- TLS Verification: Disabled
+
+#### benchmark.js / benchmark.py
+
+Simple endpoint calls. With simple I mean requests whose response is really lightweight.
+
+The benchmnark includes calls to:
+
+- `/api/status`
+- `/api/healthcheck`
+- `/api/updater` - With, without parameters and also with wrong parameters.
+- `/api/data` - Data fetching.
+- `/api/yikes` - Non existant endpoint.
+
+#### benchmark_log.js / benchmark_log.py
+
+The logs endpoint benchmark is separated to the other ones since it returns a plain text file. This could result in really large files, which could alter the results of the other requests. In case the file is several megabytes that request will obviously take longer than one that returns the status, for example. For this reason this benchmark has been separated.
+
+The benchmnark includes calls to:
+
+- `/api/log`
+- `/api/data` - With paramns to return the logs.
+
+### Workflow
+
+To run the benchmarks I've created [this workflow](../.github/workflows/benchmark.yml).
+
+It is run whenever the code or the workflows or the benchmark files change, and also on all pull requests. The steps are really simple:
+
+- Run the docker-compose.
+- Install K6 and run its benchmarks.
+- Install Locust and run its benchmarks.
+
+```yml
+name: DockerCompose Benchmark
+
+on:
+  push:
+    paths:
+      - '.github/**'
+      - 'api/**'
+      - 'config/**'
+      - 'core/**'
+      - 'db/**'
+      - 'log/**'
+      - 'updater/**'
+      - 'utils/**'
+      - 'k6_benchmark/**'
+      - 'locust_benchmark/**'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Run compose
+      run: docker-compose up -d --build
+
+    - name: Add host
+      run: sudo echo "127.0.0.1 localhost" | sudo tee -a /etc/hosts
+
+    - name: Dumb check
+      run: curl -k https://127.0.0.1/api/healthcheck
+
+    - name: Install K6
+      run: curl https://github.com/loadimpact/k6/releases/download/v0.30.0/k6-v0.30.0-linux64.tar.gz -L | tar xvz --strip-components 1
+
+    - name: K6 regular endpoints
+      run: ./k6 run k6_benchmark/benchmark.js --insecure-skip-tls-verify
+
+    - name: K6 log endpoints
+      run: ./k6 run k6_benchmark/benchmark_log.js --insecure-skip-tls-verify
+
+    - name: Setup Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install Locust
+      run: pip3 install locust
+
+    - name: Locust regular endpoints
+      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
+
+    - name: Locust log endpoints
+      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
+```
 
 ## R5
+
+### Speed test
+
+Added on the benchmarks in section [R4](#R4).
+
+### Project state
+
+The project is finished. Its main functionality is complete and it offers a fully functional API. There are some features that would be interesting to implement in the future, like authentication or integration with other services.
+
+### Deploy
+
+HarvestCCode has been deployed to Azure and can be found here: [harvestccode.azurewebsites.net](https://harvestccode.azurewebsites.net/).
+
+#### Database
+
+Since the software needs a MongoDB database I've created an instance of CosmosDB in Azure.
+
+![1](./azure/cosmosdb/1.PNG)
+
+Once created, I only need to check the connection string.
+
+![2](./azure/cosmosdb/2.PNG)
+
+#### App Service
+
+To deploy the application I've created an "App Service". This kind of resource allows me to select a Docker image from a registry and then run it.
+
+![1](./azure/appservice/1.PNG)
+
+![2](./azure/appservice/2.PNG)
+
+The only step needed is to set the `HCC_MONGO_URI` environment variable.
+
+![3](./azure/appservice/3.PNG)
+
+Since Azure already configures SSL certificates for all the apps, there is no need to do some extra configuration.
+
+![1](./azure/1.PNG)
+
+![2](./azure/2.PNG)
+
+![3](./azure/3.PNG)
+
+![4](./azure/4.PNG)
