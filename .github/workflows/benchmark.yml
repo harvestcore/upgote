@@ -27,8 +27,11 @@ jobs:
     - name: Run compose
       run: docker-compose up -d --build
 
+    - name: Add host
+      run: sudo echo "127.0.0.1 localhost" | sudo tee -a /etc/hosts
+
     - name: Dumb check
-      run: curl -k https://localhost/api/healthcheck
+      run: curl -k https://127.0.0.1/api/healthcheck
 
     - name: K6 regular endpoints
       uses: k6io/action@v0.1
