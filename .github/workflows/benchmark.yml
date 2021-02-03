@@ -51,7 +51,7 @@ jobs:
       run: pip3 install locust
 
     - name: Locust regular endpoints
-      run: locust --headless locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost
+      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost
 
     - name: Locust log endpoints
-      run: locust --headless locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost
+      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost
