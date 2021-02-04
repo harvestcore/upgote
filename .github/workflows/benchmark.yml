@@ -43,19 +43,19 @@ jobs:
     - name: K6 log endpoints
       run: ./k6 run k6_benchmark/benchmark_log.js --insecure-skip-tls-verify
 
-    - name: Setup Python 3.7
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
+    # - name: Setup Python 3.7
+    #   uses: actions/setup-python@v2
+    #   with:
+    #     python-version: 3.7
 
-    - name: Install Locust
-      run: pip3 install locust
+    # - name: Install Locust
+    #   run: pip3 install locust
 
-    - name: Dumb check
-      run: locust || true
+    # - name: Dumb check
+    #   run: locust || true
 
-    - name: Locust regular endpoints
-      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost || true
+    # - name: Locust regular endpoints
+    #   run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost || true
 
-    - name: Locust log endpoints
-      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost || true
+    # - name: Locust log endpoints
+    #   run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost || true
