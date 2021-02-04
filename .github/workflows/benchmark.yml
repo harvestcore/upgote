@@ -51,8 +51,11 @@ jobs:
     - name: Install Locust
       run: pip3 install locust
 
+    - name: Dumb check
+      run: locust || true
+
     - name: Locust regular endpoints
-      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
+      run: locust --headless -f locust_benchmark/benchmark.py -u 150 --run-time 1m --host https://localhost || true
 
     - name: Locust log endpoints
-      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost --exit-code-on-error 0
+      run: locust --headless -f locust_benchmark/benchmark_log.py -u 150 --run-time 1m --host https://localhost || true
