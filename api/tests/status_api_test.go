@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	api "github.com/harvestcore/HarvestCCode/api/tests"
-	"github.com/harvestcore/HarvestCCode/utils"
+	api "github.com/harvestcore/upgote/api/tests"
+	"github.com/harvestcore/upgote/utils"
 )
 
 func TestGetHealthcheck(t *testing.T) {

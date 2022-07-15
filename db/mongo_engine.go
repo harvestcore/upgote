@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harvestcore/HarvestCCode/config"
+	"github.com/harvestcore/upgote/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -29,8 +29,8 @@ func GetEngine() *MongoEngine {
 		defer lock.Unlock()
 
 		// Config variables
-		var mongoURI = config.GetManager().GetVariable(config.HCC_MONGO_URI)
-		var database = config.GetManager().GetVariable(config.HCC_MONGO_DATABASE)
+		var mongoURI = config.GetManager().GetVariable(config.MONGO_URI)
+		var database = config.GetManager().GetVariable(config.MONGO_DATABASE)
 
 		// Mongo client instantation
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

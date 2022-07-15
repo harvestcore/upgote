@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.14', '1.15', '1.15.4', '1.15.6']
+        go: ['1.17.12', '1.18.4']
     env:
       GOPATH: ${{ github.workspace }}
     defaults:

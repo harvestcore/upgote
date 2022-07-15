@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	
-	"github.com/harvestcore/HarvestCCode/core"
-	"github.com/harvestcore/HarvestCCode/utils"
+	"github.com/harvestcore/upgote/core"
+	"github.com/harvestcore/upgote/utils"
 )
 
 func TestCoreCreation(t *testing.T) {

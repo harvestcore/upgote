@@ -19,10 +19,10 @@ build:
 	echo "Building app..."
 
 buildapp: deps
-	go build -o harvestccode ./main.go
+	go build -o upgote ./main.go
 
 start:
-	./harvestccode
+	./upgote
 
 lint: deps testdeps
 	go vet ./...

@@ -11,9 +11,9 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 
-	"github.com/harvestcore/HarvestCCode/db"
-	"github.com/harvestcore/HarvestCCode/log"
-	"github.com/harvestcore/HarvestCCode/utils"
+	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/utils"
 )
 
 type Updater struct {

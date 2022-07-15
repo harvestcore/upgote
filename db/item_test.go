@@ -3,8 +3,8 @@ package db_test
 import (
 	"testing"
 
-	"github.com/harvestcore/HarvestCCode/db"
-	"github.com/harvestcore/HarvestCCode/utils"
+	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/utils"
 	"github.com/stretchr/testify/assert"
 )
 

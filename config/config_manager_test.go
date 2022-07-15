@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/harvestcore/HarvestCCode/config"
+	"github.com/harvestcore/upgote/config"
 )
 
 func TestConfigManager(t *testing.T) {

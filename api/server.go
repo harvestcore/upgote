@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	handlers "github.com/harvestcore/HarvestCCode/api/handlers"
-	middlewares "github.com/harvestcore/HarvestCCode/api/middlewares"
-	"github.com/harvestcore/HarvestCCode/config"
-	"github.com/harvestcore/HarvestCCode/log"
+	handlers "github.com/harvestcore/upgote/api/handlers"
+	middlewares "github.com/harvestcore/upgote/api/middlewares"
+	//"github.com/harvestcore/upgote/config"
+	"github.com/harvestcore/upgote/log"
 )
 
 var lock = &sync.Mutex{}
@@ -35,7 +35,7 @@ func GetServer() *Server {
 		server = &Server{
 			Server: &http.Server{
 				Handler: router,
-				Addr:    ":" + config.GetManager().GetVariable(config.HCC_HTTP_SERVER_PORT),
+				Addr:    ":8080", // + config.GetManager().GetVariable(config.HTTP_SERVER_PORT),
 
 				// Read and write timeouts to avoid the server hang
 				ReadTimeout:  10 * time.Second,

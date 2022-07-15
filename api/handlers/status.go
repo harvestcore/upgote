@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/core"
+	"github.com/harvestcore/upgote/core"
 )
 
 // Healthcheck Healthcheck endpoint.

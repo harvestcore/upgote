@@ -122,7 +122,7 @@ networks:
     expose:
       - 8080
     environment:
-      - HCC_MONGO_URI=mongodb://mongo:27017
+      - MONGO_URI=mongodb://mongo:27017
     healthcheck:
       test: curl --fail -s http://localhost:8080/api/healthcheck || exit 1
       interval: 30s
@@ -138,7 +138,7 @@ networks:
 - `build` - Build the image to be used from the Dockerfile named `Dockerfile.hcc` whose context is the current one (`.`). This key could be changed to `image`, since the image for HarvestCCode is hosted in both DockerHub and GH Registry. (If so, the value of this `image` key would be either `harvestcore/harvestccode-backend:latest` or `ghcr.io/harvestcore/harvestccode-backend:latest`).
 - `restart: always` - Always restart the service if it goes down for some reason.
 - `expose: 8080` - Expose the port 8080 to the network. In this case there is no need to do port mapping (like it happens in the `nginx` service).
-- `environment` - Environment variables. In this case only `HCC_MONGO_URI` is set. Note that the hostname in the URI matches the name of the service in the compose file, this is due to all services having as hostname the same value it is set in the compose.
+- `environment` - Environment variables. In this case only `MONGO_URI` is set. Note that the hostname in the URI matches the name of the service in the compose file, this is due to all services having as hostname the same value it is set in the compose.
 - `healtcheck` - This allows the health check of the service. In this case it issues a request to the `/api/healthcheck` endpoint every 30 seconds (with a max timeout of 10s and 3 retries). If the request is unsuccessful the service will be restarted automatically.
 - `networks` - Set the network to be used. In this case the `hcc` network with IP `172.25.0.3`.
 - `depends_on` - This service depends on the mongo service, so it will be started as soon as the data service is up and running.
@@ -329,7 +329,7 @@ To deploy the application I've created an "App Service". This kind of resource a
 
 ![2](./azure/appservice/2.PNG)
 
-The only step needed is to set the `HCC_MONGO_URI` environment variable.
+The only step needed is to set the `MONGO_URI` environment variable.
 
 ![3](./azure/appservice/3.PNG)
 

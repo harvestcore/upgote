@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/harvestcore/HarvestCCode/config"
-	"github.com/harvestcore/HarvestCCode/db"
+	"github.com/harvestcore/upgote/config"
+	"github.com/harvestcore/upgote/db"
 )
 
 // Connotation The connotation of the log message
@@ -72,7 +72,7 @@ var (
 // GetLogger Returns the Logger instance
 func GetLogger() *Logger {
 	if logger == nil {
-		logFilePath := config.GetManager().GetVariable(config.HCC_LOG_FILE)
+		logFilePath := config.GetManager().GetVariable(config.LOG_FILE)
 		file, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 		if err == nil {

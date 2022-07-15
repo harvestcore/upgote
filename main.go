@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/harvestcore/HarvestCCode/api"
-	"github.com/harvestcore/HarvestCCode/log"
+	"github.com/harvestcore/upgote/api"
+	"github.com/harvestcore/upgote/log"
 )
 
 func main() {
-	log.AddSimple(log.Info, "### HarvestCCode running ###")
+	log.AddSimple(log.Info, "upgote is now running")
 
 	api := api.GetServer()
 	api.Start()

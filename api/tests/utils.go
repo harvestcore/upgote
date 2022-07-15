@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/harvestcore/HarvestCCode/api"
+	"github.com/harvestcore/upgote/api"
 )
 
 // ExecuteTestingRequest Executes the given request in the testing router

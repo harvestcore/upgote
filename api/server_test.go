@@ -3,7 +3,7 @@ package api_test
 import (
 	"testing"
 
-	"github.com/harvestcore/HarvestCCode/api"
+	"github.com/harvestcore/upgote/api"
 	"github.com/stretchr/testify/assert"
 )
 

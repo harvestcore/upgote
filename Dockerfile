@@ -1,15 +1,18 @@
-FROM golang:alpine
-LABEL maintainer="Ángel Gómez <agomezm@correo.ugr.es>" version="0.3"
+FROM golang:1.15.5-alpine as build
 
-WORKDIR /app/test
+WORKDIR /go/src/github.com/harvestcore/upgote
 ENV CGO_ENABLED 0
+COPY . .
+RUN apk update --no-cache; apk add --no-cache make git; make buildapp
 
-RUN adduser -D hcc && addgroup -S hcc hcc
 
-RUN apk update --no-cache; apk add --no-cache make git
+FROM alpine:3.7
 
-ENV GOPATH=/home/hcc/go
+COPY --from=build /go/src/github.com/harvestcore/upgote/upgote .
+COPY --from=build /go/src/github.com/harvestcore/upgote/Makefile .
+EXPOSE 80
+RUN apk update --no-cache; apk add --no-cache make
 
-USER hcc
+CMD make start
 
-CMD make test
+HEALTHCHECK CMD curl --fail http://localhost/api/healthcheck || exit 1

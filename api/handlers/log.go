@@ -6,14 +6,14 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/config"
-	"github.com/harvestcore/HarvestCCode/log"
+	"github.com/harvestcore/upgote/config"
+	"github.com/harvestcore/upgote/log"
 )
 
 // Log Log endpoint.
 func Log(router *mux.Router) {
 	router.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
-		logFilePath := config.GetManager().GetVariable(config.HCC_LOG_FILE)
+		logFilePath := config.GetManager().GetVariable(config.LOG_FILE)
 		file, _ := ioutil.ReadFile(logFilePath)
 
 		w.Header().Set("Content-Type", "text/plain")

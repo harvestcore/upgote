@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/harvestcore/HarvestCCode/log"
+	"github.com/harvestcore/upgote/log"
 )
 
 // LoggingMiddleware Logs each request
