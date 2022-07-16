@@ -45,7 +45,3 @@ jobs:
 
     - name: Run tests
       run: make test
-
-    - name: Show log
-      if: ${{ always() }}
-      run: cat ./upgote.log
