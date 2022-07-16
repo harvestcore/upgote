@@ -7,7 +7,7 @@ import (
 	"github.com/harvestcore/upgote/types"
 )
 
-// RunningInDocker Returns if the code is running within a Docker container.
+// RunningInDocker Returns whether the code is running within a Docker container or not.
 func RunningInDocker() bool {
 	if _, err := os.Stat("/.dockerenv"); err == nil {
 		return true

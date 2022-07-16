@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	log.AddSimple(log.Info, "UPGOTE is now running.")
+	log.AddSimple(log.Info, "Upgote is now running.")
 
 	api := api.GetServer()
 	api.Start()

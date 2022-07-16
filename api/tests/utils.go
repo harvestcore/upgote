@@ -10,7 +10,8 @@ import (
 // ExecuteTestingRequest Executes the given request in the testing router.
 func ExecuteTestingRequest(req *http.Request) *httptest.ResponseRecorder {
 	recorder := httptest.NewRecorder()
-	api.GetServer().Server.Handler.ServeHTTP(recorder, req)
+	var server = api.GetServer().Server
+	server.Handler.ServeHTTP(recorder, req)
 
 	return recorder
 }

@@ -59,7 +59,7 @@ func (manager *Manager) setDefaultVariables() {
 
 	Set(MONGO_DATABASE, getFromEnv(MONGO_DATABASE, "upgote"))
 	Set(MONGO_URI, getFromEnv(MONGO_URI, "mongodb://localhost:27017"))
-	Set(LOG_FILE, getFromEnv(LOG_FILE, "~/upgote.log"))
+	Set(LOG_FILE, getFromEnv(LOG_FILE, "/var/log/upgote.log"))
 	Set(HTTP_SERVER_PORT, getFromEnv(HTTP_SERVER_PORT, "8080"))
 }
 
