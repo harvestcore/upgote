@@ -3,8 +3,9 @@ package db_test
 import (
 	"testing"
 
-	"github.com/harvestcore/upgote/db"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/harvestcore/upgote/db"
 )
 
 func TestMongoEngine(t *testing.T) {

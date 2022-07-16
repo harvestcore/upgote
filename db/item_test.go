@@ -3,9 +3,10 @@ package db_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/harvestcore/upgote/db"
 	"github.com/harvestcore/upgote/types"
-	"github.com/stretchr/testify/assert"
 )
 
 var testingCollection = "testing"

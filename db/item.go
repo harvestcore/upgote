@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/harvestcore/upgote/types"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/harvestcore/upgote/types"
 )
 
 // Item Encapsulates a collection.

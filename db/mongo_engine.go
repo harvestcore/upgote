@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harvestcore/upgote/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/harvestcore/upgote/config"
 )
 
 var lock = &sync.Mutex{}

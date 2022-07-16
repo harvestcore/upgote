@@ -67,9 +67,7 @@ func NewUpdater(schema types.Dict, interval int, source string, method string, r
 	}
 
 	id := uuid.New()
-	var updater *Updater
-
-	updater = &Updater{
+	var updater = &Updater{
 		Schema:      schema,
 		Interval:    _interval,
 		Source:      url.String(),
