@@ -1,6 +1,6 @@
 # Architecture
 
-The architecture of HarvestCCode is an microservice based one. The main reason for choosing this type of architecture is the nature of the tasks to be performed. A module of the software, called Updaters, will obtain data in the background from a specified source from time to time. Each time this action is completed, other processes, also asynchronous in turn, will be launched. This software is meant to be used integrated with other systems.
+The architecture of _Upgote_ is an microservice based one. The main reason for choosing this type of architecture is the nature of the tasks to be performed. A module of the software, called Updaters, will obtain data in the background from a specified source from time to time. Each time this action is completed, other processes, also asynchronous in turn, will be launched. This software is meant to be used integrated with other systems.
 
 - **Core**: Main core of the software. It contains all the logic related to Updater creation and data storing.
 - **Updater**: Background process that fetches the configured data and will store it as soon as it performs an update.

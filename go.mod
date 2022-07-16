@@ -1,4 +1,4 @@
-module github.com/harvestcore/HarvestCCode
+module github.com/harvestcore/upgote
 
 go 1.15
 
@@ -9,7 +9,4 @@ require (
 	github.com/stretchr/testify v1.6.1
 	go.mongodb.org/mongo-driver v1.4.3
 	google.golang.org/genproto v0.0.0-20210125195502-f46fe6c6624a // indirect
-
-	// Etcd3
-	go.etcd.io/etcd v0.5.0-alpha.5.0.20210123184945-d51c6c689ba3
 )

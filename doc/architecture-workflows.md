@@ -1,7 +1,7 @@
 # Architecture workflows
 
 > This document defines all the different modules, workflows and scenarios between all the parts of this software.
-> Please note that this is a living document and it will be updated along the development of HarvestCCode.
+> Please note that this is a living document and it will be updated along the development of _Upgote_.
 
 ## API
 
@@ -9,7 +9,7 @@ The landing place for all user requests. It communicates with the core to handle
 
 Possible scenarios:
 
-- **User performs a request to HarvestCCode**: The API handles that request.
+- **User performs a request to _Upgote_**: The API handles that request.
 
 ## Core
 

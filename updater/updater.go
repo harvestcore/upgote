@@ -11,26 +11,27 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 
-	"github.com/harvestcore/HarvestCCode/db"
-	"github.com/harvestcore/HarvestCCode/log"
-	"github.com/harvestcore/HarvestCCode/utils"
+	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/types"
+	"github.com/harvestcore/upgote/utils"
 )
 
 type Updater struct {
-	Schema      map[string]interface{} `json:"schema"`
-	Interval    int                    `json:"interval"`
-	Source      string                 `json:"source"`
-	ID          uuid.UUID              `json:"id"`
-	Method      string                 `json:"method"`
-	RequestBody map[string]interface{} `json:"requestBody"`
-	Timeout     int                    `json:"timeout"`
-	Collection  string                 `json:"collection"`
+	Schema      types.Dict `json:"schema"`
+	Interval    int        `json:"interval"`
+	Source      string     `json:"source"`
+	ID          uuid.UUID  `json:"id"`
+	Method      string     `json:"method"`
+	RequestBody types.Dict `json:"requestBody"`
+	Timeout     int        `json:"timeout"`
+	Collection  string     `json:"collection"`
 
 	scheduler *gocron.Scheduler
 }
 
-// NewUpdater Creates a new Updater
-func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int, collection string) *Updater {
+// NewUpdater Creates a new Updater.
+func NewUpdater(schema types.Dict, interval int, source string, method string, requestBody types.Dict, timeout int, collection string) *Updater {
 	if schema == nil {
 		log.AddSimple(log.Error, "Updater schema is not valid.")
 		return nil
@@ -66,9 +67,7 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	}
 
 	id := uuid.New()
-	var updater *Updater
-
-	updater = &Updater{
+	var updater = &Updater{
 		Schema:      schema,
 		Interval:    _interval,
 		Source:      url.String(),
@@ -82,8 +81,8 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 	return updater
 }
 
-// SendUpdate Stores the fetched data
-func (u *Updater) SendUpdate(data map[string]interface{}) {
+// SendUpdate Stores the fetched data.
+func (u *Updater) SendUpdate(data types.Dict) {
 	item := &db.Item{CollectionName: u.Collection}
 
 	matchedData := utils.MatchStructureWithSchema(data, u.Schema)
@@ -91,7 +90,7 @@ func (u *Updater) SendUpdate(data map[string]interface{}) {
 	item.InsertOne(matchedData)
 }
 
-// GetClient Returns the client configured with the timeout inverval
+// GetClient Returns the client configured with the timeout inverval.
 func (u *Updater) getClient() (client *http.Client) {
 	timeout := time.Duration(u.Timeout) * time.Second
 
@@ -102,12 +101,12 @@ func (u *Updater) getClient() (client *http.Client) {
 	return
 }
 
-// Update Updates the current updater data
-func (u *Updater) Update(data map[string]interface{}) {
-	// Stop the fetching process
+// Update Updates the current updater data.
+func (u *Updater) Update(data types.Dict) {
+	// Stop the fetching process.
 	u.Stop()
 
-	// Check possible values
+	// Check possible values.
 	if data["interval"] != nil {
 		u.Interval = data["interval"].(int)
 	}
@@ -122,11 +121,11 @@ func (u *Updater) Update(data map[string]interface{}) {
 	}
 
 	if data["schema"] != nil {
-		u.Schema = data["schema"].(map[string]interface{})
+		u.Schema = data["schema"].(types.Dict)
 	}
 
 	if data["requestBody"] != nil {
-		u.RequestBody = data["requestBody"].(map[string]interface{})
+		u.RequestBody = data["requestBody"].(types.Dict)
 	}
 
 	if data["timeout"] != nil {
@@ -134,38 +133,37 @@ func (u *Updater) Update(data map[string]interface{}) {
 	}
 }
 
-// FetchData Fetches the data from the source
+// FetchData Fetches the data from the source.
 func (u *Updater) FetchData() {
 	var requestBody []byte
 	var requestBodyErr error
 	var body bytes.Buffer
-	var dat map[string]interface{}
+	var dat types.Dict
 
-	// If the method is POST -> encode the request body
+	// If the method is POST -> encode the request body.
 	if u.Method == "POST" {
 		requestBody, requestBodyErr = json.Marshal(u.RequestBody)
 		body = *bytes.NewBuffer(requestBody)
 	}
 
 	if requestBodyErr == nil {
-		// Create request object
+		// Create request object.
 		request, requestErr := http.NewRequest(u.Method, u.Source, &body)
 
 		if requestErr == nil {
-			// Set header content type and perform the request
+			// Set header content type and perform the request.
 			request.Header.Set("Content-type", "application/json")
 			response, responseErr := u.getClient().Do(request)
 
 			if responseErr == nil {
-				// Defer the close of the body. It will be closed as soon as
-				// this method ends
+				// Defer the close of the body. It will be closed as soon as this method ends.
 				defer response.Body.Close()
 
-				// Read the body
+				// Read the body.
 				responseBody, responseBodyErr := ioutil.ReadAll(response.Body)
 
 				if responseBodyErr == nil {
-					// Decode the body
+					// Decode the body.
 					unmarshalErr := json.Unmarshal(responseBody, &dat)
 
 					if unmarshalErr != nil {
@@ -185,7 +183,7 @@ func (u *Updater) FetchData() {
 	}
 }
 
-// Run Create the scheduler and start running the background taks
+// Run Create the scheduler and start running the background taks.
 func (u *Updater) Run() {
 	log.Add(log.Info, "Running updater ", u.ID, uuid.Nil)
 
@@ -195,7 +193,7 @@ func (u *Updater) Run() {
 	u.scheduler.Every(uint64(u.Interval)).Seconds().Do(u.FetchData)
 }
 
-// Stop Clears all the background tasks
+// Stop Clears all the background tasks.
 func (u *Updater) Stop() {
 	if u.scheduler != nil {
 		u.scheduler.Clear()

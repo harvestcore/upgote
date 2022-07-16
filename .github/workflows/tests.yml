@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: ['1.14', '1.15', '1.15.4', '1.15.6']
+        go: ['1.17.12', '1.18.4']
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
@@ -41,11 +41,13 @@ jobs:
     - name: Run mongoDB
       uses: wbari/start-mongoDB@v0.2
       with:
-        mongoDBVersion: 4.4.2
+        mongoDBVersion: 5.0
+
+    - name: Create log file
+      run: |
+        sudo touch /var/log/upgote.log
+        sudo chown runner:runner /var/log/upgote.log
+        sudo chmod 0666 /var/log/upgote.log
 
     - name: Run tests
       run: make test
-
-    - name: Show log
-      if: ${{ always() }}
-      run: cat ~/harvestccode.log

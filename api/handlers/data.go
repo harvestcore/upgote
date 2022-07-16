@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/harvestcore/HarvestCCode/db"
+
+	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/types"
 )
 
 // Data Data endpoints.
@@ -23,7 +25,7 @@ func Data(router *mux.Router) {
 
 		if request.Database != "" {
 			item := &db.Item{CollectionName: request.Database}
-			response := item.Find(make(map[string]interface{}))
+			response := item.Find(make(types.Dict))
 			payload, _ = json.Marshal(response)
 
 			if request.Quantity != 0 {
@@ -32,12 +34,12 @@ func Data(router *mux.Router) {
 					response.Length = request.Quantity
 					payload, _ = json.Marshal(response)
 				} else {
-					payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database."})
+					payload, _ = json.Marshal(types.Dict{"status": false, "message": "Missing database."})
 					w.WriteHeader(http.StatusUnprocessableEntity)
 				}
 			}
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database."})
+			payload, _ = json.Marshal(types.Dict{"status": false, "message": "Missing database."})
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
@@ -56,12 +58,12 @@ func Data(router *mux.Router) {
 
 		json.NewDecoder(r.Body).Decode(&request)
 
-		if request.Database != "" && request.Force == true {
+		if request.Database != "" && request.Force {
 			item := &db.Item{CollectionName: request.Database}
 			item.Drop()
-			payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Database removed."})
+			payload, _ = json.Marshal(types.Dict{"status": true, "message": "Database removed."})
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing database or removal not forced."})
+			payload, _ = json.Marshal(types.Dict{"status": false, "message": "Missing database or removal not forced."})
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 

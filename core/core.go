@@ -5,19 +5,20 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/harvestcore/HarvestCCode/log"
-	"github.com/harvestcore/HarvestCCode/updater"
+	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/types"
+	"github.com/harvestcore/upgote/updater"
 )
 
 var lock = &sync.Mutex{}
 
-// UpdaterMap Maps the updater reference with its collection
+// UpdaterMap Maps the updater reference with its collection.
 type UpdaterMap struct {
 	Reference  *updater.Updater
 	Collection string
 }
 
-// Core Main core of the software
+// Core Main core of the software.
 type Core struct {
 	ID       uuid.UUID
 	Updaters map[uuid.UUID]*UpdaterMap
@@ -25,7 +26,7 @@ type Core struct {
 
 var core *Core
 
-// GetCore Returns the only instance of Core
+// GetCore Returns the only instance of Core.
 func GetCore() *Core {
 	if core == nil {
 		lock.Lock()
@@ -43,7 +44,7 @@ func GetCore() *Core {
 }
 
 // CreateUpdater Creates a new updater and stores a pointer to it.
-func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
+func (c *Core) CreateUpdater(data types.Dict) uuid.UUID {
 	for _, value := range c.Updaters {
 		if value.Collection == data["collection"].(string) {
 			log.AddSimple(log.Error, "Database already in use.")
@@ -53,11 +54,11 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 	}
 
 	var updater = updater.NewUpdater(
-		data["schema"].(map[string]interface{}),
+		data["schema"].(types.Dict),
 		data["interval"].(int),
 		data["source"].(string),
 		data["method"].(string),
-		data["requestBody"].(map[string]interface{}),
+		data["requestBody"].(types.Dict),
 		data["timeout"].(int),
 		data["collection"].(string),
 	)
@@ -77,7 +78,7 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 }
 
 // UpdateUpdater Updates an updater.
-func (c *Core) UpdateUpdater(updater uuid.UUID, data map[string]interface{}) {
+func (c *Core) UpdateUpdater(updater uuid.UUID, data types.Dict) {
 	u := c.Updaters[updater].Reference
 	u.Update(data)
 
@@ -96,7 +97,7 @@ func (c *Core) StartUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Run()
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" started.")
@@ -113,13 +114,13 @@ func (c *Core) RemoveUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Stop()
 
-	// Set pointer to null. (GC will free this memory)
+	// Set pointer to null. (GC will free this memory).
 	u.Reference = nil
 
-	// Remove entry in the map
+	// Remove entry in the map.
 	delete(c.Updaters, updater)
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" removed.")
@@ -136,7 +137,7 @@ func (c *Core) StopUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Stop()
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" stopped.")

@@ -2,14 +2,16 @@ package db
 
 import (
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/harvestcore/upgote/types"
 )
 
-// Item Encapsulates a collection
+// Item Encapsulates a collection.
 type Item struct {
 	CollectionName string
 }
 
-// Collection Returns the collection associated to this class
+// Collection Returns the collection associated to this class.
 func (item *Item) Collection() *mongo.Collection {
 	var collection *mongo.Collection
 
@@ -20,9 +22,9 @@ func (item *Item) Collection() *mongo.Collection {
 	return collection
 }
 
-// Find Find the items that fit the criteria
-func (item *Item) Find(criteria map[string]interface{}) *FindResponse {
-	var results []map[string]interface{}
+// Find Find the items that fit the criteria.
+func (item *Item) Find(criteria types.Dict) *FindResponse {
+	var results []types.Dict
 
 	cursor, err := item.Collection().Find(Ctx(), criteria)
 	if err == nil {
@@ -30,7 +32,7 @@ func (item *Item) Find(criteria map[string]interface{}) *FindResponse {
 	}
 
 	if results == nil {
-		results = make([]map[string]interface{}, 0)
+		results = make([]types.Dict, 0)
 	}
 
 	return &FindResponse{
@@ -40,8 +42,8 @@ func (item *Item) Find(criteria map[string]interface{}) *FindResponse {
 	}
 }
 
-// InsertOne Inserts one element in the current collection
-func (item *Item) InsertOne(element map[string]interface{}) *InsertResponse {
+// InsertOne Inserts one element in the current collection.
+func (item *Item) InsertOne(element types.Dict) *InsertResponse {
 	res, err := item.Collection().InsertOne(Ctx(), element)
 	length := 0
 	items := make([]interface{}, 0)
@@ -58,8 +60,8 @@ func (item *Item) InsertOne(element map[string]interface{}) *InsertResponse {
 	}
 }
 
-// InsertMany Inserts multiple elements in the current collection
-func (item *Item) InsertMany(elements []map[string]interface{}) InsertResponse {
+// InsertMany Inserts multiple elements in the current collection.
+func (item *Item) InsertMany(elements []types.Dict) InsertResponse {
 	toInsert := make([]interface{}, 0)
 	lenght := 0
 	items := make([]interface{}, 0)
@@ -82,9 +84,9 @@ func (item *Item) InsertMany(elements []map[string]interface{}) InsertResponse {
 	}
 }
 
-// Update Updates the given element with the new data in the current collection
-func (item *Item) Update(criteria map[string]interface{}, updated map[string]interface{}) *UpdateResponse {
-	updateQuery := map[string]interface{}{
+// Update Updates the given element with the new data in the current collection.
+func (item *Item) Update(criteria types.Dict, updated types.Dict) *UpdateResponse {
+	updateQuery := types.Dict{
 		"$set": updated,
 	}
 
@@ -103,8 +105,8 @@ func (item *Item) Update(criteria map[string]interface{}, updated map[string]int
 	}
 }
 
-// Delete Deletes the given element from the current collection
-func (item *Item) Delete(criteria map[string]interface{}) *DeleteResponse {
+// Delete Deletes the given element from the current collection.
+func (item *Item) Delete(criteria types.Dict) *DeleteResponse {
 	res, err := item.Collection().DeleteMany(Ctx(), criteria)
 	deleted := 0
 	status := false
@@ -120,7 +122,7 @@ func (item *Item) Delete(criteria map[string]interface{}) *DeleteResponse {
 	}
 }
 
-// Drop Drops the current collection
+// Drop Drops the current collection.
 func (item *Item) Drop() {
 	item.Collection().Drop(Ctx())
 }

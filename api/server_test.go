@@ -3,8 +3,9 @@ package api_test
 import (
 	"testing"
 
-	"github.com/harvestcore/HarvestCCode/api"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/harvestcore/upgote/api"
 )
 
 func TestServerCreation(t *testing.T) {
