@@ -43,5 +43,11 @@ jobs:
       with:
         mongoDBVersion: 5.0
 
+    - name: Create log file
+      run: |
+        sudo touch /var/log/upgote.log
+        sudo chown runner:runner /var/log/upgote.log
+        sudo chmod 0666 /var/log/upgote.log
+
     - name: Run tests
       run: make test
