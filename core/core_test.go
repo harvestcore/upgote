@@ -5,8 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	
+
 	"github.com/harvestcore/upgote/core"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 )
 
@@ -20,16 +21,16 @@ func TestCoreCreation(t *testing.T) {
 
 func TestCoreCreateUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var schema = make(map[string]interface{})
+		var schema = make(types.Dict)
 		schema["cool"] = "test"
 
-		var data = make(map[string]interface{})
+		var data = make(types.Dict)
 		data["collection"] = "testing"
 		data["schema"] = schema
 		data["interval"] = 10
 		data["source"] = "https://google.es"
 		data["method"] = "GET"
-		data["requestBody"] = make(map[string]interface{})
+		data["requestBody"] = make(types.Dict)
 		data["timeout"] = 20
 
 		var c = core.GetCore()
@@ -44,16 +45,16 @@ func TestCoreCreateUpdater(t *testing.T) {
 
 func TestCoreStopUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var schema = make(map[string]interface{})
+		var schema = make(types.Dict)
 		schema["cool"] = "test"
 
-		var data = make(map[string]interface{})
+		var data = make(types.Dict)
 		data["collection"] = "yikes"
 		data["schema"] = schema
 		data["interval"] = 10
 		data["source"] = "https://google.es"
 		data["method"] = "GET"
-		data["requestBody"] = make(map[string]interface{})
+		data["requestBody"] = make(types.Dict)
 		data["timeout"] = 20
 
 		var c = core.GetCore()
@@ -71,16 +72,16 @@ func TestCoreStopUpdater(t *testing.T) {
 
 func TestCoreRemoveUpdater(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var schema = make(map[string]interface{})
+		var schema = make(types.Dict)
 		schema["cool"] = "test"
 
-		var data = make(map[string]interface{})
+		var data = make(types.Dict)
 		data["collection"] = "yikes123"
 		data["schema"] = schema
 		data["interval"] = 10
 		data["source"] = "https://google.es"
 		data["method"] = "GET"
-		data["requestBody"] = make(map[string]interface{})
+		data["requestBody"] = make(types.Dict)
 		data["timeout"] = 20
 
 		var c = core.GetCore()

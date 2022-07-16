@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/harvestcore/upgote/config"
 	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/types"
 )
 
 // Connotation The connotation of the log message
@@ -43,8 +44,8 @@ func NewLog(connotation Connotation, message string, from uuid.UUID, to uuid.UUI
 	}
 }
 
-func (l *Log) serialize() map[string]interface{} {
-	return map[string]interface{}{
+func (l *Log) serialize() types.Dict {
+	return types.Dict{
 		"connotation": string(l.Connotation),
 		"datetime":    l.Datetime.String(),
 		"from":        l.From.String(),
@@ -72,7 +73,7 @@ var (
 // GetLogger Returns the Logger instance
 func GetLogger() *Logger {
 	if logger == nil {
-		logFilePath := config.GetManager().GetVariable(config.LOG_FILE)
+		logFilePath := config.GetManager().Get(config.LOG_FILE).(string)
 		file, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 
 		if err == nil {
@@ -106,14 +107,13 @@ func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) 
 	var _log = NewLog(connotation, message, from, to)
 
 	if logger != nil && _log != nil {
-		var _message = message
-		if from != uuid.Nil {
-			_message += "__from__" + from.String()
-		}
+		var _message = _log.serialize()
+		
+		// Add log message to database
+		logger.Item.InsertOne(_message)
 
-		if to != uuid.Nil {
-			_message += "__to__" + to.String()
-		}
+		delete(_message, "connotation")
+		delete(_message, "datetime")
 
 		// Add log message to local text file
 		switch connotation {
@@ -125,8 +125,6 @@ func Add(connotation Connotation, message string, from uuid.UUID, to uuid.UUID) 
 			errorLogger.Println(_message)
 		}
 
-		// Add log message to database
-		logger.Item.InsertOne(_log.serialize())
 	}
 }
 

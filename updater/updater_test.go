@@ -5,20 +5,21 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/updater"
 	"github.com/harvestcore/upgote/utils"
 )
 
 func TestUpdaterCreation(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var nilSchema map[string]interface{}
+		var nilSchema types.Dict
 		var nilInterval int
 		var nilSource string
 		var nilMethod string
-		var nilRequestBody map[string]interface{}
+		var nilRequestBody types.Dict
 		var nilTimeout int
 
-		var schema = make(map[string]interface{})
+		var schema = make(types.Dict)
 		schema["cool"] = "test"
 
 		var u = updater.NewUpdater(
@@ -111,7 +112,7 @@ func TestUpdaterCreation(t *testing.T) {
 
 func TestUpdaterUpdate(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var schema = make(map[string]interface{})
+		var schema = make(types.Dict)
 		schema["cool"] = "test"
 
 		var u = updater.NewUpdater(
@@ -127,12 +128,12 @@ func TestUpdaterUpdate(t *testing.T) {
 		schema["cool"] = "test2"
 		schema["test2"] = "cool"
 
-		var data = make(map[string]interface{})
+		var data = make(types.Dict)
 		data["schema"] = schema
 		data["interval"] = 60
 		data["source"] = "https://google.com"
 		data["method"] = "POST"
-		data["requestBody"] = make(map[string]interface{})
+		data["requestBody"] = make(types.Dict)
 		data["timeout"] = 30
 
 		u.Update(data)

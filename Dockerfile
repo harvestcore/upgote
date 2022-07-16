@@ -10,7 +10,7 @@ FROM alpine:3.7
 
 COPY --from=build /go/src/github.com/harvestcore/upgote/upgote .
 COPY --from=build /go/src/github.com/harvestcore/upgote/Makefile .
-EXPOSE 80
+EXPOSE 8080
 RUN apk update --no-cache; apk add --no-cache make
 
 CMD make start

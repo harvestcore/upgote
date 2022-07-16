@@ -3,45 +3,24 @@ package config
 import (
 	"os"
 	"sync"
-)
 
-type Variable string
+	"github.com/harvestcore/upgote/types"
+)
 
 const (
 	// Variable names
-	MONGO_DATABASE   Variable = "MONGO_DATABASE"
-	MONGO_URI        Variable = "MONGO_URI"
-	LOG_FILE         Variable = "LOG_FILE"
-	HTTP_SERVER_PORT Variable = "HTTP_SERVER_PORT"
-
-	// Default variables
-	DEFAULT_MONGO_DATABASE   Variable = "upgote"
-	DEFAULT_MONGO_URI        Variable = "mongodb://127.0.0.1:27017"
-	DEFAULT_LOG_FILE         Variable = "/upgote.log"
-	DEFAULT_HTTP_SERVER_PORT Variable = "80"
+	MONGO_DATABASE   string = "MONGO_DATABASE"
+	MONGO_URI        string = "MONGO_URI"
+	LOG_FILE         string = "LOG_FILE"
+	HTTP_SERVER_PORT string = "HTTP_SERVER_PORT"
+	UPGOTE_VERSION   string = "UPGOTE_VERSION"
 )
-
-// GetDefault Returns the default value of a variable
-func GetDefault(variable Variable) string {
-	switch variable {
-	case MONGO_URI:
-		return string(DEFAULT_MONGO_URI)
-	case MONGO_DATABASE:
-		return string(DEFAULT_MONGO_DATABASE)
-	case LOG_FILE:
-		return os.Getenv("HOME") + string(DEFAULT_LOG_FILE)
-	case HTTP_SERVER_PORT:
-		return string(DEFAULT_HTTP_SERVER_PORT)
-	}
-
-	return ""
-}
 
 var lock = &sync.Mutex{}
 
 // Manager Encapsulates all the config variables needed
 type Manager struct {
-	VariablePool map[string]string
+	VariablePool types.Dict
 }
 
 var manager *Manager
@@ -53,30 +32,52 @@ func GetManager() *Manager {
 		defer lock.Unlock()
 
 		manager = &Manager{
-			VariablePool: make(map[string]string),
+			VariablePool: make(types.Dict),
 		}
+
+		manager.setDefaultVariables()
 	}
 
 	return manager
 }
 
+// getFromEnv Get a variable from the environment.
+func getFromEnv(key string, fallback types.Object) types.Object {
+	value, exists := os.LookupEnv(key)
+	
+	if !exists {
+        return fallback
+    }
 
-// GetVariable Returns the requested variable.
-func (manager *Manager) GetVariable(variable Variable) string {
+    return value
+}
+
+// setDefaultVariables Set the default variables.
+func (manager *Manager) setDefaultVariables() {
+	// Upgote version.
+	manager.Set(UPGOTE_VERSION, "0.2.0")
+
+	manager.Set(MONGO_DATABASE, getFromEnv(MONGO_DATABASE, "upgote"))
+	manager.Set(MONGO_URI, getFromEnv(MONGO_URI, "mongodb://localhost:27017"))
+	manager.Set(LOG_FILE, getFromEnv(LOG_FILE, "./upgote.log"))
+	manager.Set(HTTP_SERVER_PORT, getFromEnv(HTTP_SERVER_PORT, "8080"))
+}
+
+// Get Returns the requested variable.
+func (manager *Manager) Get(variable string) types.Object {
 	var output = manager.VariablePool[string(variable)]
 
-	// Try to get the variable from remote.
 	if output == "" {
 		// Try to get the variable from the environment.
-		output = os.Getenv(string(variable))
-
-		// Default value.
-		if output == "" {
-			output = GetDefault(variable)
-		} else {
-			manager.VariablePool[string(variable)] = string(output)
-		}
+		output = getFromEnv(variable, nil)
 	}
 
 	return output
+}
+
+// Set Set a variable.
+func (manager *Manager) Set(variable string, value types.Object) {
+	if variable != "" && value != nil {
+		manager.VariablePool[variable] = value
+	}
 }

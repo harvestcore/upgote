@@ -7,33 +7,34 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/harvestcore/upgote/core"
+	"github.com/harvestcore/upgote/types"
 )
 
 type customRequest struct {
-	Schema      map[string]interface{} `json:"schema"`
-	Interval    int                    `json:"interval"`
-	Source      string                 `json:"source"`
-	ID          uuid.UUID              `json:"id"`
-	Method      string                 `json:"method"`
-	RequestBody map[string]interface{} `json:"requestBody"`
-	Timeout     int                    `json:"timeout"`
-	Collection  string                 `json:"database"`
+	Schema      types.Dict	`json:"schema"`
+	Interval    int         `json:"interval"`
+	Source      string      `json:"source"`
+	ID          uuid.UUID   `json:"id"`
+	Method      string      `json:"method"`
+	RequestBody types.Dict	`json:"requestBody"`
+	Timeout     int         `json:"timeout"`
+	Collection  string      `json:"database"`
 }
 
 // Updater Updater endpoints.
 func Updater(router *mux.Router) {
 	router.HandleFunc("/updater", func(w http.ResponseWriter, r *http.Request) {
 		c := core.GetCore()
-		data := make([]map[string]interface{}, 0)
+		data := make([]types.Dict, 0)
 
 		for _, value := range c.Updaters {
-			data = append(data, map[string]interface{}{
+			data = append(data, types.Dict{
 				"database": value.Collection,
 				"updater":  &value.Reference,
 			})
 		}
 
-		payload, _ := json.Marshal(map[string]interface{}{
+		payload, _ := json.Marshal(types.Dict{
 			"items":  data,
 			"status": true,
 			"length": len(data),
@@ -51,7 +52,7 @@ func Updater(router *mux.Router) {
 
 		if checkUpdaterParams(request) {
 			c := core.GetCore()
-			updaterID := c.CreateUpdater(map[string]interface{}{
+			updaterID := c.CreateUpdater(types.Dict{
 				"schema":      request.Schema,
 				"interval":    request.Interval,
 				"source":      request.Source,
@@ -62,20 +63,20 @@ func Updater(router *mux.Router) {
 			})
 
 			if updaterID != uuid.Nil {
-				payload, _ = json.Marshal(map[string]interface{}{
+				payload, _ = json.Marshal(types.Dict{
 					"status":  true,
 					"message": "Updater created.",
 					"id":      updaterID.String(),
 				})
 			} else {
-				payload, _ = json.Marshal(map[string]interface{}{
+				payload, _ = json.Marshal(types.Dict{
 					"status":  false,
 					"message": "Error creating updater. Wrong parameters",
 				})
 				w.WriteHeader(http.StatusUnprocessableEntity)
 			}
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{
+			payload, _ = json.Marshal(types.Dict{
 				"status":  false,
 				"message": "Wrong parameters",
 			})
@@ -95,7 +96,7 @@ func Updater(router *mux.Router) {
 
 		if request.ID != uuid.Nil || checkUpdaterParams(request) {
 			c := core.GetCore()
-			c.UpdateUpdater(request.ID, map[string]interface{}{
+			c.UpdateUpdater(request.ID, types.Dict{
 				"schema":      request.Schema,
 				"interval":    request.Interval,
 				"source":      request.Source,
@@ -105,12 +106,12 @@ func Updater(router *mux.Router) {
 				"collection":  request.Collection,
 			})
 
-			payload, _ = json.Marshal(map[string]interface{}{
+			payload, _ = json.Marshal(types.Dict{
 				"status":  true,
 				"message": "Updater updated.",
 			})
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{
+			payload, _ = json.Marshal(types.Dict{
 				"status":  false,
 				"message": "Missing updater ID.",
 			})
@@ -133,18 +134,18 @@ func Updater(router *mux.Router) {
 
 		json.NewDecoder(r.Body).Decode(&request)
 
-		if request.ID != "" && request.Force == true {
+		if request.ID != "" && request.Force {
 			c := core.GetCore()
 			id, err := uuid.Parse(request.ID)
 			if err != nil {
-				payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Invalid ID."})
+				payload, _ = json.Marshal(types.Dict{"status": false, "message": "Invalid ID."})
 				w.WriteHeader(http.StatusUnprocessableEntity)
 			} else {
 				c.RemoveUpdater(id)
-				payload, _ = json.Marshal(map[string]interface{}{"status": true, "message": "Updater removed."})
+				payload, _ = json.Marshal(types.Dict{"status": true, "message": "Updater removed."})
 			}
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{"status": false, "message": "Missing updater ID or removal not forced."})
+			payload, _ = json.Marshal(types.Dict{"status": false, "message": "Missing updater ID or removal not forced."})
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 
@@ -177,26 +178,26 @@ func Updater(router *mux.Router) {
 				}
 
 				if status {
-					payload, _ = json.Marshal(map[string]interface{}{
+					payload, _ = json.Marshal(types.Dict{
 						"status":  true,
 						"message": "Action executed successfully.",
 					})
 				} else {
-					payload, _ = json.Marshal(map[string]interface{}{
+					payload, _ = json.Marshal(types.Dict{
 						"status":  false,
 						"message": "The updater does not exist.",
 					})
 					w.WriteHeader(http.StatusUnprocessableEntity)
 				}
 			} else {
-				payload, _ = json.Marshal(map[string]interface{}{
+				payload, _ = json.Marshal(types.Dict{
 					"status":  false,
 					"message": "Wrong ID.",
 				})
 				w.WriteHeader(http.StatusUnprocessableEntity)
 			}
 		} else {
-			payload, _ = json.Marshal(map[string]interface{}{
+			payload, _ = json.Marshal(types.Dict{
 				"status":  false,
 				"message": "Wrong fields.",
 			})

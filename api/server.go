@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	handlers "github.com/harvestcore/upgote/api/handlers"
 	middlewares "github.com/harvestcore/upgote/api/middlewares"
-	//"github.com/harvestcore/upgote/config"
+	"github.com/harvestcore/upgote/config"
 	"github.com/harvestcore/upgote/log"
 )
 
@@ -35,7 +35,7 @@ func GetServer() *Server {
 		server = &Server{
 			Server: &http.Server{
 				Handler: router,
-				Addr:    ":8080", // + config.GetManager().GetVariable(config.HTTP_SERVER_PORT),
+				Addr:    ":" + config.GetManager().Get(config.HTTP_SERVER_PORT).(string),
 
 				// Read and write timeouts to avoid the server hang
 				ReadTimeout:  10 * time.Second,

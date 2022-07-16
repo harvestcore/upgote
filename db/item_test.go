@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +22,7 @@ func TestItemCreation(t *testing.T) {
 
 func TestItemInsertOne(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var name = map[string]interface{}{
+		var name = types.Dict{
 			"name": "pi",
 		}
 
@@ -45,7 +46,7 @@ func TestItemInsertOne(t *testing.T) {
 
 func TestItemInsertMany(t *testing.T) {
 	if !utils.RunningInDocker() {
-		names := []map[string]interface{}{
+		names := []types.Dict{
 			{
 				"test": "TEST",
 			},
@@ -54,7 +55,7 @@ func TestItemInsertMany(t *testing.T) {
 			},
 		}
 
-		name := map[string]interface{}{
+		name := types.Dict{
 			"test": "TEST",
 		}
 
@@ -78,7 +79,7 @@ func TestItemInsertMany(t *testing.T) {
 
 func TestItemFind(t *testing.T) {
 	if !utils.RunningInDocker() {
-		names := []map[string]interface{}{
+		names := []types.Dict{
 			{
 				"test": "TEST",
 			},
@@ -87,11 +88,11 @@ func TestItemFind(t *testing.T) {
 			},
 		}
 
-		name := map[string]interface{}{
+		name := types.Dict{
 			"test": "TEST2",
 		}
 
-		empty := map[string]interface{}{}
+		empty := types.Dict{}
 
 		var item = db.Item{
 			CollectionName: testingCollection,
@@ -118,7 +119,7 @@ func TestItemFind(t *testing.T) {
 
 func TestItemDelete(t *testing.T) {
 	if !utils.RunningInDocker() {
-		names := []map[string]interface{}{
+		names := []types.Dict{
 			{
 				"test": "TEST",
 			},
@@ -127,11 +128,11 @@ func TestItemDelete(t *testing.T) {
 			},
 		}
 
-		name := map[string]interface{}{
+		name := types.Dict{
 			"test": "TEST",
 		}
 
-		empty := map[string]interface{}{}
+		empty := types.Dict{}
 
 		var item = db.Item{
 			CollectionName: testingCollection,
@@ -157,16 +158,16 @@ func TestItemDelete(t *testing.T) {
 
 func TestItemUpdate(t *testing.T) {
 	if !utils.RunningInDocker() {
-		var name = map[string]interface{}{
+		var name = types.Dict{
 			"name": "pi",
 		}
 
-		nameUpdate := map[string]interface{}{
+		nameUpdate := types.Dict{
 			"name":    "pi",
 			"surname": "po",
 		}
 
-		empty := map[string]interface{}{}
+		empty := types.Dict{}
 
 		var item = db.Item{
 			CollectionName: testingCollection,

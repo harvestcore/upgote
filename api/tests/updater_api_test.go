@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	api "github.com/harvestcore/upgote/api/tests"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 )
 
@@ -20,7 +21,7 @@ func TestGetUpdater(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "GET /updater status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "GET /updater Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "GET /updater status is not true")
@@ -37,7 +38,7 @@ func TestPostCreateUpdaterWrongParams(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /updater status code is not 422")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /updater Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "POST /updater status is not false")
@@ -49,7 +50,7 @@ func TestDeleteUpdater(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingDELETE", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		req, _ = http.NewRequest("DELETE", "/api/updater", bytes.NewBuffer([]byte(`{"force": true, "id": "`+data["id"].(string)+`"}`)))
@@ -72,7 +73,7 @@ func TestPostCreateUpdaterParams(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusCreated, "POST /updater status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /updater Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /updater status is not true")
@@ -87,7 +88,7 @@ func TestPutUpdateUpdater(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPUT", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		req, _ = http.NewRequest("PUT", "/api/updater", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
@@ -107,7 +108,7 @@ func TestPostStartUpdater(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOST", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		req, _ = http.NewRequest("POST", "/api/updater/action", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "action": "start"}`)))
@@ -127,7 +128,7 @@ func TestPostStopUpdater(t *testing.T) {
 		req, _ := http.NewRequest("POST", "/api/updater", bytes.NewBuffer([]byte(`{"database": "testingPOSTstop", "schema": {"my": "schema"}, "interval": 60, "source": "https://ipinfo.io/json", "method": "GET", "timeout": 30}`)))
 		res := api.ExecuteTestingRequest(req)
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		req, _ = http.NewRequest("POST", "/api/updater/action", bytes.NewBuffer([]byte(`{"id": "`+data["id"].(string)+`", "action": "start"}`)))

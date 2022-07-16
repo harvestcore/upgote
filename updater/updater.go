@@ -13,24 +13,25 @@ import (
 
 	"github.com/harvestcore/upgote/db"
 	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 )
 
 type Updater struct {
-	Schema      map[string]interface{} `json:"schema"`
-	Interval    int                    `json:"interval"`
-	Source      string                 `json:"source"`
-	ID          uuid.UUID              `json:"id"`
-	Method      string                 `json:"method"`
-	RequestBody map[string]interface{} `json:"requestBody"`
-	Timeout     int                    `json:"timeout"`
-	Collection  string                 `json:"collection"`
+	Schema      types.Dict `json:"schema"`
+	Interval    int        `json:"interval"`
+	Source      string     `json:"source"`
+	ID          uuid.UUID  `json:"id"`
+	Method      string     `json:"method"`
+	RequestBody types.Dict `json:"requestBody"`
+	Timeout     int        `json:"timeout"`
+	Collection  string     `json:"collection"`
 
 	scheduler *gocron.Scheduler
 }
 
 // NewUpdater Creates a new Updater
-func NewUpdater(schema map[string]interface{}, interval int, source string, method string, requestBody map[string]interface{}, timeout int, collection string) *Updater {
+func NewUpdater(schema types.Dict, interval int, source string, method string, requestBody types.Dict, timeout int, collection string) *Updater {
 	if schema == nil {
 		log.AddSimple(log.Error, "Updater schema is not valid.")
 		return nil
@@ -83,7 +84,7 @@ func NewUpdater(schema map[string]interface{}, interval int, source string, meth
 }
 
 // SendUpdate Stores the fetched data
-func (u *Updater) SendUpdate(data map[string]interface{}) {
+func (u *Updater) SendUpdate(data types.Dict) {
 	item := &db.Item{CollectionName: u.Collection}
 
 	matchedData := utils.MatchStructureWithSchema(data, u.Schema)
@@ -103,7 +104,7 @@ func (u *Updater) getClient() (client *http.Client) {
 }
 
 // Update Updates the current updater data
-func (u *Updater) Update(data map[string]interface{}) {
+func (u *Updater) Update(data types.Dict) {
 	// Stop the fetching process
 	u.Stop()
 
@@ -122,11 +123,11 @@ func (u *Updater) Update(data map[string]interface{}) {
 	}
 
 	if data["schema"] != nil {
-		u.Schema = data["schema"].(map[string]interface{})
+		u.Schema = data["schema"].(types.Dict)
 	}
 
 	if data["requestBody"] != nil {
-		u.RequestBody = data["requestBody"].(map[string]interface{})
+		u.RequestBody = data["requestBody"].(types.Dict)
 	}
 
 	if data["timeout"] != nil {
@@ -139,7 +140,7 @@ func (u *Updater) FetchData() {
 	var requestBody []byte
 	var requestBodyErr error
 	var body bytes.Buffer
-	var dat map[string]interface{}
+	var dat types.Dict
 
 	// If the method is POST -> encode the request body
 	if u.Method == "POST" {

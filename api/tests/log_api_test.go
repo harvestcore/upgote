@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	api "github.com/harvestcore/upgote/api/tests"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 )
 
@@ -30,7 +31,7 @@ func TestPostLogFileNoQuantity(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "GET /log status code is not 200. Without quantity")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /log Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /log status is not true")
@@ -46,7 +47,7 @@ func TestPostLogFileWithQuantity(t *testing.T) {
 
 		assert.Equal(t, res.Code, http.StatusOK, "GET /log status code is not 200. With quantity")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /log status is not true")
@@ -62,7 +63,7 @@ func TestPostLogFileNegativeQuantity(t *testing.T) {
 
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "GET /log status code is not 422. With negative quantity")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "POST /log status is not false. With negative quantity")

@@ -1,10 +1,12 @@
 package db
 
+import "github.com/harvestcore/upgote/types"
+
 // FindResponse Encapsulates the response of a Find operation
 type FindResponse struct {
-	Status bool                     `json:"status"`
-	Length int                      `json:"length"`
-	Items  []map[string]interface{} `json:"items"`
+	Status bool         `json:"status"`
+	Length int          `json:"length"`
+	Items  []types.Dict `json:"items"`
 }
 
 // InsertResponse Encapsulates the response of an Insert operation

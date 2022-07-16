@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/updater"
 )
 
@@ -43,7 +44,7 @@ func GetCore() *Core {
 }
 
 // CreateUpdater Creates a new updater and stores a pointer to it.
-func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
+func (c *Core) CreateUpdater(data types.Dict) uuid.UUID {
 	for _, value := range c.Updaters {
 		if value.Collection == data["collection"].(string) {
 			log.AddSimple(log.Error, "Database already in use.")
@@ -53,11 +54,11 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 	}
 
 	var updater = updater.NewUpdater(
-		data["schema"].(map[string]interface{}),
+		data["schema"].(types.Dict),
 		data["interval"].(int),
 		data["source"].(string),
 		data["method"].(string),
-		data["requestBody"].(map[string]interface{}),
+		data["requestBody"].(types.Dict),
 		data["timeout"].(int),
 		data["collection"].(string),
 	)
@@ -77,7 +78,7 @@ func (c *Core) CreateUpdater(data map[string]interface{}) uuid.UUID {
 }
 
 // UpdateUpdater Updates an updater.
-func (c *Core) UpdateUpdater(updater uuid.UUID, data map[string]interface{}) {
+func (c *Core) UpdateUpdater(updater uuid.UUID, data types.Dict) {
 	u := c.Updaters[updater].Reference
 	u.Update(data)
 

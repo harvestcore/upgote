@@ -10,6 +10,7 @@ import (
 
 	api "github.com/harvestcore/upgote/api/tests"
 	"github.com/harvestcore/upgote/db"
+	"github.com/harvestcore/upgote/types"
 	"github.com/harvestcore/upgote/utils"
 )
 
@@ -21,7 +22,7 @@ func TestPostDataNoArgs(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /data (no args) status code is not 422")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "POST /data (no args) status is not false")
@@ -36,7 +37,7 @@ func TestPostDataWithDatabaseNoQuantity(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /data status is not true")
@@ -53,7 +54,7 @@ func TestPostDataWithWrongDatabaseNoQuantity(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /data status is not true")
@@ -65,7 +66,7 @@ func TestPostDataWithWrongDatabaseNoQuantity(t *testing.T) {
 func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
 	if !utils.RunningInDocker() {
 		item := &db.Item{CollectionName: "TestPostDataWithDatabaseAndQuantity"}
-		item.InsertOne(map[string]interface{}{"test": 1})
+		item.InsertOne(types.Dict{"test": 1})
 
 		req, _ := http.NewRequest("POST", "/api/data", bytes.NewBuffer([]byte(`{"database": "TestPostDataWithDatabaseAndQuantity", "quantity": 1}`)))
 		res := api.ExecuteTestingRequest(req)
@@ -73,7 +74,7 @@ func TestPostDataWithDatabaseAndQuantity(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "POST /data status code is not 200")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "POST /data status is not true")
@@ -92,7 +93,7 @@ func TestPostDataWithDatabaseAndWrongQuantity(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "POST /data status code is not 422")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "POST /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "POST /data status is not false")
@@ -108,7 +109,7 @@ func TestDeleteDataWithNoDatabase(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "DELETE /data status code is not 422")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "DELETE /data status is not false")
@@ -124,7 +125,7 @@ func TestDeleteDataWithWrongDatabaseAndNoForce(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusUnprocessableEntity, "DELETE /data status code is not 422")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.False(t, data["status"].(bool), "DELETE /data status is not false")
@@ -140,7 +141,7 @@ func TestDeleteDataWithWrongDatabaseAndForce(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "DELETE /data status code is not 204")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "DELETE /data status is not false")
@@ -151,7 +152,7 @@ func TestDeleteDataWithWrongDatabaseAndForce(t *testing.T) {
 func TestDeleteDataWithExistingDatabaseAndForce(t *testing.T) {
 	if !utils.RunningInDocker() {
 		item := &db.Item{CollectionName: "__delete"}
-		item.InsertOne(map[string]interface{}{"test": 1})
+		item.InsertOne(types.Dict{"test": 1})
 
 		req, _ := http.NewRequest("DELETE", "/api/data", bytes.NewBuffer([]byte(`{"database": "__delete", "force": true}`)))
 		res := api.ExecuteTestingRequest(req)
@@ -159,7 +160,7 @@ func TestDeleteDataWithExistingDatabaseAndForce(t *testing.T) {
 		assert.Equal(t, res.Code, http.StatusOK, "DELETE /data status code is not 204")
 		assert.Equal(t, res.HeaderMap.Get("Content-Type"), "application/json", "DELETE /data Content type is not \"application/json\"")
 
-		var data map[string]interface{}
+		var data types.Dict
 		json.Unmarshal(res.Body.Bytes(), &data)
 
 		assert.True(t, data["status"].(bool), "DELETE /data status is not false")

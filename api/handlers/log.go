@@ -8,12 +8,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/harvestcore/upgote/config"
 	"github.com/harvestcore/upgote/log"
+	"github.com/harvestcore/upgote/types"
 )
 
 // Log Log endpoint.
 func Log(router *mux.Router) {
 	router.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
-		logFilePath := config.GetManager().GetVariable(config.LOG_FILE)
+		logFilePath := config.GetManager().Get(config.LOG_FILE).(string)
 		file, _ := ioutil.ReadFile(logFilePath)
 
 		w.Header().Set("Content-Type", "text/plain")
@@ -30,7 +31,7 @@ func Log(router *mux.Router) {
 
 		json.NewDecoder(r.Body).Decode(&request)
 
-		response := log.GetLogger().Item.Find(make(map[string]interface{}))
+		response := log.GetLogger().Item.Find(make(types.Dict))
 
 		payload, _ = json.Marshal(response)
 
@@ -41,7 +42,7 @@ func Log(router *mux.Router) {
 
 				payload, _ = json.Marshal(response)
 			} else {
-				payload, _ = json.Marshal(map[string]interface{}{
+				payload, _ = json.Marshal(types.Dict{
 					"status":  false,
 					"message": "Wrong quantity value.",
 				})

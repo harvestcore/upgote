@@ -4,15 +4,8 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/google/uuid"
+	"github.com/harvestcore/upgote/types"
 )
-
-type Reply int
-
-type RegisterComponentArgs struct {
-	ComponentType string
-	ID            uuid.UUID
-}
 
 // RunningInDocker Returns if the code is running within a Docker container
 func RunningInDocker() bool {
@@ -24,7 +17,7 @@ func RunningInDocker() bool {
 }
 
 // MatchStructureWithSchema Matches the data with the given schema
-func MatchStructureWithSchema(data map[string]interface{}, schema map[string]interface{}) map[string]interface{} {
+func MatchStructureWithSchema(data types.Dict, schema types.Dict) types.Dict {
 	var i interface{}
 
 	for key, value := range data {
@@ -33,7 +26,7 @@ func MatchStructureWithSchema(data map[string]interface{}, schema map[string]int
 		} else {
 			if reflect.TypeOf(value) == reflect.MapOf(reflect.TypeOf("string"), reflect.TypeOf(&i).Elem()) &&
 				reflect.TypeOf(schema[key]) == reflect.MapOf(reflect.TypeOf("string"), reflect.TypeOf(&i).Elem()) {
-				data[key] = MatchStructureWithSchema(data[key].(map[string]interface{}), schema[key].(map[string]interface{}))
+				data[key] = MatchStructureWithSchema(data[key].(types.Dict), schema[key].(types.Dict))
 			}
 		}
 	}

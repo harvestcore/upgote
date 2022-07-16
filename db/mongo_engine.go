@@ -29,8 +29,8 @@ func GetEngine() *MongoEngine {
 		defer lock.Unlock()
 
 		// Config variables
-		var mongoURI = config.GetManager().GetVariable(config.MONGO_URI)
-		var database = config.GetManager().GetVariable(config.MONGO_DATABASE)
+		var mongoURI = config.GetManager().Get(config.MONGO_URI).(string)
+		var database = config.GetManager().Get(config.MONGO_DATABASE).(string)
 
 		// Mongo client instantation
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
