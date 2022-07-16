@@ -48,4 +48,4 @@ jobs:
 
     - name: Show log
       if: ${{ always() }}
-      run: cat ~/upgote.log
+      run: cat ./upgote.log
