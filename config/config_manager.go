@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	// Variable names
+	// Variable names.
 	MONGO_DATABASE   string = "MONGO_DATABASE"
 	MONGO_URI        string = "MONGO_URI"
 	LOG_FILE         string = "LOG_FILE"
@@ -18,14 +18,14 @@ const (
 
 var lock = &sync.Mutex{}
 
-// Manager Encapsulates all the config variables needed
+// Manager Encapsulates all the config variables needed.
 type Manager struct {
 	VariablePool types.Dict
 }
 
 var manager *Manager
 
-// GetManager Returns the Manager instance
+// GetManager Returns the Manager instance.
 func GetManager() *Manager {
 	if manager == nil {
 		lock.Lock()
@@ -55,16 +55,17 @@ func getFromEnv(key string, fallback types.Object) types.Object {
 // setDefaultVariables Set the default variables.
 func (manager *Manager) setDefaultVariables() {
 	// Upgote version.
-	manager.Set(UPGOTE_VERSION, "0.2.0")
+	Set(UPGOTE_VERSION, "0.2.0")
 
-	manager.Set(MONGO_DATABASE, getFromEnv(MONGO_DATABASE, "upgote"))
-	manager.Set(MONGO_URI, getFromEnv(MONGO_URI, "mongodb://localhost:27017"))
-	manager.Set(LOG_FILE, getFromEnv(LOG_FILE, "./upgote.log"))
-	manager.Set(HTTP_SERVER_PORT, getFromEnv(HTTP_SERVER_PORT, "8080"))
+	Set(MONGO_DATABASE, getFromEnv(MONGO_DATABASE, "upgote"))
+	Set(MONGO_URI, getFromEnv(MONGO_URI, "mongodb://localhost:27017"))
+	Set(LOG_FILE, getFromEnv(LOG_FILE, "./upgote.log"))
+	Set(HTTP_SERVER_PORT, getFromEnv(HTTP_SERVER_PORT, "8080"))
 }
 
 // Get Returns the requested variable.
-func (manager *Manager) Get(variable string) types.Object {
+func Get(variable string) types.Object {
+	var manager = GetManager()
 	var output = manager.VariablePool[string(variable)]
 
 	if output == "" {
@@ -76,7 +77,8 @@ func (manager *Manager) Get(variable string) types.Object {
 }
 
 // Set Set a variable.
-func (manager *Manager) Set(variable string, value types.Object) {
+func Set(variable string, value types.Object) {
+	var manager = GetManager()
 	if variable != "" && value != nil {
 		manager.VariablePool[variable] = value
 	}

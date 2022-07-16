@@ -14,14 +14,14 @@ import (
 
 var lock = &sync.Mutex{}
 
-// Server HTTP server of the software
+// Server HTTP server of the software.
 type Server struct {
 	Server *http.Server
 }
 
 var server *Server
 
-// GetServer Returns the only instance of the HTTP server
+// GetServer Returns the only instance of the HTTP server.
 func GetServer() *Server {
 	if server == nil {
 		lock.Lock()
@@ -35,9 +35,9 @@ func GetServer() *Server {
 		server = &Server{
 			Server: &http.Server{
 				Handler: router,
-				Addr:    ":" + config.GetManager().Get(config.HTTP_SERVER_PORT).(string),
+				Addr:    ":" + config.Get(config.HTTP_SERVER_PORT).(string),
 
-				// Read and write timeouts to avoid the server hang
+				// Read and write timeouts to avoid the server hang.
 				ReadTimeout:  10 * time.Second,
 				WriteTimeout: 10 * time.Second,
 			},
@@ -47,7 +47,7 @@ func GetServer() *Server {
 	return server
 }
 
-// Start Starts listening and serving requests
+// Start Starts listening and serving requests.
 func (s *Server) Start() {
 	log.AddSimple(log.Info, "HTTP Server started, running on address "+s.Server.Addr)
 
@@ -56,7 +56,7 @@ func (s *Server) Start() {
 	}
 }
 
-// registerHandlers Registers all the server handlers
+// registerHandlers Registers all the server handlers.
 func registerHandlers(router *mux.Router) {
 	handlers.Healthcheck(router)
 	handlers.Status(router)
@@ -65,7 +65,7 @@ func registerHandlers(router *mux.Router) {
 	handlers.Updater(router)
 }
 
-// registerMiddlewares Registers all the server middlewares
+// registerMiddlewares Registers all the server middlewares.
 func registerMiddlewares(router *mux.Router) {
 	router.Use(middlewares.LoggingMiddleware)
 }

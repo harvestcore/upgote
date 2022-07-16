@@ -5,12 +5,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Item Encapsulates a collection
+// Item Encapsulates a collection.
 type Item struct {
 	CollectionName string
 }
 
-// Collection Returns the collection associated to this class
+// Collection Returns the collection associated to this class.
 func (item *Item) Collection() *mongo.Collection {
 	var collection *mongo.Collection
 
@@ -21,7 +21,7 @@ func (item *Item) Collection() *mongo.Collection {
 	return collection
 }
 
-// Find Find the items that fit the criteria
+// Find Find the items that fit the criteria.
 func (item *Item) Find(criteria types.Dict) *FindResponse {
 	var results []types.Dict
 
@@ -41,7 +41,7 @@ func (item *Item) Find(criteria types.Dict) *FindResponse {
 	}
 }
 
-// InsertOne Inserts one element in the current collection
+// InsertOne Inserts one element in the current collection.
 func (item *Item) InsertOne(element types.Dict) *InsertResponse {
 	res, err := item.Collection().InsertOne(Ctx(), element)
 	length := 0
@@ -59,7 +59,7 @@ func (item *Item) InsertOne(element types.Dict) *InsertResponse {
 	}
 }
 
-// InsertMany Inserts multiple elements in the current collection
+// InsertMany Inserts multiple elements in the current collection.
 func (item *Item) InsertMany(elements []types.Dict) InsertResponse {
 	toInsert := make([]interface{}, 0)
 	lenght := 0
@@ -83,7 +83,7 @@ func (item *Item) InsertMany(elements []types.Dict) InsertResponse {
 	}
 }
 
-// Update Updates the given element with the new data in the current collection
+// Update Updates the given element with the new data in the current collection.
 func (item *Item) Update(criteria types.Dict, updated types.Dict) *UpdateResponse {
 	updateQuery := types.Dict{
 		"$set": updated,
@@ -104,7 +104,7 @@ func (item *Item) Update(criteria types.Dict, updated types.Dict) *UpdateRespons
 	}
 }
 
-// Delete Deletes the given element from the current collection
+// Delete Deletes the given element from the current collection.
 func (item *Item) Delete(criteria types.Dict) *DeleteResponse {
 	res, err := item.Collection().DeleteMany(Ctx(), criteria)
 	deleted := 0
@@ -121,7 +121,7 @@ func (item *Item) Delete(criteria types.Dict) *DeleteResponse {
 	}
 }
 
-// Drop Drops the current collection
+// Drop Drops the current collection.
 func (item *Item) Drop() {
 	item.Collection().Drop(Ctx())
 }

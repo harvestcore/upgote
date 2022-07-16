@@ -12,7 +12,7 @@ import (
 
 var lock = &sync.Mutex{}
 
-// MongoEngine Encapsulates a Mongo client with its database name
+// MongoEngine Encapsulates a Mongo client with its database name.
 type MongoEngine struct {
 	Client   *mongo.Client
 	Database string
@@ -22,17 +22,17 @@ type MongoEngine struct {
 
 var engine *MongoEngine
 
-// GetEngine Returns the only instance of MongoEngine
+// GetEngine Returns the only instance of MongoEngine.
 func GetEngine() *MongoEngine {
 	if engine == nil {
 		lock.Lock()
 		defer lock.Unlock()
 
-		// Config variables
-		var mongoURI = config.GetManager().Get(config.MONGO_URI).(string)
-		var database = config.GetManager().Get(config.MONGO_DATABASE).(string)
+		// Config variables.
+		var mongoURI = config.Get(config.MONGO_URI).(string)
+		var database = config.Get(config.MONGO_DATABASE).(string)
 
-		// Mongo client instantation
+		// Mongo client instantation.
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
 
@@ -54,20 +54,20 @@ func GetEngine() *MongoEngine {
 	return engine
 }
 
-// CloseConnection Closes the client connection
+// CloseConnection Closes the client connection.
 func CloseConnection() {
 	var engine = GetEngine()
 	engine.cancel()
 	engine.Client.Disconnect(engine.ctx)
 }
 
-// DB Returns the current active database
+// DB Returns the current active database.
 func DB() *mongo.Database {
 	var engine = GetEngine()
 	return engine.Client.Database(engine.Database)
 }
 
-// Ctx Returns the context
+// Ctx Returns the context.
 func Ctx() context.Context {
 	return context.TODO()
 }

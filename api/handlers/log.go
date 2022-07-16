@@ -14,7 +14,7 @@ import (
 // Log Log endpoint.
 func Log(router *mux.Router) {
 	router.HandleFunc("/log", func(w http.ResponseWriter, r *http.Request) {
-		logFilePath := config.GetManager().Get(config.LOG_FILE).(string)
+		logFilePath := config.Get(config.LOG_FILE).(string)
 		file, _ := ioutil.ReadFile(logFilePath)
 
 		w.Header().Set("Content-Type", "text/plain")

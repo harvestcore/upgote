@@ -12,13 +12,13 @@ import (
 
 var lock = &sync.Mutex{}
 
-// UpdaterMap Maps the updater reference with its collection
+// UpdaterMap Maps the updater reference with its collection.
 type UpdaterMap struct {
 	Reference  *updater.Updater
 	Collection string
 }
 
-// Core Main core of the software
+// Core Main core of the software.
 type Core struct {
 	ID       uuid.UUID
 	Updaters map[uuid.UUID]*UpdaterMap
@@ -26,7 +26,7 @@ type Core struct {
 
 var core *Core
 
-// GetCore Returns the only instance of Core
+// GetCore Returns the only instance of Core.
 func GetCore() *Core {
 	if core == nil {
 		lock.Lock()
@@ -97,7 +97,7 @@ func (c *Core) StartUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Run()
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" started.")
@@ -114,13 +114,13 @@ func (c *Core) RemoveUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Stop()
 
-	// Set pointer to null. (GC will free this memory)
+	// Set pointer to null. (GC will free this memory).
 	u.Reference = nil
 
-	// Remove entry in the map
+	// Remove entry in the map.
 	delete(c.Updaters, updater)
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" removed.")
@@ -137,7 +137,7 @@ func (c *Core) StopUpdater(updater uuid.UUID) bool {
 		return false
 	}
 
-	// Stop the fetching process
+	// Stop the fetching process.
 	u.Reference.Stop()
 
 	log.AddSimple(log.Info, "Updater "+updater.String()+" stopped.")

@@ -7,7 +7,7 @@ import (
 	"github.com/harvestcore/upgote/types"
 )
 
-// RunningInDocker Returns if the code is running within a Docker container
+// RunningInDocker Returns if the code is running within a Docker container.
 func RunningInDocker() bool {
 	if _, err := os.Stat("/.dockerenv"); err == nil {
 		return true
@@ -16,7 +16,7 @@ func RunningInDocker() bool {
 	return false
 }
 
-// MatchStructureWithSchema Matches the data with the given schema
+// MatchStructureWithSchema Matches the data with the given schema.
 func MatchStructureWithSchema(data types.Dict, schema types.Dict) types.Dict {
 	var i interface{}
 
